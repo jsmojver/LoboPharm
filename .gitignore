@@ -1,0 +1,6 @@
+.hg/
+*.pyc
+project/settings_local.py
+static/upl/**
+
+

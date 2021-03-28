@@ -1,0 +1,6 @@
+syntax: glob
+_develop/**
+*.pyc
+.idea/**
+project/settings_local.py
+project/fiskalizacija/flib_log.py
