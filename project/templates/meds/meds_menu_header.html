@@ -1,0 +1,31 @@
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+         <li><a class="nohijack" href="javascript:url_into_active_main_tab(lastSearchUrl);">Natrag</a></li>
+         <li><a href="{% url meds.view artikal.id %}">Opće informacije</a></li>
+       {% if artikal.ATCCode %} 
+         <li><a href="{% url meds.alternative artikal.ATCCode %}">Alternative</a></li>
+         <li><a href="{% url meds.similar artikal.ATCCode %}">Ista grupa</a></li>
+       {% endif %}
+       {% if artikal.abda_artikal.tekstovi.all %}
+         <li><a href="{% url meds.view.upute artikal.id %}">Upute</a></li>
+       {% endif %}
+         <li><a href="{% url meds.view.sastav artikal.id %}">Sastav</a></li>
+         <li><a href="{% url meds.view.interakcije artikal.id %}">Interakcije</a></li>
+         <form action="{% url order.kosarica.add %}" method="post">
+         	<li><input type="hidden" name="lijekId" value="{{ artikal.id }}"></input><input name="kolicina" value="0" class="insideTabsSubmit plusminus kotacic"></input></li>
+         	<li><input type="submit" class="insideTabsSubmit dodaj-u-kosaricu" value="Dodaj u košaricu"></input></li>
+         </form>      
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    $(".kotacic").bind("mousewheel", function(event, delta, deltaX, deltaY) {
+       if (delta > 0) { this.value = parseInt(this.value) + 1; } else { if (parseInt(this.value) > 0) { this.value = parseInt(this.value) - 1; } }
+        $('#meds_izracun_cijene').html(' &nbsp;&nbsp;&nbsp; (' + (this.value * {{artikal.cijena_s_marzom}}).toFixed(2) + '&euro; &nbsp; ' + (this.value*"{{artikal.cijena_s_marzom|eur2hrk}}".replace(',', '.')).toFixed(2) + ' kn)'); 
+        return false;
+     });
+});
+</script>
+

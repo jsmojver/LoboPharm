@@ -1,0 +1,24 @@
+<!-- <img src="/static/img/form/pills2.png" style="float:left;" /> -->
+
+<div>
+
+<h3>{{objekt.naziv}}</h3>
+
+<div id="placeholder" style="width:1000px;height:300px;"></div> 
+
+{% comment %}
+{% endcomment %}
+
+<script id="source" language="javascript" type="text/javascript"> 
+
+$(document).ready(function() {
+	$(function () {
+    	var d1 = [{% for i in plotpoints %}[{{i.0}}, {{i.1}}], {% endfor %}];
+	 
+	    jQuery.plot($("#placeholder"), [{data: d1, lines: { show: true }, threshold: { below: 2, color: "rgb(200, 20, 30)" }}], {xaxis: { mode: "time"}});
+	}); 
+});
+	</script> 
+
+
+</div>

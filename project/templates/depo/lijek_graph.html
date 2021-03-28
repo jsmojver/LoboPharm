@@ -1,0 +1,48 @@
+<!-- <img src="/static/img/form/pills2.png" style="float:left;" /> -->
+
+<div>
+
+<h3>{{objekt.naziv}}</h3>
+
+<div id="placeholder" style="width:1000px;height:300px;"></div> 
+
+{% comment %}
+<div>
+    <table>
+       
+       
+		   {% for i in datumi %}
+  		   <tr>
+  		      
+  		      {% if i.1 > 0 %}
+  		        <td></td><td></td><td>{{i.0}}</td><td>{{i.1}}</td>    
+  		      {% else %}
+        		  <td>{{i.0}}</td><td>{{i.1}}</td><td></td><td></td>
+        		{% endif %}
+        		
+        	
+  		   </tr>
+		   {% endfor %}
+       
+    </table>
+
+</div> 
+{% endcomment %}
+
+<script id="source" language="javascript" type="text/javascript"> 
+
+$(document).ready(function() {
+	$(function () {
+    	var d1 = [];
+	        
+		   {% for i in plotpoints %}
+  		   d1.push([{{i.0}}, {{i.1}}]);		   		   
+		   {% endfor %}
+	 
+	    jQuery.plot($("#placeholder"), [{data: d1, lines: { show: true }, threshold: { below: {{objekt.min_stanje}}, color: "rgb(200, 20, 30)" }}], {xaxis: { mode: "time", minTickSize: [24, "hour"] }});
+	}); 
+});
+	</script> 
+
+
+</div>

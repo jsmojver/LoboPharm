@@ -1,0 +1,33 @@
+<!-- <img src="/static/img/form/pills2.png" style="float:left;" /> -->
+<div>
+
+{% include "meds/meds_menu_header.html" %}
+
+<div class="clear space-1x"></div>
+
+{% with sastav=artikal.abda_artikal.sastav.all %}
+                   
+	<table class='dt2'>
+		<tr><th>Redni broj</th><th>Tip tvari</th><th>Generičko ime</th><th>Količina</th><th>Jedinice</th></tr>
+		{% for i in sastav %}
+			<tr><td>{{i.rangnr}}</td><td>{{i.tip_tvari}}</td><td>{{i.naziv_tvari}}</td><td>{{i.menge}}</td><td>{{i.einheit}}</td></tr>
+		{% endfor %}
+	</table>
+
+<div class="clear space-2x"></div>        
+                   
+	<table class='dt2'>		
+		{% for i in sastav %}
+		   <tr><th>{{i.rangnr}}</th><th>{{i.naziv_tvari}} ({{i.tip_tvari}})</th></tr>
+		   {% for j in i.stoff.text.all %}		    
+			 <tr><td>{{j.get_tekst}}</td><td style="text-align:left;">{{j.text|linebreaksbr}}</td></tr>
+		   {% endfor %}
+		{% endfor %}
+	</table>
+
+{% endwith %}
+
+</div>
+
+
+

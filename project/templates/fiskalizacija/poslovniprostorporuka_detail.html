@@ -1,0 +1,38 @@
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url fiskalizacija.pp.list %}">Popis PP poruka</a></li>
+       {% if poslovniprostorporuka.http_status != '200' %}
+       	<li><a href="{% url fiskalizacija.pp.submit poslovniprostorporuka.id %}">Pošalji u PU</a></li>
+       {% endif %}
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+<table class="data-table" style="margin-left: 20px; margin-top: 20px; width: 60%;">
+       <caption>Fiskalizacija - podaci o poslovnom prostoru {{ poslovniprostorporuka.broj_poslovniprostorporukaa }}</caption>
+
+	<tr><td>OIB Tvrtke:</td><td> {{ poslovniprostorporuka.oib_tvrtke }}</td></tr>
+	<tr><td>OIB odgovorne osobe:</td><td> {{ poslovniprostorporuka.oib_odgovornog }}</td></tr>
+	<tr><td>Oznaka poslovnog prostora:</td><td> {{ poslovniprostorporuka.oznaka_poslovnog_prostora }}</td></tr>
+	<tr><td>Radno vrijeme:</td><td> {{ poslovniprostorporuka.radno_vrijeme }}</td></tr>
+	<tr><td>Datum početka primjene:</td><td> {{ poslovniprostorporuka.datum_pocetka_primjene }}</td></tr>
+	<tr><td>Ulica:</td><td> {{ poslovniprostorporuka.ulica }}</td></tr>
+	<tr><td>Kućni broj:</td><td> {{ poslovniprostorporuka.kucni_broj }}</td></tr>
+	<tr><td>Broj pošte:</td><td> {{ poslovniprostorporuka.broj_poste }}</td></tr>
+	<tr><td>Naselje:</td><td> {{ poslovniprostorporuka.naselje }}</td></tr>
+	<tr><td>Općina:</td><td> {{ poslovniprostorporuka.opcina }}</td></tr>
+	<tr><td>Datum i vrijeme:</td><td> {{ poslovniprostorporuka.datum_vrijeme }}</td></tr>
+	<tr><td>UUID:</td><td> {{ poslovniprostorporuka.uuid }}</td></tr>
+	<tr><td>Fiskaliziran:</td><td> {{ poslovniprostorporuka.fiskaliziran }}</td></tr>	
+	<tr><td>Status SOAP zahtjeva:</td><td> {{ poslovniprostorporuka.http_status }}</td></tr>
+	<tr><td>Kriptografski potpis OK:</td><td> {{ poslovniprostorporuka.signature_valid }}</td></tr>
+</table>
+
+<table class="data-table" style="width: 60%; margin-left: 20px; margin-top: 30px;">
+	<caption>Sadržaj komunikacije</caption>
+	<tr><td>Zahtjev poreznoj upravi:</td><td><div style="word-wrap: break-word; width: 500px; "> <pre>{{ poslovniprostorporuka.poruka_zahtjev }} </pre></div></td></tr>
+	<tr><td>Odgovor porezne uprave:</td><td><div style="word-wrap: break-word; width: 500px; "> <pre>{{ poslovniprostorporuka.poruka_odgovor }} </pre></div></td></tr>
+
+</table>
+
+

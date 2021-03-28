@@ -1,0 +1,54 @@
+	<img src="/static/img/devel/cart7.png" style="padding-left: 20px; padding-top: 20px;" />
+
+	<table class="data-table" style="float: right; width: 76%; margin-top:20px;">
+        <caption>Klijent</caption>
+
+	<tr><td>Ime:</td><td style="width:80%;">{{ user.kosarica.klijent }}</td></tr>
+	<tr><td>Adresa:</td><td><a href="javascript:window.open('http://maps.google.com/?q={{ user.kosarica.klijent.adresa }},{{user.kosarica.klijent.grad}},Croatia', '_blank');">{{ user.kosarica.klijent.adresa }}, {{ user.kosarica.klijent.grad }}</td></tr>
+	<tr><td>Poštanski broj:</td><td>{{ user.kosarica.klijent.postanski_broj }} </td></tr>
+	<tr><td>Telefon:</td><td>{{ user.kosarica.klijent.telefon }}</td></tr>
+	<tr><td>Mobitel:</td><td>{{ user.kosarica.klijent.mobitel }}</td></tr>
+	<tr><td>E-mail:</td><td>{{ user.kosarica.klijent.email }}</td></tr>
+	<!-- Tu još ide napomena -->
+	</table>
+
+
+
+<!-- </div>-->
+  
+  
+<div class="clear space-2x"></div>
+
+<table class="data-table" id="kosarica_list">
+
+      <thead>
+        <tr>
+           <th>Naziv artikla</th>
+	   <th>Količina</th>
+	   <th>Jed. cijena</th>
+	   <th>Manipulativni troškovi</th>
+	   <th>Rabat</th>
+	   <th>Napomena</th>
+	   <th>Ukupno</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in user.kosarica.artikli.all %}
+		<tr id="kosarica-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+			<td>{{i.artikal}}</td>
+			<td>{{i.kolicina}}</td>
+			<td>{{i.artikal.cijena}} &euro;</td>
+			<td>{{i.artikal.manipulativni}} &euro;</td>
+			<td></td>
+			<td></td>
+			<td>{{i.ukupna_cijena}} &euro;</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+</table>
+
+

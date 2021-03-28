@@ -1,0 +1,36 @@
+    <div style="width: 100%">
+     <div id='receipt-container' style="width: 35em; border: 1px solid green; font-size: 10px; font-family: receipt; padding: 20px;">        
+	<div style="text-align: center">
+	<img src="/static/img/devel/logo1.png" width="350px;" />
+	<br />
+	{{ vrijeme }}
+	<p class="font-b"> - P O T V R D A - </p>
+	<span>Naručitelj: <u><strong>{{objekt.narucitelj}}</strong></u></span>
+	<br />
+	<span>Datum narudžbe: <u><strong>{{objekt.datum}}</strong></u></span>
+	<br />
+	<br />
+	<pre style="font-size: 0.9em; font-family: receipt;">Lijek                         Kol     Cijena      Iznos</pre>
+	<hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+	{% for i in popis %}
+	<div><pre style="font-size: 0.9em; font-family: receipt;">{{i.0|ljust:"29"}}{{i.1|rjust:"5"}}{{i.2|rjust:"11"}}{{i.3|rjust:"11"}}</pre></div>
+	{% endfor %}
+	<hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+	<div style="text-align: right;"> <p class="font-c"> UKUPNO: {{ukupna_cijena}} &euro; </p> </div>
+	<br />
+	<div> Uplaćen polog: <strong>{{objekt.polog}} &euro;</strong> </div>
+	<div> Pri preuzimanju platiti: <strong>{{platiti}} &euro;</strong> </div>
+	<br />
+	<div> Službenik: <strong>{{objekt.sluzbenik}}</strong></div><br />
+	<div> __________________________________ </div>
+	<div> Potpis </div><br /><br />
+	<img src="/barcode/generate/png/{{objekt.barcode}}" /><br />
+	<div> Hvala na posjeti! </div><br />
+	</div>
+
+     </div>
+    </div>
+
+
+
+

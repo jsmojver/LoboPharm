@@ -1,0 +1,65 @@
+<div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url order.izdavanje.izdaj narudzba.id %}">Izdaj kupcu</a></li>
+       <li><a href="{% url order.izdavanje.zahtjev narudzba.id %}">Zahtjev za izdavanje</a></li>
+       <li><a class="nohijack" href="javascript:void(0);">Odustani</a></li>
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+<div class="clear space-1x"></div>
+
+<div style="background-image: url('/static/img/display2.png'); background-repeat:no-repeat; background-position: 100% 0%; height:500px;">
+
+<div id="brojcanik"> <br /><br />{{narudzba.get_total|eur2hrk}} kn</div>
+
+{% with klijent=narudzba.klijent %}
+
+<table class="data-table" style="float: left; width: 69%; margin-left: 5px; margin-top:10px;"">
+        <caption>Izdavanje narudžbe br. {{narudzba.sifra}}</caption>
+    {% if klijent.tip_klijenta == 1 %} <!-- Fizička osoba -->
+	<tr><td>Ime:</td><td style="width:80%;"><a href="{% url client.view klijent.id %}">{{ klijent.ime }} {{ klijent.prezime }}</a></td></tr>
+	<tr><td>Adresa:</td><td><a class="nohijack" href="javascript:window.open('http://maps.google.com/?q={{ klijent.adresa }},{{klijent.grad}},Croatia', '_blank');">{{ klijent.adresa }}, {{ klijent.postanski_broj }}, {{ klijent.grad }}</td></tr>
+	<tr><td>Zemlja:</td><td>{{klijent.zemlja}}</td></tr>
+	<tr><td>Telefon:</td><td>{{ klijent.telefon }}</td></tr>
+	<tr><td>Mobitel:</td><td>{{ klijent.mobitel }}</td></tr>
+	<tr><td>E-mail:</td><td>{{ klijent.email }}</td></tr>
+	{% else %} <!-- Pravna osoba -->
+	<tr><td>Naziv:</td><td style="width:80%;"><a href="{% url client.view klijent.id %}">{{ klijent.naziv }}</a></td></tr>
+	<tr><td>Adresa:</td><td><a class="nohijack" href="javascript:window.open('http://maps.google.com/?q={{ klijent.adresa }},{{klijent.grad}},Croatia', '_blank');">{{ klijent.adresa }}, {{ klijent.postanski_broj }}, {{ klijent.grad }}</td></tr>
+	<tr><td>Telefon:</td><td>{{ klijent.telefon }}</td></tr>
+	<tr><td>OIB:</td><td>{{ klijent.oib }}, {{ klijent.get_tip_obveznika }}</td></tr>
+	<tr><td>E-mail:</td><td>{{ klijent.email }}</td></tr>
+	<tr><td>Rabat:</td><td>{{klijent.rabat}}</td></tr>		
+	{% endif %}
+	<!-- Tu još ide napomena -->
+</table>
+
+
+{% endwith %}
+
+<table class="data-table" style="width:69%; margin-left:5px; margin-top:10px; float: left;">
+<tr><th>Artikal</th><th>Količina</th><th>Pakiranje</th><th>Jedinična cijena</th><th>Ukupno</th><th></th></tr>
+
+{% for i in artikli %}
+<tr class="red-za-izdavanje" onClick="javascript:izdavanje_toggle_red(this);"><td>{{i.ime}}</td><td>{{i.kolicina}}</td>
+
+
+<td>{% if i.ZoNr %}{{i.std_kolicina}} {{i.jedinice}}{% endif %}</td><td>{{i.jedinicna_cijena}} &euro;</td>
+<td style="text-align: right;">{{i.get_total}} &euro; </td><td></td></tr>    
+{% endfor %}
+<tr><td>Manipulativni troškovi</td><td>1</td><td></td><td></td><td style="text-align: right;">{{ narudzba.troskovi }} &euro;</td><td></td></tr>
+
+<tr style="border-top: 1px solid #BFCFD8;" ><th>Svrha</th><th>Uplaćeno</th><th>Ažurirano</th><th>Djelatnik</th><th>Iznos</th><th></th></tr>
+
+{% for i in narudzba.uplate.all %}
+<tr><td>{{i.get_tip}}</td><td>{{i.created}}</td><td>{{i.modified}} </td><td>{{ i.djelatnik.get_full_name }}</td><td style="text-align: right;">-{{i.iznos}} {{i.valuta.html|safe}}</td><td></td></tr>
+{% endfor %}
+
+<tr><td></td><td></td><td></td><td>Za platiti:</td><td style="text-align: right;"><strong>{{narudzba.get_total}} &euro; </strong></td><td></td></tr>    
+    
+</table>
+
+</div>
+
+
+<a href="{% url order.izdavanje narudzba.id %}">Izdavanje</a>

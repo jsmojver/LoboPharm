@@ -1,0 +1,45 @@
+{% with posiljkaLijekId=object_list.0.posiljka.id lijekId=object_list.0.lijek.id %}
+<div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url depo.posiljka.detail posiljkaLijekId %}"><< Povratak</a></li>
+       <li><a href="javascript:ispisi_naljepnice({{lijekId}});" class="nohijack">Ispiši naljepnice</a></li>
+    </ul> 
+    <div class="insideTabsMenuArrow"></div>
+</div>
+<div class="clear space-1x"></div>
+
+<table class="data-table" id="posiljka_prikaz">
+
+    <caption>Kutije lijeka</caption>
+      <thead>
+        <tr>
+      	   <th>Bar kod</th>
+           <th>Uneseno</th>
+           <th>Izmijenjeno</th>
+           <th>Status</th>
+           <th>Ime lijeka</th>
+           <th>Naljepnica</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+	{% with lijek_ime=object_list.0.lijek.lijek.naziv %}
+   	{% for i in object_list %}
+  	<tr {% if i.status > 3 %}style='opacity:.30;'{%endif%}>
+  	  <td><a href="{% url depo.posiljka.kutija.events i.id %}">{{i.id}}</a></td>
+  	  <td>{{i.created}}</td>
+  	  <td>{{i.modified}}</td>
+  	  <td>{{i.ime_statusa}}</td>
+  	  <td>{{lijek_ime}}</td>
+  	  <td><a class="nohijack" href="javascript:ispisi_jednu_naljepnicu({{i.id}}, '{{lijek_ime}}', '{% url depo.posiljka.detail posiljkaLijekId %}');">{% if i.printed == 1 %}Otisnuta{% else %}Nije otisnuta{% endif%}</a></td>
+  	</tr>
+  	{% endfor %}	                 
+	
+	{% endwith %}
+  </tbody>
+	
+	{% url depo.posiljka.kutija.detail object_list.0.lijek.id as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+{% endwith %}

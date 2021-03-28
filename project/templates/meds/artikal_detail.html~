@@ -1,0 +1,159 @@
+<!-- <img src="/static/img/form/pills2.png" style="float:left;" /> -->
+<div>
+
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       {% if artikal.ATCCode %} 
+         <li><a href="{% url meds.alternative artikal.ATCCode %}">Alternative</a></li>
+         <li><a href="{% url meds.similar artikal.ATCCode %}">Ista grupa</a></li>
+       {% endif %}
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+<div class="clear space-1x"></div>
+
+<h3> Pregled artikla </h3>
+                    <div class="content-66-left-wrapper" style="height:190px;">
+                      <h2 class="content-box-header"><span>Artikal</span></h2>
+                      <div class="content-wrapper">
+			<table class="data-table">
+			<tr><td>Naziv artikla:</td><td><strong>{{ artikal.name }}</strong></td></tr>
+			<tr><td>Količina:</td><td><strong>{{ artikal.kolicina }} {{ artikal.jedinice }}</strong></td></tr>
+			<tr><td>Maloprodajna cijena: </td><td><strong>{{ artikal.cijena }} &euro;</strong></td></tr>
+			<tr><td>Manipulativni troškovi: </td><td><strong>6 &euro;</strong></td></tr>
+			</table>
+                      </div>
+                    </div>
+  
+                    <div class="content-30-right-wrapper centralno-poravnanje" style="height:190px;">
+                      <h2 class="content-box-header"><span>Pakiranje</span></h2>
+                      <div class="content-wrapper">
+			<table>
+			<tr><td><img src="/static/img/box_dimensions_diagram.jpg" style="width:96px;height:96px;" /></td><td><img src="/static/img/vaga.png" style="width:96px;height:96px;" /></td></tr>
+                       {% if artikal.dimenzije.id %}
+			<tr><td><strong>{{ artikal.dimenzije.duljina }}</strong> x <strong>{{ artikal.dimenzije.sirina }}</strong> x <strong>{{ artikal.dimenzije.visina }}</strong> mm</td><td><strong>{{ artikal.dimenzije.masa }}</strong> g</td></tr>
+  		       {% else %}
+			<tr><td><strong>?</strong> x <strong>?</strong> x <strong>?</strong> mm</td><td><strong>?</strong> g</td></tr>
+		       {% endif %}
+
+			</table>
+
+                      </div>
+                    </div>
+  
+                    <div class="clear space-2x"></div>
+  
+                    <div class="content-30-left-wrapper">
+                      <h2 class="content-box-header"><span>Dobavljač</span></h2>
+                      <div class="content-wrapper">
+<div style="text-align: center; padding-bottom: 10px;"> {% if artikal.dobavljac.ima_logo %} <img src="{{artikal.dobavljac.fotka}}" /> {% endif %} </div>                        
+
+<table class='dobavljac'> <tr><td>Naziv: </td><td><strong>{{ artikal.dobavljac.naziv }}</strong></td></tr>
+	<tr><td></td><td>{{ artikal.dobavljac.dodatak_nazivu }}</td></tr>
+ 	<tr><td>Tip:</td><td>{{ artikal.dobavljac.tip_naziv }}</td></tr>
+	{% for i in artikal.dobavljac.adrese.all %}
+	  <tr class='dobavljac-prored'><td></td><td></td></tr>
+  	  <tr><td></td><td><h4>{{i.tip.opis}}</h4></td></tr>
+	  {% for j in i.broj %}
+  		<tr><td>{{j.telefon_human_readable}}:</td><td>{{ j.broj }}</td></tr>
+	  {% endfor %}
+		{% if i.distribucija %} <tr><td></td><td>{{ i.distribucija }}</td></tr> {% endif %}
+		{% if i.ulica %} <tr><td>Ulica: </td><td>{{i.ulica}}</td></tr> {% endif %}
+		{% if i.mjesto %}<tr><td>Mjesto: </td><td> {{i.postanski_broj}} {{i.mjesto}}</td></tr> {% endif %}
+	{% endfor %}
+	</table>
+	
+
+                      </div>
+                    </div>
+   
+                    <div class="content-30-middle-wrapper centralno-poravnanje">
+                      <h2 class="content-box-header"><span>ATC klasifikacija: {{ artikal.ATCCode }}</span></h2>
+			<table>
+  			   <tr><td></td><td>ATC kategorien</td></tr>
+			{% if artikal.ATCCode %}
+			  {% for i in artikal.ATC.tablica %}
+  			   <tr><td></td><td><img src="/static/img/down.png" /></td></tr>
+  			   <tr><td>{{i.0}}</td><td>{{i.1}}</td></tr>
+			  {% endfor %}
+			{% endif %}
+			</table>
+                      <div class="content-wrapper">
+                      </div>
+                    </div>
+ 
+                    <div class="content-30-right-wrapper">
+                      <h2 class="content-box-header"><span>Identifikacija tablete</span></h2>
+                      <div class="content-wrapper" style="text-align: center;">
+{% if artikal.identifikacija.fotka %} 
+	<img src="/fotke/{{artikal.identifikacija.fotka}}" style="border:1px solid #021a40; padding: 1px; margin-bottom: 10px;" />
+{% endif %}
+						<table class="data-table">                        
+{% if 1 %}
+<tr><td>Širina:</td><td>{{artikal.identifikacija.D}} mm</td></tr>
+<tr><td>Visina:</td><td>{{artikal.identifikacija.H}} mm</td></tr>
+<tr><td>Duljina:</td><td>{{artikal.identifikacija.L}} mm</td></tr>
+<tr><td>Masa:</td><td>{{artikal.identifikacija.G}} mg</td></tr>
+
+<tr><td>Natpis:</td><td>{{artikal.identifikacija.PraegV}}</td></tr>
+{% if artikal.identifikacija.PraegR %}<tr><td>Natpis straga:</td><td>{{ artikal.identifikacija.PraegR }}</td></tr>  {% endif %}
+<tr><td>Boja:</td><td>{{artikal.identifikacija.boja.naziv}}</td></tr>
+<tr><td>Tip:</td><td>{{artikal.identifikacija.tip.naziv}}</td></tr>
+{% endif %}
+			</table>
+
+
+                      </div>
+                    </div>
+                    <div class="clear space-2x"></div>
+
+
+<table class='data-table'>
+
+
+
+
+
+
+
+
+
+
+<tr><td>Na skladištu: </td><td>{{ artikal.stanje }}</td></tr>
+</table>
+
+<!-- Srediti, ovo je copypaste -->
+<table class="data-table" id="dodaj_posiljku">
+<div class="bg-lightgray border-darkgray form-wrapper" id="sample-form-wrapper-2">
+            
+      <img src="/static/img/form/pill.png" style="float: left; margin-bottom: -50px; margin-left: -10px;" />
+      <caption style="padding-left: 100px" >Naruči artikal</caption>
+            
+      <thead>
+        <tr>
+	   <th>Količina</th>
+           <th>Manipulativni troškovi</th>
+	   <th>Cijena</th>
+	   <th>Ukupno</th>
+        </tr>
+      </thead>
+
+	 <tbody>	
+
+		  <tr id="dodavanje_artikli_red">
+			<td style="padding:0px;"><input style="width: 98%; border: 0px;" class="text-box paket-id" type="hidden" readonly="readonly" name="lijek" id="kosarica_id_lijek" /></td> 
+       			<td style="padding:0px;"><input style="width: 98%; border: 0px;" class="autocomplete text-box" type="text" name="naziv" id="kosarica_id_naziv" /></td>
+			<td style="padding:0px;"><input style="width: 98%; border: 0px;" class="text-box" type="text" name="kolicina" id="kosarica_id_kolicina" /></td>
+			<td><input type="hidden" name="posiljka" value="1" id="id_posiljka" /><a href="#" id="gumb_u_kosaricu">Dodaj</a></td>
+			
+		  </tr>
+                      
+        </tbody>
+</div>
+</table>
+<!-- do tud -->
+
+</div>
+
+
+

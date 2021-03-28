@@ -1,0 +1,16 @@
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url fiskalizacija.racun.list %}">Popis računa</a></li>
+       <li><a href="{% url fiskalizacija.racun.detalji racun.id %}">Aktivni račun</a></li>
+       <li><a href="{% url fiskalizacija.racun.html racun.id %}">Pretpregled ispisa</a></li>
+       <li><a href="javascript:ispisi_racun({{racun.id}});" class="nohijack">Ponovno ispiši</a></li>
+       <!-- {% if not racun.jir  %} <li><a href="{% url fiskalizacija.racun.dostavi_naknadno racun.id %} ">Naknadno dostavi</a></li> {% endif %} -->
+       {% if not racun.storno and not racun.stornira_racun %} <li><a href="javascript:storniraj({{racun.id}});" class="nohijack">Storniraj</a></li> {% endif %}
+       <li><a class="nohijack" href="{% url fiskalizacija.report.pdf %}">Dnevno izvješće</a></li>
+       {% if perms.is_admin %} 
+	<!-- Debug --> 
+       {% endif %}
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+

@@ -1,0 +1,45 @@
+<div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url fiskalizacija.pp.add %}">Novi zahtjev PU</a></li>
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+<table class="data-table" id="popis-pp-poruka">
+
+      <caption>Poslovni prostor poruke (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+		   <th>UUID</th>
+           <th>Ulica</th>
+           <th>Kućni broj</th>
+           <th>Naselje</th>
+           <th>Datum i vrijeme</th>
+           <th>Prijavljen PU</th>
+           <th>HTTP Status</th>
+           <th>Potpis OK</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="klijent-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+   			<td><a href="{% url fiskalizacija.pp.view i.id %}">{{i.uuid}}</a></td>
+			<td>{{i.ulica}}</td>
+ 		    <td>{{i.kucni_broj}}</td>
+			<td>{{i.naselje}}</td>
+			<td>{{i.datum_vrijeme}}</td>
+			<td>{{i.fiskaliziran}}</td>
+		 	<td>{{i.http_status}}</td>
+                        <td>{% if i.signature_valid %} <img src="/static/img/devel/tick2.png" /> {% else %} <img src="/static/img/devel/iks.png" />{% endif %} </td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url fiskalizacija.pp.view as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>

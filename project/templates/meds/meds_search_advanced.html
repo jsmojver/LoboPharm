@@ -1,0 +1,55 @@
+<table class="data-table" id="search_rezultati">
+
+      <caption>Rezultati pretrage (str. {{ page_obj.number }} / {{ paginator.num_pages }}) </caption>
+
+      <thead>
+        <tr>
+           <th>Ime</th>
+	       <th>Količina</th>
+           <th>Jedinice</th>
+           <th>Nabavna</th>
+           <th>Prodajna</th>
+           <th>ATC kod</th>
+           <th>Dobavljač</th>
+           <th></th>
+           <th></th>
+           <th></th>
+           <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in stranica.object_list %}
+  		<tr class="{% cycle 'odd' 'even' %}">
+			<td><a href="{% url meds.view i.id %}" {% if i.verkehrskz == 11 %} style="text-decoration:line-through;" {% endif %}>{{i.name}}</a></td>
+			<td>{{i.kolicina}} </td>
+			<td>{{i.jedinice}}</td>
+			<td style="text-align: right;">{{i.ApoEk|addpoint}} &#8364;</td>
+			<td style="text-align: right;">{{i.ApoVk|addpoint}} &#8364;</td>
+			<td>{{i.ATCCode}}</td>
+			<td>{{i.kratica_dobavljaca}}</td>
+                        <td>{% if i.ApoKz == 1 %} <img src="/static/img/recept4.png" /> {% endif %}</td>
+                        <td>{% if i.BtmFl %} <img src="/static/img/opijat.png" /> {% endif %}</td>
+                        <td>{% if i.VeterinaerFl %} <img src="/static/img/dog2.png" /> {% endif %}</td>
+                        <td>{% if i.verkehrskz == 1 %} <img src="/static/img/icon_av.png" style="width:24px;"/> {% endif %}</td>
+
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+         <div class="table-right-1">
+                      <div></div>
+                      {% if page_obj.has_previous %} <a class="table-button paginator-lijevo" href="{{adresa}}&page={{page_obj.previous_page_number}}">Prethodna</a> {% endif %}
+
+                      {% for i in page_obj.digg_page_range %}
+                         {% if not i %}<div class="pagination-dots">...</div>{% else %}<a class="page-number {% if i == page_obj.number %} page-selected {% endif %}" href="{{adresa}}&page={{i}}" >{{i}}</a>{% endif %}
+                      {% endfor %}
+                      {% if page_obj.has_next %} <a class="table-button paginator-desno" href="{{adresa}}&page={{page_obj.next_page_number}}">Sljedeća</a> {% endif %}
+
+         </div>
+
+</table>
+<!-- </div> -->
+

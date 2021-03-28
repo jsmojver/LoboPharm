@@ -1,0 +1,293 @@
+{% extends "admin/base/base.html" %}
+
+{% block extra_head %}
+    <link href="/static/css/admin.css" rel="stylesheet" type="text/css" />
+    {% if include_datepicker %}
+        {% set include_jquery_ui = True %}
+    {% endif %}
+    {% if include_tinymce %}
+        <script src="/static/js/tinymce/jquery.tinymce.js" type="text/javascript"></script>
+    {% endif %}
+    {% if include_file_uploader %}
+        <script type="text/javascript" src="/static/js/fileuploader.js"></script>
+        <link href="/static/css/fileuploader.css" rel="stylesheet" type="text/css" />
+    {% endif %}
+    {% if include_jquery_ui %}
+        <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js"></script>
+        <link href="/static/css/ui/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+    {% endif %}
+    {% if include_cookies or include_list_filter %}
+        <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    {% endif %}
+    {% if include_fancybox %}
+        <script type="text/javascript" src="/static/js/jquery.fancybox.pack.js"></script>
+        <link href="/static/css/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+    {% endif %}
+    {% if include_sprintf %}
+        <script type="text/javascript" src="/static/js/sprintf-0.7-beta1.js"></script>
+    {% endif %}
+    {% if include_svg %}
+        <script src="/static/css/svg/svg.js" data-path="/static/css/svg"></script>
+        <script type="text/javascript" src="/static/js/floorplan_lib.js"></script>
+    {% endif %}
+    {% if include_qtip %}
+        <script type="text/javascript" src="/static/js/jquery.qtip.min.js"></script>
+        <link href="/static/css/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+    {% endif %}
+{% endblock %}
+
+
+
+{% block body_content %}
+
+    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Apodata</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li{% if active_page == "frontpage" %} class="active"{% endif %}><a href="/administrator/">Početna</a></li>
+                    <li class="dropdown{% if active_page == "meds" %} active{% endif %}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lijekovi <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/administrator/meds/njemacka/">Njemačko tržište</a></li>
+                            <li><a href="/administrator/meds/ostala_trzista/">Ostala tržišta</a></li>
+                            <li><a href="/administrator/meds/depo/">Depo</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/administrator/meds/trzista/">Tržišta</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="nav navbar-right">
+                    <p class="navbar-text">Prijavljen kao: <strong>{{ request.user.username }}</strong> ({{ request.user.email }})</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="container wrapper">
+        {% block main_content %}{% endblock %}
+    </div>
+
+
+    {% if include_list_controls %}
+        <div class="modal fade" id="dlg_confirm" tabindex="-1" role="dialog" aria-labelledby="dlg_confirm_title" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="dlg_confirm_title">Potvrda</h4>
+                    </div>
+                    <div class="modal-body">
+                        Izvršiti operaciju na označenim objektima?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+                        <button type="button" id="cmd_exec" class="btn btn-primary">Nastavi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+
+
+        $(function()
+        {
+            $(".dummy_link").click(
+                function()
+                {
+                    return false;
+                }
+            );
+
+            $(".hover_row").mouseenter(
+                function()
+                {
+                    $(this).addClass("active");
+                }
+            ).mouseleave(
+                function()
+                {
+                    $(this).removeClass("active");
+                }
+            );
+
+            $("input").focus(
+                function()
+                {
+                    $(this).addClass("input_focused");
+                }
+            ).blur(
+                function()
+                {
+                    $(this).removeClass("input_focused");
+                }
+            );
+
+            $("textarea").focus(
+                function()
+                {
+                    $(this).addClass("textarea_focused");
+                }
+            ).blur(
+                function()
+                {
+                    $(this).removeClass("textarea_focused");
+                }
+            );
+
+            $(".button").hover(
+                function()
+                {
+                    $(this).addClass("button_hover");
+                }, function()
+                {
+                    $(this).removeClass("button_hover");
+                }
+            );
+
+            $("a").each(
+                function(i)
+                {
+                    var rel = $(this).attr("rel");
+                    if ($(this).attr("href") != "" && (rel == "external"))
+                        $(this).attr("target", "_blank");
+                }
+            );
+
+            {% if include_list_controls %}
+                $("#select_all").click(
+                    function()
+                    {
+                        $(".cmd_chx").prop("checked", true);
+                        $("#operation").trigger("change");
+                        return false;
+                    }
+                );
+
+                $("#deselect_all").click(
+                    function()
+                    {
+                        $(".cmd_chx").prop("checked", false);
+                        $("#operation").trigger("change");
+                        return false;
+                    }
+                );
+
+                $(".cmd_chx").click(
+                    function()
+                    {
+                        $("#operation").trigger("change");
+                    }
+                );
+
+                $("#operation").change(
+                    function()
+                    {
+                        $("#cmd_exec_confirm").prop("disabled", $(".cmd_chx:checked").length == 0 || $(this).val() == "none");
+                    }
+                );
+
+                $("#cmd_exec").click(
+                    function()
+                    {
+                        var ids = [];
+                        $(".cmd_chx:checked").each(
+                            function(index)
+                            {
+                                ids.push($(this).next(".item_id").val());
+                            }
+                        );
+
+                        $("#selected_items").val(ids.join(","));
+                        $("#fm").submit();
+                        $(this).dialog("close");
+
+                        return false;
+                    }
+                );
+
+                $("#operation").trigger("change");
+            {% endif %}
+
+
+            {% if include_list_filter %}
+                $(".apply_filter_on_change").change(
+                    function(event)
+                    {
+                        set_filter();
+                        document.location = "{{ request.path }}";
+                        return false;
+                    }
+                );
+
+                $(".apply_filter_on_click").click(
+                    function(event)
+                    {
+                        set_filter();
+                        document.location = "{{ request.path }}";
+                        return false;
+                    }
+                );
+
+                $(".apply_filter_on_enter").keydown(
+                    function(event)
+                    {
+                        if (event.keyCode == "13")
+                        {
+                            set_filter();
+                            document.location = "{{ request.path }}";
+                            return false;
+                        }
+                    }
+                );
+
+                $(".clear_filter").click(
+                    function(event)
+                    {
+                        clear_filter();
+                        document.location = "{{ request.path }}";
+                        return false;
+                    }
+                );
+            {% endif %}
+
+
+            {% if include_datepicker %}
+                $(".datepicker").datepicker(
+                    {
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        dateFormat: "dd.mm.yy",
+                        monthNames: ["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac"],
+                        firstDay: 1,
+                        dayNames: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"],
+                        dayNamesShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
+                        dayNamesMin: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"]
+                    }
+                );
+            {% endif %}
+
+            {% if include_qtip %}
+                $(".tip").qtip();
+            {% endif %}
+        });
+
+    /* ]]> */
+    </script>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+<table class="data-table" id="posiljka_dodavanje_prikaz">
+
+    <caption>Artikli</caption>
+      <thead>
+        <tr>
+      	   <th>Naziv</th>
+           <th>Cijena</th>
+           <th>Komada</th>
+           <th>Ukupni iznos</th>
+           <th>Zadužio</th>
+           <th>Depo</th>
+           <th></th>
+
+        </tr>
+      </thead>
+
+	 <tbody>
+ 	{% for i in posiljka.lijekovi.all %}
+	<tr>
+	  <td><a href="{% url depo.posiljka.kutija.detail i.id %}">{{i.lijek.naziv}}</a></td>
+	  <td>{{i.lijek.cijena}} &euro;</td>
+	  <td>{{i.kolicina}}</td>
+	  <td>{{i.ukupno}} &euro;</td>
+	  <td>{{user.get_full_name}}</td>
+	  <td>{{i.lijek.depo.naziv}}</td>
+	  <td></td>
+	</tr>
+	{% endfor %}	                 
+	
+	<tr><td></td><td></td><td><strong>{{posiljka.broj_artikala}}</strong></td><td><strong>{{posiljka.vrijednost}} &euro;</strong></td><td></td><td></td><td></td></tr>
+        </tbody>
+	
+
+</table>
+
+

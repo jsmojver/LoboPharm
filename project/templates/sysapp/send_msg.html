@@ -1,0 +1,13 @@
+     <img src="/static/img/devel/korisnik5.png" style="float: left; margin-bottom: -50px; margin-left: 60px; width: 96px;" />
+<div style="border: 1px dotted gray; width: 450px; box-shadow: 8px 8px 5px #ddd; border-radius: 15px; padding: 30px; margin-top: 30px; margin-left: 85px;" >
+        <form id="forma-slanje-poruke" method="post" action="{% url sysapp.message.send %}" class='modelforms'>
+                <table>
+                {{ form.as_table }}
+                </table>
+                <div style="text-align: right;">
+                  <input class="modelforms-gumb" type="image" src="/static/img/devel/add2.png" style="width: 64px; border: 0px; margin-right: 20px;" />
+                </div>
+        </form>
+        <div class="clear space-2x" style="height: 1px;"></div>
+</div>
+

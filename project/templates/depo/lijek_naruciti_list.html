@@ -1,0 +1,41 @@
+<!-- <div id="mainTab-6"> -->
+<table class="data-table" id="popis_lijekova">
+
+
+      <caption>Potrebno je naručiti (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>ID</th>
+	   <th>Naziv</th>
+           <th>Cijena</th>
+           <th>Depo</th>
+           <th>Stanje</th>
+           <th>Minimalna zaliha</th>
+           <th></th>
+           <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="lijekovi-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+			<td>{{i.id}}</td>
+			<td>{{i.naziv}}</td>
+			<td>{{i.cijena}} &#8364;</td>
+			<td>{{i.depo}}</td>
+			<td>{{i.stanje}}</td>
+			<td>{{i.min_stanje}}</td>
+		 	<td>Uredi</td>
+		 	<td>{% if i.ima_dovoljno %}{% else %} <img src="/static/img/table/usklicnik.png" style="width:16px;" /> {%endif%}</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	{% url depo.zalihe.nedostaje as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+<!-- </div> -->

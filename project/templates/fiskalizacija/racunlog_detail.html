@@ -1,0 +1,25 @@
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url fiskalizacija.racun.detalji racunlog.racun_id %}">Povratak na račun</a></li>
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+<table class="data-table" style="width: 60%; margin-left: 20px; margin-top: 30px;">
+	<caption>{{ racunlog.tip_hr }} ({{racunlog.http_status}}) - [{{ racunlog.vrijeme }}] - {{racunlog.uuid}} </caption>
+	<tr><td>Vrijeme:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.vrijeme }} </pre></div></td></tr>
+	<tr><td>Trajanje:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.trajanje }} </pre></div></td></tr>
+	<tr><td>HTTP Status:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.http_status }} </pre></div></td></tr>
+	<tr><td>UUID:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.uuid }} </pre></div></td></tr>
+
+	<tr><td>Vrijeme slanja:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.vrijeme_slanja }} </pre></div></td></tr>
+	<tr><td>Potpis ispravan:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.signature_valid }} </pre></div></td></tr>
+	
+        <tr><td>Digest:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.digest }} </pre></div></td></tr>
+	<tr><td>Signature:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.signature }} </pre></div></td></tr>
+
+	<tr><td>Zahtjev poreznoj upravi:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.poruka_zahtjev }} </pre></div></td></tr>
+	<tr><td>Odgovor porezne uprave:</td><td><div style="word-wrap: break-word; width: 700px; "> <pre>{{ racunlog.poruka_odgovor }} </pre></div></td></tr>
+</table>
+
+

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>My Title</title>
+        <style type="text/css">
+            @page {
+                size: {{ pagesize }};
+                margin: 1cm;
+	        @frame header { 
+	            -pdf-frame-content: headerContent; 
+	            top:0.5cm; 
+	            margin-left: 9cm; 
+	            margin-right: 1cm; 
+	            height:6.5cm;
+		}
+                @frame footer {
+                    -pdf-frame-content: footerContent;
+                    bottom: 0cm;
+                    margin-left: 9cm;
+                    margin-right: 9cm;
+                    height: 1cm;
+                }
+             } 
+	    @font-face {
+		font-family: DroidSans; 
+		src: url(/var/www/diocles/templates/rml/Georgia.ttf);
+		}
+	    td,div { font-family: DroidSans; }
+	    table { border-top: 1px solid lightgrey; border-collapse:none; padding-top: 2px;}
+
+        </style>
+    </head>
+    <body>
+        <div id="headerContent">
+            {%block page_head%}
+            {%endblock%}
+        </div>
+		<div style="font-size: 18px; text-align:center;">
+	               Zaključak blagajne, {{datum}}
+		</div>
+		<div style="font-size: 14px; text-align:center;">
+		       Razdoblje: {{ interval.created__min }} - {{ interval.created__max }}<br />
+		       Ukupno: {{ euri }} EUR, {{ kune }} kn<br />
+		       Djelatnica: {{ djelatnik.get_full_name }}<br />
+		</div>
+	<hr />
+        <div>
+	    <table>
+		  <tr>
+		       <td>Tip</td>
+		       <td>Iznos</td>	
+		       <td>Vrijeme</td>	
+		       <td>Klijent</td>	
+		       <td>Naručeno/broj</td>	
+		       <td>Napomena</td>	
+		  </tr>
+            {% for j in uplate %}
+		  <tr>
+		       <td>{{j.get_tip }}  </td>
+		       <td>{{j.iznos}} {{j.valuta.kratica}}</td>	
+		       <td>{{j.created.time}}</td>	
+		       <td>{{j.klijent.get_full_name}}</td>	
+		       <td>{{j.narudzba.created.date}} / {{ j.narudzba.broj }}</td>	
+		       <td width=150px>{{j.napomena}}</td>	
+		  </tr>
+            {% endfor %}
+	    </table>
+        </div>
+	<hr />
+
+
+        <div id="footerContent">
+            {%block page_foot%}
+                Stranica <pdf:pagenumber>
+            {%endblock%}
+        </div>
+    </body>
+</html>
+

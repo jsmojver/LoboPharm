@@ -1,0 +1,34 @@
+<div class="clear space-1x"></div>
+
+<table class="data-table" id="posiljka_prikaz">
+
+    <caption>Na skladištu bi trebalo biti {{paginator.count}} lijekova</caption>
+      <thead>
+        <tr>
+      	   <th>Šifra</th>
+           <th>Uneseno</th>
+           <th>Izmijenjeno</th>
+           <th>Status</th>
+           <th>Ime lijeka</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+	
+   	{% for i in object_list %}
+  	<tr {% if i.nedostaje %}style='opacity:.50;'{%endif%}>
+  	  <td><a href="{% url depo.posiljka.kutija.events i.kutija.id %}">{{i.kutija.id}}</a></td>
+  	  <td>{{i.created}}</td>
+  	  <td>{{i.modified}}</td>
+  	  <td>{{i.kutija.ime_statusa}}</td>
+  	  <td>{{i.kutija.lijek.lijek.naziv}}</td>
+  	</tr>
+  	{% endfor %}	                 
+	
+	
+  </tbody>
+	
+	{% url depo.inventura.detail object_list.0.inventura_id as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>

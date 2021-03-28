@@ -1,0 +1,21 @@
+<!-- <img src="/static/img/form/pills2.png" style="float:left;" /> -->
+<div>
+
+{% include "meds/meds_menu_header.html" %}
+
+<div class="clear space-1x"></div>
+
+{% with tekstovi=artikal.abda_artikal.tekstovi.all %}
+                   
+	<table class='dt2'>
+		<tr><th>Tip</th><th>Tekst</th></tr>
+		{% for i in tekstovi %}
+			{% if i.tekst %}<tr><td>{{i.get_tip}}</td><td style="text-align: left;">{{i.tekst|linebreaksbr}}</pre></td></tr>{% endif %}
+		{% endfor %}
+	</table>
+
+{% endwith %}
+</div>
+
+
+

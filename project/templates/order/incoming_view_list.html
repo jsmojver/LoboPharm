@@ -1,0 +1,52 @@
+<table class="data-table">      	   		  
+      <caption> U dolasku  (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>Ime</th>
+		   <th>Klijent</th>           
+           <th>Količina</th>
+           <th>Jedinice</th>
+           <th>Status</th>
+           <th>Zabilježba</th>
+           <th>Naručio</th>
+           <th>Datum</th>
+           <th>Jedinična cijena</th>
+	   <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr class="{% cycle 'odd' 'even' %}">
+   		<td><a href="{% url order.view i.narudzba.id %}">{{i.ime}}</a></td> 			
+		<td>
+			<a href="{% url client.view i.narudzba.klijent.id %}">
+				{% if i.narudzba.klijent.tip_klijenta == 1 %}
+					{{i.narudzba.klijent}}
+				{% else %}
+					{{i.narudzba.klijent.naziv}}
+				{% endif %}   		   				
+			</a>
+		</td> 		
+		<td>{{i.kolicina}}</td>
+		<td>{{i.jedinice}}</td>
+		<td>{{i.get_status}}</td>
+		<td>{{i.narudzba.zabiljezba|truncatewords:4}}</td>
+		<td>{{i.narucio}}</td>
+		<td>{{i.created}}</td>
+		<td>{{i.jedinicna_cijena}} &euro;</td>
+		<td>
+			<a href="{% url order.artikal.zaprimi i.id 0 %}">Zaprimi</a>
+			<!-- <a href="{% url client.edit i.id %}">Storniraj</a> -->
+		</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url order.incoming.view as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>

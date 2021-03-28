@@ -1,0 +1,79 @@
+{% comment %}
+{{ form }}
+{% endcomment %}
+
+<table class="data-table" id="dodaj_posiljku">
+<div class="bg-lightgray border-darkgray form-wrapper" id="sample-form-wrapper-2">
+            
+	<form method="post" action="/ajax/paket/kosarica/{{posiljka.id}}/" id="dodavanje_artikli_depo">
+
+	<input type="hidden" name="lijekovi-TOTAL_FORMS" value="30" id="id_lijekovi-TOTAL_FORMS" /><input type="hidden" name="lijekovi-INITIAL_FORMS" value="0" id="id_lijekovi-INITIAL_FORMS" /><input type="hidden" name="lijekovi-MAX_NUM_FORMS" id="id_lijekovi-MAX_NUM_FORMS" />
+
+      <img src="/static/img/form/kutija.png" style="float: left; margin-bottom: -50px; margin-left: 10px;" />
+      <caption style="padding-left: 80px" >Dodavanje pošiljke (br. {{posiljka.id}} od {{posiljka.datum.date}})</caption>
+            
+      <thead>
+        <tr>
+	   <th style="width: 50px;"></th>
+           <th>Lijek</th>
+	   <th>Količina</th>
+	   <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>	
+
+		  <tr id="dodavanje_artikli_red">
+			<td style="padding:0px;"><input style="width: 88%; border: 0px; padding: 10px 0 10px 0;" class="text-box paket-id" type="hidden" readonly="readonly" name="lijek" id="kosarica_id_lijek" /></td> 
+       			<td style="padding:0px;"><input style="width: 88%; border: 0px; padding: 10px;" class="autocomplete text-box" type="text" name="naziv" id="kosarica_id_naziv" /></td>
+			<td style="padding:0px;"><input style="width: 88%; border: 0px; padding: 10px;" class="text-box" type="text" name="kolicina" id="kosarica_id_kolicina" /></td>
+			<td><input type="hidden" name="posiljka" value="1" id="id_posiljka" /><a href="#" id="gumb_u_kosaricu">Dodaj</a></td>
+			
+		  </tr>
+                      
+        </tbody>
+</div>
+</table>
+
+	<!-- <input type="submit" value="Unesi" name="gumb_dodaj_posiljku" /> -->
+
+	</form>
+
+<div class="clear space-2x"></div>
+
+<div id="posiljka_o_lijeku"></div>
+
+<div class="clear space-2x"></div>
+
+<div id="posiljka_dodavanje_container">
+{% include "depo/posiljka_detail.html" %}
+</div>
+
+<script type="text/javascript">
+$('.autocomplete').autocomplete({  
+          		source: "/autocomplete",
+			minLength: 3,
+			select: function( event, ui ) {
+  			  // ui.item.value = ui.item.id + ' ' + ui.item.label
+			  $(this).parent().prev().children('.paket-id').val(ui.item.id); // ovo bolje rijesiti sa direktnim ID-om jer je samo jedna takvo polje za dodavanje
+                          /* console.log(ui.item.value); */
+			  $('#posiljka_o_lijeku').load('/ajax/izdavanje/olijeku/'+ui.item.id);
+			}
+        });
+
+function reload_container() { 	   $('#posiljka_dodavanje_container').load('/ajax/paket/kosarica/{{posiljka.id}}/');   }
+
+$('#gumb_u_kosaricu').bind('click', function(event) {
+    $.post('/ajax/paket/kosarica/{{posiljka.id}}/', { lijek: $('#kosarica_id_lijek').val(), kolicina: $('#kosarica_id_kolicina').val(), posiljka: {{posiljka.id}} },
+      function( data ) {	   
+	   reload_container();
+	   $('#dodavanje_artikli_red input').map(function() {  $(this).val(''); });
+	   if(data!='OK') $('#posiljka_o_lijeku').html('<div><strong>Nije moguće dodati artikal jer: </strong></div>' + data);
+      }
+    );
+   });
+
+        
+</script>
+
+

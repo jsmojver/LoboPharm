@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="" />
+
+    <title>eLjekarna</title>
+
+    <link rel="stylesheet" href="/static/css/general.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/calendar.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/message.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/form.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/wysiwyg.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/jquery.gritter.css" type="text/css" media="screen" />
+    
+    <!-- <link rel="stylesheet" href="/static/css/jquery-ui-1.8.20.custom.css" type="text/css" media="screen" /> --> 
+    <!--[if IE ]><link rel="stylesheet" href="/static/css/ie.css" type="text/css" media="screen" /><![endif]-->
+    <!--[if IE 6]><link rel="stylesheet" href="/static/css/ie6.css" type="text/css" media="screen" /><![endif]-->
+    <!--[if IE 7]><link rel="stylesheet" href="/static/css/ie7.css" type="text/css" media="screen" /><![endif]-->
+
+    <script type="text/javascript" SRC="/static/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" SRC="/static/js/jquery-ui-1.8.16.custom.min.js"></script>
+    <script type="text/javascript" SRC="/static/js/jquery.bpopup-0.7.0.min.js"></script>
+    <script type="text/javascript" SRC="/static/js/jquery.gritter.min.js"></script>
+    <!-- <script type="text/javascript" SRC="/static/js/jquery.tablesorter.min.js"></script> -->
+    <script type="text/javascript" SRC="/static/js/jquery.hijack.js"></script>
+    <script type="text/javascript" SRC="/static/js/jquery.wysiwyg.js"></script>
+    <script type="text/javascript" SRC="/static/js/onload-index.js"></script>
+    <script type="text/javascript" SRC="/static/js/diocles.js?q={{randint}}"></script>
+    
+    <!-- <script type="text/javascript" SRC="/static/js/memory_leak_checker.js"></script> -->
+    
+  </head>
+
+  <body class="common">
+    <div id="page-wrapper-1">
+
+      <div id="header-wrapper-1">
+      
+        <h1 id="logo">
+          <!-- ****************** LOGO ****************** -->
+          <a href=""><img SRC="/static/img/logo4.png" alt="Apodata Logo" /></a>
+        </h1>
+
+        <div id="star"></div>
+        
+        
+        <!-- ****************** MENUS ****************** -->
+        <ul id="top-menu">
+          <!-- <li><a HREF="index.htm" title="">O aplikaciji</a></li>
+          <li><a href="" title="">Interakcije</a></li> -->
+          <li><a href="" title="">1 &euro; = {{ tecajna_lista.srednji_tecaj }} kn ({{tecajna_lista.date}})</a></li>
+          <li><img src="/static/img/devel/cart1.png" style="float: left; width: 28px; margin-top: -5px; margin-right: 5px; padding-bottom:0px;" /><a href="javascript:void(0);" onClick="show_cart();" title=""> (<strong>{{user.kosarica.zbroji}}</strong>) {{ user.kosarica.cijena| }} &euro;</a></li>
+        </ul> <!--top-menu-->
+
+        <ul id="main-menu">
+          <li><a class="active" HREF="index.htm" title="">Depo</a></li>
+          <li><a href="" title="">Naručivanje</a></li>
+          <li><a href="" title="">Baza lijekova</a></li>
+          <li><a href="" title="">Statistika</a></li>
+          <li><a href="" title="">Pomoć</a></li>
+        </ul> <!--main-menu-->
+
+        <!-- ****************** SEARCH BOX ****************** -->
+        <form id="search-box" method="post" action="">
+          <fieldset>
+            <input type="text" id="search-field" name="searchfield" value="" />
+            <input type="submit" name="search" id="search" value="Unos" onClick="$.getScript('/barcode/submit/' + $('#search-field').val());"/>
+            <a href="javascript:show_meds_search();" title="" id="advanced-search">Napredno pretraživanje</a>
+          </fieldset>
+        </form>
+
+      </div> <!--header-wrapper-1 -->
+
+
+      <!-- ****************** LEFT SIDEBAR ****************** -->
+      <div id="left-wrapper-1">
+          <h2 class="box-1-title">Djelatnik</h2>
+          <div class="box-1 centriraj">
+	    <img src="/static/img/form/apotekarka.png" style="float:left; padding-bottom: 10px; padding-left: 10px;" />
+            <p><strong>{{user.get_full_name}}</strong></p>
+	    <p>Odjel prodaje</p>
+            <p>Radno mjesto: <strong>P-1</strong></p>
+            <p style="font-size:9px;">IP: {{ip_adresa}}</p>
+
+            <ul id="user-menu">
+              <li><a href="" title="">Zaduženja</a> |&nbsp;</li>
+              <li><a href="" title="">Postavke</a> |&nbsp;</li>
+              <li><a HREF="/accounts/logout" title="">Odjava</a></li>
+            </ul>
+            <div class="clear"></div>
+	    <p style="font-size:9px; margin-bottom:0px; margin-top:5px;">Posljednja prijava: {{user.last_login}}<br/><br/>1 &euro; = {{ tecajna_lista.srednji_tecaj }} kn (HNB {{tecajna_lista.date}}) </p>
+	    <p id='debug-remove'></p> <!-- TODO: remove, for debugging purposes only -->
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+
+          <!-- ****************** SIDEMENU ****************** -->
+          <h2 class="box-1-title">Izbornik</h2>
+          <div class="box-1 insideTabs">
+		<ul id="side-menu">
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Fizičke osobe</a>
+          			<ul id="sub-1" class="submenu-linkovi">
+          				<li><a href="/client/search" tab='0'>Pretraga</a></li>
+          				<li><a href="/client/create" tab='0'>Dodavanje</a></li>
+          				<li><a href="/client/browse" tab='0'>Popis</a></li>
+          			</ul>
+          		</li>
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Pravne osobe</a>
+          			<ul id="sub-1" class="submenu-linkovi">
+          				<li><a href="/order/company/search" tab='0'>Pretraga</a></li>
+          				<li><a href="/order/company/create" tab='0'>Dodavanje pravne osobe</a></li>
+          				<li><a href="/order/company/browse" tab='0'>Popis</a></li>
+          			</ul>
+          		</li>
+
+      
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Depo</a>
+          			<ul id="sub-2" class="submenu-linkovi">
+          				<li><a href="/ajax/stavke/pregled" tab='1' >Stavke</a></li>
+          				<li><a href="{% url lijekovi.list.sort 'asc' 'naziv' %}" tab='1' >Lijekovi</a></li>
+          				<li><a href="/ajax/paket/dodaj" tab='1' >Dodaj pošiljku</a></li>
+          				<li><a href="/ajax/lijekovi/naruciti" tab='1' >Nedostatne zalihe</a></li>
+           				<li><a href="/depo/posiljka/list" tab='1' >Pregled pošiljke</a></li>
+          				<li><a href="/graph/lijek/test/1" tab='1' >Graph test</a></li>
+          			</ul>
+          		</li>
+
+          		<li class="submenu-item">
+                               <a class="submenu-link" HREF="#">Narudžba</a>
+				<ul id="sub-3" class="submenu-linkovi">
+		                        <li><a href="/order/kosarica/view" tab='2'>Košarica</a></li>
+		                        <li><a href="/meds/search" tab='2'>Pretraga</a></li>
+				</ul>
+          		</li>
+            </ul>
+
+<!--          	<ul id="listticker" style="text-align:center;" >
+			<li>Pretraga<img src='/static/img/devel/search.png'/><img src='/static/img/form/cosak.png' class="li-active"</li>
+			<li>Dodavanje<img src='/static/img/devel/add.png'/></li>
+			<li>Svi pacijenti<img src='/static/img/devel/book.png'/></li>
+			<li>Detalji<img src='/static/img/devel/detail.png'/></li>
+
+		</ul> -->
+<!--		<ul style="padding-left: 10px; padding-right: 10px;"> 
+			<li style="font-weight: bold; font-size:11px;">Prijavljeni korisnici</li>
+			<li style="border-bottom: 1px dotted lightgray; margin-bottom: 5px;" ></li>
+			<li style="font-size:11px;"><img src="/static/img/form/online.png" style="float: left; width:14px;" />Ana Štefan</li>
+			<li style="font-size:11px;"><img src="/static/img/form/online.png" style="float: left; width:14px;" />Dragana Jozeljić</li>
+
+
+		</ul> -->
+            <div class="clear"></div>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+
+          <h2 class="box-1-title">Red čekanja</h2>
+          <div class="box-1" style="height: 120px;">
+		<!-- <ul style="padding-left: 10px; padding-right: 10px;"> -->
+		<div id="semafor">001</div>
+  		<div id="semafor-komande">
+			<img src="/static/img/semafor/play.png" onClick="javascript:test_redomat();"/>
+			<img src="/static/img/semafor/pause.png" />
+			<img src="/static/img/semafor/user.png" />
+			<img src="/static/img/semafor/power.png" />
+
+		</div>
+
+		<!-- </ul> -->
+            <div class="clear"></div>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+
+
+          <!-- ****************** jQuery CALENDAR ****************** -->
+          <h2 class="box-1-title">Kalendar</h2>
+          <div class="box-1">
+            <div id="calendar"></div>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+      </div> <!--left-wrapper-->
+
+
+      <div id="content-wrapper-1">
+        <div id="squeeze">
+          <div id="content">
+
+            <div id="mainTabs" >
+
+              <!-- ****************** MAIN TABS MENU ****************** -->
+              <ul id="mainTabsMenu">
+                <li><a href="#mainTab-1" onclick="this.blur();">Pacijenti</a></li>
+                <li><a href="#mainTab-2" onclick="this.blur();">Depo</a></li>
+                <li><a href="#mainTab-3" onclick="this.blur();">Narudžbe</a></li>
+                <li><a href="#mainTab-4" onclick="this.blur();">Izdavanje - Depo</a></li>
+              </ul>
+              <div class="clear"></div>
+  
+              <!-- ****************** PACIJENTI ****************** -->
+              <div id="mainTab-1">
+
+              </div> <!--mainTab-1-->
+              
+              <!-- ****************** DEPO ****************** -->
+              <div id="mainTab-2">
+	      </div>
+
+	      <!-- **************** NARUDŽBE **************** -->
+
+              <div id="mainTab-3">
+              </div> <!--mainTab-3-->
+              
+              <!-- ****************** MAIN TAB CONTENT 3 ****************** -->
+              
+              
+              <!-- ****************** MAIN TAB CONTENT 4 ****************** -->
+              <div id="mainTab-4">
+
+		<div class="content-100-wrapper" style="-webkit-border-radius: 10px 10px 10px 10px;" id="izdavanje-accordion">
+                      <h2 class="content-box-header" style="-webkit-border-radius: 10px 10px 0px 0px;"><span>Zahtjev za izdavanje</span></h2>
+                      <div class="content-wrapper">
+	 		<img src="/static/img/arrowbox-big.png" style="float: left; width: 64px; padding-right: 15px;" />
+      				<form action="/ajax/forma/izdavanje" method="post" id="izdavanje-forma">         
+			<table><tr><td>
+			          <table>
+				    <tr><td><label for="id_izdavanjeLijek">Naziv</label></td><td><p class="name izdavanje"><input type="text" name="izdavanjeLijek" id="id_izdavanjeLijek" /></p></td></tr>
+		    		    <tr><td><label for="id_kolicina">Količina</label></td><td><p class="email izdavanje"><input type="text" name="kolicina" id="id_kolicina" /></p></td></tr>
+				  <!--    	<tr><td><label for="korisnik">Korisnik</label></td><td><p class="email izdavanje"><input type="text" name="izdavanje-korisnik" id="izdavanje-korisnik" /></p></td></tr> -->
+				  </table>
+				</td><td>
+			 	  <table>
+			   	    <tr><td style="padding-left: 20px; padding-right: 0px;"><label for="id_opaska">Opaska</label></td><td><p class="email izdavanje"><textarea name="opaska" id="id_opaska"></textarea></p></td>
+				        <td></td><td><p class="submit izdavanje"><input type="submit" value="Izvrši zahtjev" /></p></td></tr>
+				    <tr><td><input name="lijekId" id="id_lijekId" hidden /></td><td>{% csrf_token %}</td></tr>
+				  </table>
+				</td></tr>
+			     </table>
+			  	</form>
+				
+		      </div>
+
+
+ 	         </div>
+
+                    <div class="space-2x"></div>
+                    <div class="space-2x"></div>
+
+ <div class="content-50-left-wrapper">
+                      <h2 class="content-box-header"><span>Podaci o lijeku</span></h2>
+                      <div class="content-wrapper" id="podaci-o-lijeku">
+			<img src="/static/img/form/pills2.png" style="float:left;" />
+                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
+                        <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem.</p>
+                        <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto</p>
+
+                      </div>
+                    </div>
+  
+                    <div class="content-50-right-wrapper">
+                      <h2 class="content-box-header"><span>Izdavanje</span></h2>
+                      <div class="content-wrapper">
+               <form class="form izdavanje">  
+		                    <p>Za izdavanje lijekova sa depoa unesite naziv i količinu. Sustav će ponuditi pomoć nakon 3 unesena znaka. Za izdavanje lijekova sa depoa unesite naziv i količinu. Sustav će ponuditi pomoć nakon 3 unesena znaka. Za izdavanje lijekova sa depoa unesite naziv i količinu. Sustav će ponuditi pomoć nakon 3 unesena znaka. Za izdavanje lijekova sa depoa unesite naziv i količinu. Sustav će ponuditi pomoć nakon 3 unesena znaka.</p>
+				</form>  
+	
+
+                      </div>
+                    </div>
+
+                    <div class="space-2x"></div>
+                    <div class="space-2x"></div>
+                    <div class="space-2x"></div>
+
+                    <div class="clear pt-2x"></div>
+              </div> <!--mainTab-4-->
+              
+              
+              <!-- ****************** MAIN TAB CONTENT 5 ****************** -->
+              <!-- <div id="mainTab-5">
+                  <h3>Izdavanje robe, 14.12.2011.</h3>
+                    <table class="data-table" id="izdavanje_robe">
+                      <caption>Otpremnica br. 381</caption>
+
+                      <thead>
+                        <tr>
+                          <th></th>
+			  <th>Broj</th>
+                          <th>Djelatnik</th>
+                          <th>Količina</th>
+                          <th>Lijek</th>
+                          <th>Primatelj</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                       
+                        
+                      </tbody>
+                    </table>
+
+                    <div id="table-left-1">
+                      <select name="table_action" id="table-action">
+                        <option value="option-1">choose an action</option>
+                        <option value="option-2">send record</option>
+                        <option value="option-3">remove record</option>
+                      </select>
+                      <a class="table-button" href="">Apply to selected</a>
+                      <a class="table-button" href="">Apply to all</a>
+                    </div>
+                      
+                    <div id="table-right-1">
+                      <a class="table-button" href="">Previous</a>
+                      <a class="page-number" href="">1</a>
+                      <a class="page-number" href="">2</a>
+                      <a class="page-number page-selected" href="">3</a>
+                      <a class="page-number" href="">4</a>
+                      <a class="page-number" href="">5</a>
+                      <a class="table-button" href="">Next</a>
+                    </div>
+                    <div class="clear space-2x"></div> 
+              </div> --> <!--mainTab-5-->
+
+            </div> <!--mainTabs-->
+
+          </div> <!--content-wrapper-->
+  
+          <div class="clear"></div>
+
+        </div>
+      </div> <!--content-wrapper-->
+
+      <div class="clear"></div>
+    </div> <!--page-wrapper-1 -->
+
+    <object id="print_plugin" type="application/x-diocles" style="width:1px;height:1px;margin:0px;padding:0px;z-index:999;"></object>
+    <!-- ****************** FOOTER ****************** -->
+    <div id="footer-wrapper-1">
+      <div id="footer-arrow">
+        <p><strong>apodata systems</strong> &copy; 2012.</p>
+        <p>
+        </p>
+      </div>
+    </div> <!--footer-wrapper-1 -->
+    <!-- <object id="print_plugin" type="application/x-diocles" hidden="true"></object> -->
+
+  </body>
+</html>

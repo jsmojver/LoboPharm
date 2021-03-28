@@ -1,0 +1,30 @@
+    <div style="width: 100%">
+     <div id='receipt-container' style="width: 35em; font-size: 10px; font-family: receipt; padding: 20px;">        
+	<div style="text-align: center">
+	<img src="/static/img/logo_kurfursten.bmp" width="350px;" />
+	<br />
+	{{ vrijeme }}
+	<p class="font-b"> - P O T V R D A - </p>
+	<span>Naručitelj: <u><strong>{{objekt.narucitelj}}</strong></u></span>
+	<br />
+	<span>Datum narudžbe: <u><strong>{{objekt.datum}}</strong></u></span>
+	<br />
+	<br />
+	<pre style="font-size: 0.9em; font-family: receipt;">Lijek                                          Količina</pre>
+	<hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+	{% for i in popis %}
+	<div><pre style="font-size: 0.9em; font-family: receipt;">{{i.0|ljust:"45"}}{{i.1|rjust:"9"}}</pre></div>
+	{% endfor %}
+	<hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+	<br />
+	<br />
+	<img src="/barcode/generate/png/{{objekt.barcode}}" /><br />
+	<div> Hvala na posjeti! </div><br />
+	</div>
+
+     </div>
+    </div>
+
+
+
+

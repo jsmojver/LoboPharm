@@ -1,0 +1,35 @@
+    <div style="width: 50%">
+     <div id='receipt-container' style="width: 35em; font-size: 10px; font-family: receipt; padding: 20px;">        
+	<div style="text-align: center">
+	<img src="/static/img/logo_kurfursten.bmp" width="350px;" />
+	<br />
+	{{ vrijeme }}
+	<p class="font-b"> - P O T V R D A - </p>
+	<span>Naručitelj: <u><strong>{{narudzba.klijent.get_full_name}}</strong></u></span>
+	<br />
+	<span>Datum narudžbe: <u><strong>{{narudzba.created}}</strong></u></span>
+	<br />
+	<br />
+
+        <pre style="font-size: 0.9em; font-family: receipt;">Lijek                         Kol     Cijena      Iznos</pre>
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        {% for i in narudzba.artikli.all %}
+        <div><pre style="font-size: 0.9em; font-family: receipt;">{{i.ime|ljust:"29"}}{{i.kolicina|rjust:"5"}}{{i.jedinicna_cijena|rjust:"11"}}{{i.get_total|rjust:"11"}}</pre></div>
+        {% endfor %}
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        <div style="text-align: right;"> <p class="font-c"> UKUPNO: {{narudzba.ukupna_cijena}} &euro; </p> </div>
+        <br />
+        <div> Uplaćen polog: <strong>{{narudzba.get_polog}} &euro;</strong> </div>
+        <div> Pri preuzimanju platiti: <strong>{{narudzba.za_platiti}} &euro;</strong> </div>
+        <br />
+	<br />
+	<img src="{% comment %} {% url sysapp.views.eanpng narudzba.get_barcode %} {% endcomment %}" /><br />
+	<div> ** Hvala na posjeti! ** </div><br />
+	</div>
+
+     </div>
+    </div>
+
+
+
+

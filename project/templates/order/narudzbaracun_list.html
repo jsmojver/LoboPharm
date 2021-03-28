@@ -1,0 +1,147 @@
+
+<div class="insideTabs">
+    <form id="tabs_menu_fm" class="select_range_frame" method="post" action="/order/racuni/list">
+        <input type="hidden" name="cmd" value="" />
+        <ul class="insideTabsMenu select_range_frame">
+            <li>
+                <select name="range_type">
+                    <option value=""{% if range_type == "" %} selected="selected"{% endif %}>Nefiltrirano</option>
+                    <option value="day"{% if range_type == "day" %} selected="selected"{% endif %}>Dan</option>
+                    {% comment %}<option value="range"{% if range_type == "range" %} selected="selected"{% endif %}>Razdoblje</option>{% endcomment %}
+                </select>
+            </li>
+            <li>
+                <span class="begin_date"{% if range_type == "" %} style="display: none;"{% endif %}>
+                    <input type="text" name="begin_date" class="datepicker" value="{{ begin_date|date:"d.m.Y" }}" style="width: 100px;"/>
+                </span>
+            </li>
+            <li><a href="#" class="submit_daily_report_range">Osvježi</a></li>
+            <li><a href="/order/racuni/report/daily/download/" class="download_report nohijack"{% if range_type == "" %} style="display: none;"{% endif %}>Preuzmi</a></li>
+
+            <li class="label separator">Mjesečno izvješće:</li>
+            <li>
+                <select name="monthly_report_month">
+                    {% for c in report_months %}
+                        <option value="{{ forloop.counter }}"{% if forloop.counter == now.month %} selected="selected"{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>
+                <select name="monthly_report_year">
+                    {% for c in report_years %}
+                        <option value="{{ c }}"{% if c == now.year %} selected="selected"{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><a href="#" class="download_monthly_report nohijack">Preuzmi</a></li>
+        </ul>
+        <div class="insideTabsMenuArrow"></div>
+    </form>
+</div>
+<div class="clear space-1x"></div>
+
+<table class="data-table" id="popis_lijekova">
+
+      <caption>Računi (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+	   <th>Broj</th>
+           <th>Narudžba</th>
+           <th>Kreiran</th>
+           <th>Izmijenjen</th>
+           <th>Izdao</th>
+           <th>Storniran</th>
+           <th>Stornira račun br.</th>
+           <th>Opaska</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="klijent-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}" {% if i.storniran or i.stornira_racun %} style="opacity:0.4;" {% endif %}>
+			<td>{{i.broj}}</td>
+			<td><a href="{% url order.view i.narudzba.id %}">{{i.narudzba.sifra}}</a></td>
+			<td>{{i.created}}</td>
+			<td>{{i.modified}}</td>
+			<td>{{i.kreirao.get_full_name}}</td>
+			<td>{{i.storniran|translate}}</td>
+			<td>{{i.stornira_racun.broj}}</td>
+		 	<td>{{i.zabiljezba|truncatewords:4}}</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url order.racuni.list as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>
+
+
+<script type="text/javascript">
+    /* <![CDATA[ */
+
+    $(function () {
+        $(".datepicker").datepicker(
+            {
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                dateFormat: "dd.mm.yy",
+                monthNames: ["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac"],
+                firstDay: 1,
+                dayNames: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"],
+                dayNamesShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
+                dayNamesMin: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"]
+            }
+        );
+
+        $(".select_range_frame select[name='range_type']").change(
+            function()
+            {
+                switch ($(this).val())
+                {
+                    case "":
+                        $(".select_range_frame span.begin_date").hide();
+                        $(".select_range_frame span.end_date").hide();
+                        $(".select_range_frame a.download_report").hide();
+                        break;
+                    case "day":
+                        $(".select_range_frame span.begin_date").show();
+                        $(".select_range_frame span.end_date").hide();
+                        {% if range_type != "" %}
+                            $(".select_range_frame a.download_report").show();
+                        {% endif %}
+                        break;
+                    case "range":
+                        $(".select_range_frame span.begin_date").show();
+                        $(".select_range_frame span.end_date").show();
+                        $(".select_range_frame a.download_report").show();
+                        break;
+                }
+            }
+        );
+
+        $(".submit_daily_report_range").click(
+            function()
+            {
+                $("#tabs_menu_fm input[name='cmd']").val("daily_report_range");
+                $("#tabs_menu_fm").submit();
+                return false;
+            }
+        );
+
+        $(".download_monthly_report").click(
+            function()
+            {
+                var month = $("#tabs_menu_fm select[name='monthly_report_month']").val();
+                var year = $("#tabs_menu_fm select[name='monthly_report_year']").val();
+                window.location = "/order/racuni/report/monthly/download/" + year + "/" + month + "/";
+                return false;
+            }
+        );
+    });
+
+    /* ]]> */
+</script>

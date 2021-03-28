@@ -1,0 +1,49 @@
+<img src="/static/img/devel/checkout2.png" style="float: left; margin-bottom: -30px; margin-left: 15px; width: 64px;" />
+<div>
+<h3>Izdavanje kupcu</h3>
+<table class="dt2">
+
+	<!-- Tu ide extends XYZ a osnovni dio izvući da bude zajednički? -->
+
+      
+      <thead>
+        <tr>
+	   	   <th>Naziv</th>           
+           <th>Količina</th>           
+		   <th>Djelatnik</th>           
+           <th>Cijena (&euro;)</th>
+           <th>Cijena (kn)</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}	  
+		<tr class="{% cycle 'odd' 'even' %}">	
+			<td>{{i.naziv}}</td>			
+			<td>{{i.broj_kutija}}</td>								
+		 	<td>{{i.user}}</td>
+			<td>{{i.ukupno}} &euro;</td>
+			<td>{{i.ukupno_hrk}} kn</td>
+		</tr>	  
+     {% endfor %}
+     
+     <tr class="{% cycle 'odd' 'even' %}">	
+			<td></td>			
+			<td></td>			
+			<td></td>					 	
+			<td><strong>{{ukupno}} &euro;</strong></td>
+			<td><strong>{{ukupno_hrk}} kn</strong></td>
+		</tr>       
+                       
+        </tbody>
+
+	
+	{% url depo.stavke.nerijesene as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+</div>
+<div>
+	<a href="{% url depo.kosarica.lock %}"><img src="/static/img/devel/submit3.png" style="width:64px; float:right;margin-right:50px; margin-top:20px;" /></a>
+</div>

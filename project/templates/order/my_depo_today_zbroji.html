@@ -1,0 +1,35 @@
+{% include "order/my_depo_header.html" %}
+
+<div class="clear space-1x"></div>
+
+<!-- 
+
+{{ obracun|safe }}
+
+-->
+
+<table class="data-table">      	   		  
+      <caption> Moj današnji depo  (str. {{ page_obj.number }} / {{ paginator.num_pages }}, Ukupno: {{ kutija }} kutija, {{ ukupno }} kn) </caption>
+
+      <thead>
+        <tr>
+           <th>Ime</th>
+           <th>Količina</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for key, value in obracun.items %}
+		<tr class="{% cycle 'odd' 'even' %}" {% if i.status == 5 %} style="opacity:0.5;" {% endif %}>
+		<td>{{ key }}</td>
+		<td>{{ value }}</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url order.my.depo.today.zbroji as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>

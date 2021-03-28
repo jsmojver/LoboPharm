@@ -1,0 +1,54 @@
+{% include "order/my_depo_header.html" %}
+
+<div class="clear space-1x"></div>
+
+<!-- 
+
+{{ obracun|safe }}
+
+-->
+
+<table class="data-table">      	   		  
+      <caption> Moj današnji depo  (str. {{ page_obj.number }} / {{ paginator.num_pages }}, Ukupno: {{ kutija }} kutija, {{ ukupno }} kn) </caption>
+
+      <thead>
+        <tr>
+           <th>Ime</th>
+           <th>Količina</th>
+           <th>Jedinice</th>
+           <th>Status</th>
+           <th>Naručio</th>
+           <th>Datum</th>
+           <th>Jed. cijena</th>
+           <th>Ukupno</th>
+	   <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr class="{% cycle 'odd' 'even' %}" {% if i.status == 5 %} style="opacity:0.5;" {% endif %}>
+   		<td><a href="{% url order.view i.narudzba.id %}">{{i.ime}}</a></td> 			
+		<td>{{i.kolicina}}</td>
+		<td>{{i.jedinice}}</td>
+		<td>{{i.get_status}}</td>
+		<td>{{i.narucio}}</td>
+		<td>{{i.created}}</td>
+		<td>{{i.jedinicna_cijena}} {{ i.valuta_text }}</td>
+		<td>{{i.get_total}} {{ i.valuta_text }}</td>
+		<td>
+                {% if i.status == 5 %} <img src="/static/img/devel/tick2.png" /> {% else %} <img src="/static/img/devel/iks.png" />{% endif %}
+
+			<!-- <a href="{% url order.artikal.zaprimi i.id 0 %}">Zaprimi</a> -->
+			<!-- <a href="{% url client.edit i.id %}">Storniraj</a> -->
+		</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url order.my.depo.today as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>

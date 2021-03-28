@@ -1,0 +1,77 @@
+<!-- <div id="mainTab-5"> -->
+
+                  <h3>Izdavanje robe s depoa</h3>
+                    <table class="data-table" id="izdavanje_robe">
+                      <caption>Izdatnica</caption>
+
+                      <thead>
+                        <tr>
+                          <th></th>
+			  <th>Broj</th>
+                          <th>Djelatnik</th>
+                          <th>Količina</th>
+                          <th>Lijek</th>
+                          <th>Primatelj</th>
+			  <th>Upućeno</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+			
+			{% for i in zahtjevi %}
+
+			<tr id="izdavanje-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+				<td class="select"><img src="/static/img/table/status-{{i.status}}.png" class="status" id="izdavanje-status-img-{{i.id}}" /></td>
+				<td>{{i.id}}</td>
+				<td>{{i.user.first_name}} {{i.user.last_name}}</td>
+				<td>{{i.kolicina}}</td>
+				<td>{{i.lijek.naziv}}</td>
+				<td>Primatelj</td> <!-- Kako doći do primatelja? -->
+				<td>{{i.created}}</td>
+				<td><a class="table-edit" href="#" id="izdavanje-preuzmi-{{i.id}}"></a><a class="table-delete" href="#" id="izdavanje-potvrdi-{{i.id}}"></a></td>
+			</tr>
+
+			{% endfor %}
+                        
+                      </tbody>
+                    </table>
+
+                     
+                    <div id="table-right-1">
+                      <a class="table-button" href="">Prethodna</a>
+                      <a class="page-number" href="">1</a>
+                      <a class="page-number" href="">2</a>
+                      <a class="page-number page-selected" href="">3</a>
+                      <a class="page-number" href="">4</a>
+                      <a class="page-number" href="">5</a>
+                      <a class="table-button" href="">Slijedeća</a>
+                    </div>
+                    <div class="clear space-2x"></div> 
+<!-- </div> <!--mainTab-5-->
+
+<script type="text/javascript">
+
+$('.table-edit').click(function(target){
+	id = $(this).attr('id').split('-').pop(); // Dohvati ID iz ID-a gumba, 'izdavanje-preuzmi-{{i.id}}'
+	$.get('/ajax/zahtjev/azuriraj/'+id+'/1', function(data){
+		if(data.status == '1') {
+			$('#izdavanje-status-img-'+id).attr('src', '/static/img/table/status-1.png');
+			sticky_notify_remove(id);
+		}
+	});
+	
+});
+
+$('.table-delete').click(function(target){
+	id = $(this).attr('id').split('-').pop(); // Dohvati ID iz ID-a gumba, 'izdavanje-preuzmi-{{i.id}}'
+	$.get('/ajax/zahtjev/azuriraj/'+id+'/2', function(data){
+		if(data.status == '1') {
+			$('#izdavanje-status-img-'+id).attr('src', '/static/img/table/status-2.png');
+		}
+	});
+	
+});
+
+
+</script>

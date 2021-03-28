@@ -1,0 +1,26 @@
+<div class="content-wrapper">
+
+  <table class='data-table' style="border-color:white;">
+        {% for i in object_list %}
+        <thead>
+          <tr><th>
+    		{{i.created}} - {{i.title}}
+	  </th></tr>
+	</thead>
+	<tbody>
+		<tr><td style="border: 1px solid lightgrey;">
+                {{ i.body|safe }}
+		</td></tr>
+		<tr><td style="padding-top: 30px;"></td></tr>
+	</tbody>
+     {% endfor %}       
+     
+    {% url sysapp.obavijesti as url %}
+    {% include "paginator.html" with adresa=url %}
+
+   </table>
+
+</div>
+
+
+

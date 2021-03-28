@@ -1,0 +1,33 @@
+<table class="data-table" id="posiljka_prikaz">
+
+    <caption>Artikli</caption>
+      <thead>
+        <tr>
+      	   <th>Broj</th>
+           <th>Datum</th>
+           <th>Zadužio</th>
+           <th>Broj artikala</th>
+           <th>Vrijednost</th>
+           <th>Kodirana</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+ 	{% for i in object_list %}
+	<tr>
+	  <td>{{i.id}}</td>
+	  
+	  <td><a href="{% url depo.posiljka.detail i.id %}">{{i.datum}}</a></td>
+	  <td>{{user.get_full_name}}</td>
+	  <td>{{i.broj_artikala}}</td>
+	  <td>{{i.vrijednost}} &euro;</td>
+	  <td>{{i.kodirano}}</td>
+	</tr>
+	{% endfor %}	                 
+	
+  </tbody>
+	
+	{% url depo.posiljka.list as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>

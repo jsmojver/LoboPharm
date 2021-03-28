@@ -1,0 +1,268 @@
+ {% include "order/narudzba_header.html" %}
+
+ <div class="clear space-2x"></div>
+ 
+ <div class="content-30-left-wrapper">
+
+  <h2 class="content-box-header"><span>Narudžba {{narudzba.sifra}} &nbsp;&nbsp; (interno {{narudzba.broj}})</span></h2>
+  <div class="content-wrapper">
+
+	<table class="data-table">
+
+	<tr><td>Status: </td><td>{{ narudzba.get_status }}</td></tr>
+	<tr><td>Kreirana: </td><td>{{ narudzba.created }}</td></tr>
+	<tr><td>Konto: </td><td>{{ narudzba.konto_name|default:"" }}</td></tr>
+	<tr><td>Ukupna cijena: </td><td>{{ narudzba.ukupna_cijena_bez_troskova_euri }} &euro; + {{ narudzba.ukupna_cijena_bez_troskova_kune }} kn</td></tr>
+	<tr><td>Model: </td><td>HR01</td></tr>
+        <tr><td>Poziv na broj: </td><td>{{ narudzba.generiraj_poziv_na_broj }} </td></tr>
+	<tr><td>Uplaćen polog: </td><td>{{ narudzba.get_polog_kn }} kn</td></tr>
+
+	</table>
+
+ </div>
+
+ </div>
+  
+
+ <div class="content-30-middle-wrapper" >
+ <h2 class="content-box-header"><span>Klijent</span></h2>
+      <div class="content-wrapper">
+	<table class="data-table">
+
+	<tr><td>Ime:</td><td><a href="{% url client.view narudzba.klijent.id %}">		
+			{% if narudzba.klijent.tip_klijenta == 1 %}
+				{{narudzba.klijent}}
+			{% else %}
+				{{narudzba.klijent.naziv}}
+			{% endif %}
+		</a></td></tr>
+	<tr><td>Adresa:</td><td>{{ narudzba.klijent.adresa }}</td></tr>
+        <tr><td>Poštanski broj:</td><td>{{ narudzba.klijent.postanski_broj }}</td></tr>
+	<tr><td>Grad:</td><td>{{ narudzba.klijent.grad }}</td></tr>
+	<tr><td>Telefon:</td><td>{{ narudzba.klijent.telefon }}</td></tr>
+	<tr><td>Mobitel:</td><td>{{ narudzba.klijent.mobitel }}</td></tr>
+	</table>
+
+
+
+      </div>
+</div>
+  
+
+<!--  <div class="content-30-right-wrapper">
+ <h2 class="content-box-header"><span>Iznos</span></h2>
+      <div class="content-wrapper">
+-->
+<div style="background-image: url('/static/img/display2.png'); background-repeat:no-repeat; background-position: 100% 0%; height:250px;">
+<div id="brojcanik"> <br /><br />{{narudzba.grand_total_kn}} kn</div> 
+</div>
+
+<!--      </div>
+</div>
+  -->
+
+<script type="text/javascript">
+  ukupni_iznos = Math.abs(parseFloat('{{narudzba.grand_total_kn}}'.replace(',', '.')));
+</script>  
+  
+<div class="clear space-2x"></div>
+  
+
+{% if narudzba.artikli.count %}
+<div class="content-100-wrapper">
+<!-- <h2 class="content-box-header"><span>Sadržaj narudžbe:</span></h2> -->
+<div class="content-wrapper">
+
+<table class='data-table'>
+<caption>Artikli</caption>
+
+<thead>
+<tr><th>Izdati</th><th>Lijek</th><th>Količina</th><th>Šifra</th><th>Std. količina</th><th>Jedinična cijena</th><th>Cijena</th><th>Tržište</th><th>Status</th><th></th></tr>
+</thead>
+{% for i in narudzba.artikli.all %}
+<tr>
+<td>
+    {% if i.status == 4 %} <a href="{% url order.artikal.izdaj i.id %}">Izdaj</a>{%endif %}
+    <!-- {% if i.status == 0 %} <a href="{% url order.artikal.zaprimi i.id 1 %}">Zaprimi</a> <br />{% endif %} -->
+    {% if i.status == 0 and perms.order.add_uplata %} <a href="{% url order.artikal.naplati i.id %}">Naplati</a>{% endif %}
+    {% if i.status == 1 and perms.order.add_uplata %} <a href="{% url order.artikal.naplati i.id %}">Naplati</a>{% endif %}
+
+</td> 
+
+<td>{{i.ime}}</td><td>{{i.kolicina}}</td><td>{{i.ZoNr}}</td><td>{{i.std_kolicina|floatformat:2}} {{i.jedinice}}</td><td>{{i.jedinicna_cijena}} {{i.valuta_text}}</td><td>{{i.get_total}} {{i.valuta_text}}</td><td>{{i.trziste.naziv}}</td><td>{{i.get_status}}</td><td><p onClick="$.getScript('{% url order.kosarica.add.iz.stare.narudzbe i.id %}');">+</p></td></tr');>
+    <tr><td colspan="9" style="padding-left:120px;">
+    <ol>
+    {% for j in i.log_order.all %}
+		<li>{{ j.opis }} {{ j.datetime }} ({{j.user.get_full_name}})</li>
+	{% endfor %}
+	</ol>
+	</td><td></td></tr>	
+{% endfor %}
+</table>
+
+ </div>
+
+{% if narudzba.uplate.count %}
+ 
+ <div class="content-wrapper">
+<table class='data-table'>
+<caption>Uplate</caption>
+<!-- Uplate -->
+ 
+{% if narudzba.status != 6  %}
+<thead>
+<tr><th>Vrsta</th><th class="td-desno">Iznos</th><th class="td-desno">(EUR)</th><th class="td-desno">(HRK)</th><th>Djelatnik</th><th>Datum i vrijeme</th><th>Svrha uplate</th><th>Napomena</th><th></th></tr>
+</thead>
+
+	{% for i in narudzba.uplate.all %}
+<tr><td>{{i.get_vrsta}}</td><td class="td-desno">{{i.get_vrsta_predznak}}{{i.iznos}} {{i.valuta.kratica}}</td><td class="td-desno">{{i.get_vrsta_predznak}}{{i.to_euro}} &euro;</td><td class="td-desno">{{i.get_vrsta_predznak}}{{i.to_kn}} kn</td><td>{{i.djelatnik.get_full_name}}</td><td>{{i.timestamp|safe}}</td><td>{{i.get_tip}}</td><td>{{i.napomena}}</td><td>{% if i.vrsta == 1 and i.tip != '2' %}<a href="{% url order.uplata.delete narudzba.id i.id %}">Obriši</a>{% endif %}</td></tr>
+	{% endfor %}
+
+<tr><td>Bilanca:</td><td></td><td class="td-desno"></td><td class="td-desno">{{narudzba.grand_total_kn}} kn</td><td></td><td></td><td></td><td></td><td></td></tr>
+
+{% else %}
+<thead>
+<tr><th>Vrsta</th><th class="td-desno">Iznos</th></th><th>Djelatnik</th><th>Datum i vrijeme</th><th>Svrha uplate</th><th>Napomena</th></tr>
+</thead>
+	{% for i in narudzba.uplate.all %}
+<tr><td>{{i.get_vrsta}}</td><td class="td-desno">{{i.get_vrsta_predznak}}{{i.iznos}} {{i.valuta.kratica}}</td><td>{{i.djelatnik.get_full_name}}</td><td>{{i.timestamp|safe}}</td><td>{{i.get_tip}}</td><td>{{i.napomena}}</td><td></td></tr>
+	{% endfor %}
+
+{% endif %}
+</table>
+</div>
+{% endif %}
+
+
+{% if narudzba.status != 6 and narudzba.status != 7 and perms.order.add_uplata %}
+<!-- Uplata -->
+
+<div class="content-wrapper">
+<form method="post" action="{% url order.uplata.add %}"> 
+      <img src="/static/img/lova2.png" style="float: right; margin-bottom: -90px; margin-left: 10px; width:128px;" />
+      <table class="data-table">
+      <caption>Dodavanje uplate</caption>
+      <thead>
+        <tr>
+           <th>Tip</th>
+           <th>Opis</th>
+           <th>Valuta</th>
+           <th>Iznos</th>
+           <th>Bilješka</th>
+           <th></th>
+        </tr>
+      </thead>
+         <tbody>        
+                        <td style="padding:0px;">
+<select name="vrsta" style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 10px; color:grey; ">
+  <option value="0" selected >Uplata</option>
+  <option value="1">Zaduženje</option>
+</select></td>
+<td style="padding:0px;">
+<select name="tip_uplate" id="tip_uplate" style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 10px; color:grey;">
+  <option value="1" selected>Polog</option>
+  <option value="2">Uplata za lijek</option>
+  <option value="3">Uplata poštom/na račun</option>
+  <option value="4">Usluge transporta</option>
+  <option value="6">Poštarina</option>
+  <option value="7">Usluge posredovanja</option>
+  <option value="9">Ispravak greške pri uplati</option>
+  <option value="10">Uplaćeno prije uvođenja sustava</option>
+</select></td>
+<td style="padding:0px;">
+<select name="valuta" style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 10px; color:grey; ">
+  <option value="1">Eur</option>
+  <option value="4" selected>HRK</option>
+</select>
+                        <td style="padding:0px;"><input style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 10px;" class="text-box" name="iznos" id="id_iznos" /></td>
+                        <td style="padding:0px;"><input style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 10px;" class="text-box" name="biljeska" id="id_biljeska" /></td>
+                        <td><input type="image" src="/static/img/devel/tick2.png" style="border-style: none;"/><img src="/static/img/table/status-0.png" onClick="javascript:$(this).closest('tr').find('#id_iznos').val(ukupni_iznos);$(this).closest('tr').find('#tip_uplate').val('2');"/></a></td>
+        </tbody>
+      </table>
+        <input type="hidden" name="narudzba" value="{{narudzba.id}}">
+
+        </form>
+
+
+
+ </div>
+<!-- /Uplata -->
+{% endif %}
+
+
+
+ 
+</div>
+
+<div class="clear space-2x"></div>
+{% if narudzba.racuni.count %}
+	<table class='data-table'>
+        <img src="/static/img/devel/racun.png" style="float: right; margin-bottom: -70px; margin-left: 20px; width:96px;" />
+	<caption>Fiskalni računi</caption>
+	<thead>
+	<tr><th>Broj računa</th><th>Datum i vrijeme</th><th>Zaštitni kod</th><th>Izdao</th><th>Jir</th><th>Iznos</th><th></th><th></th><th></th></tr>
+	</thead>
+
+	{% for i in narudzba.racuni.all %}
+		<tr style="font-size:11px;{% if i.storno or i.stornira_racun %}opacity:0.5;{% endif %}"><td><a href="{% url order.fiskaliziraj.racun_detalji i.id %}">{{i.oznaka_racuna}}</a></td><td>{{i.datum_vrijeme_zastitni}}</td><td>{{i.zastitni_kod}}</td><td>{{i.djelatnik.get_full_name}}</td><td>{{i.jir}}</td><td>{{i.iznos}} kn</td>
+		<td>
+                {% if i.storno %}
+			<img src="/static/img/devel/arrows1.png" />
+		{% else %}
+			{% if i.jir %} <img src="/static/img/devel/tick2.png" /> {% else %} <img src="/static/img/devel/iks.png" /> {% endif %}
+		{% endif %}
+		</td>
+		<td>{% if not i.stornira_racun and not i.storno %} <p onClick="storniraj({{i.id}});"> (Storniraj)</p> {% endif %}</td>
+                <td></td>
+		</tr>
+	{% endfor %}
+	</table>
+{% endif %}
+<br />
+
+
+<div class="clear space-2x"></div>
+{% if narudzba.narudzba_racuni.count %}
+	<table class='data-table'>
+        <img src="/static/img/devel/racun.png" style="float: right; margin-bottom: -70px; margin-left: 20px; width:96px;" />
+	<caption>Njemački računi</caption>
+	<thead>
+	<tr><th>Broj računa</th><th>Datum i vrijeme</th><th>Izdao</th><th>Storniran</th><th>Stornira račun</th><th></th><th></th><th></th></tr>
+
+	</thead>
+
+	{% for i in narudzba.narudzba_racuni.all %}
+		<tr style="font-size:11px;{% if i.storniran or i.stornira_racun %}opacity:0.5;{% endif %}"><td>{{i.broj }}</td><td>{{i.created}}</td><td>{{i.kreirao.get_full_name}}</td><td>{{i.storniran|translate}}</td><td>{{i.stornira_racun.broj}}</td>
+	
+		<td></td>
+		<td>
+                {% if i.storniran %}
+			<img src="/static/img/devel/arrows1.png" />
+		{% else %}
+			<img src="/static/img/devel/tick2.png" />
+		{% endif %}
+		</td>
+                <td>
+		{% if not i.storniran and not i.stornira_racun %}
+		<a href="{% url order.njemacki.racun.storniraj i.id %}">Storniraj</a>
+		{% endif %}
+		</td>
+		</tr>
+	{% endfor %}
+	</table>
+{% endif %}
+<br />
+
+
+
+
+
+
+
+
+
+
+   
+{% endif %}
+
+

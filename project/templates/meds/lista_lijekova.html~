@@ -1,0 +1,38 @@
+      <script type="text/javascript">
+          lastSearchUrl="{{request.get_full_path}}";
+      </script>
+      
+      <caption>Rezultati pretrage (str. {{ page_obj.number }} / {{ paginator.num_pages }}) </caption>
+
+      <thead>
+        <tr>
+           <th>Ime</th>
+           <th>Količina</th>
+           <th>Jedinice</th>
+           <th>Nabavna</th>
+           <th>Prodajna</th>
+           <th>ATC kod</th>
+           <th>Dobavljač</th>
+           <th></th>
+           <th></th>
+           <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="lijekovi-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+			<td><a href="{% url meds.view i.id %}">{{i.name}}</a></td>
+			<td>{{i.kolicina}} </td>
+			<td>{{i.jedinice}}</td>
+			<td style="text-align: right;">{{i.ApoEk|addpoint}} &#8364;</td>
+			<td style="text-align: right;">{{i.ApoVk|addpoint}} &#8364;</td>
+			<td>{{i.ATCCode}}</td>
+			<td>{{i.kratica_dobavljaca}}</td>
+		 	<td>{% if i.ApoKz == 1 %} <img src="{{STATIC_URL}}/static/img/recept4.png" /> {% endif %}</td>
+		 	<td>{% if i.BtmFl %} <img src="{{STATIC_URL}}/static/img/opijat.png" /> {% endif %}</td>
+		 	<td>{% if i.VeterinaerFl %} <img src="{{STATIC_URL}}/static/img/dog2.png" /> {% endif %}</td>
+		</tr>
+        {% endfor %}       
+

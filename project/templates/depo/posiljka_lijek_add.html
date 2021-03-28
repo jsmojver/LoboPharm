@@ -1,0 +1,85 @@
+<div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url depo.views.posiljka_zakljucaj %}">Zaključaj</a></li>       
+    </ul> 
+    <div class="insideTabsMenuArrow"></div>
+</div>
+<div class="clear space-1x"></div>
+
+<div>
+           
+<form method="post" action="{% url depo.posiljka.lijek.add %}">	
+
+      <img src="/static/img/form/kutija.png" style="float: left; margin-bottom: -50px; margin-left: 10px;" />
+      
+      <h3 style="padding-left: 80px" >Dodavanje pošiljke (br. {{posiljka.id}} od {{posiljka.datum.date}})</h3>
+      
+      <table class="dt2">
+            
+      <thead>
+        <tr>
+	   <th style="width: 50px;"></th>
+           <th>Lijek</th>
+	   <th>Količina</th>
+	   <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>	
+
+  	  	<td></td>
+  			<td style="padding:0px;">
+  			<input style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 10px;" data-autocomplete-url="/autocomplete" name="lijek" autofocus="autofocus" type="text" class="autocomplete" id="id_lijek" /></td>
+			<td style="padding:0px;"><input style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 10px;" class="text-box" type="number" name="kolicina" id="id_kolicina" /></td>
+			<td><input type="image" src="/static/img/devel/tick2.png" style="border-style: none;"/></td>
+                      
+        </tbody>
+      </table>
+	</form>
+
+</div>
+
+
+<div class="clear space-2x"></div>
+
+<div id="posiljka_dodavanje_container">
+
+<table class="data-table" id="posiljka_dodavanje_prikaz">
+
+    <caption>Artikli</caption>
+      <thead>
+        <tr>
+      	   <th>Naziv</th>
+           <th>Cijena</th>
+           <th>Komada</th>
+           <th>Ukupni iznos</th>
+           <th>Zadužio</th>
+           <th>Depo</th>           
+           <th></th>
+
+        </tr>
+      </thead>
+
+	 <tbody>
+ 	{% for i in posiljka.lijekovi.all %}
+	<tr>
+	  <td>{{i.lijek.naziv}}</td>
+	  <td>{{i.lijek.cijena}} &euro;</td>
+	  <td>{{i.kolicina}}</td>
+	  <td>{{i.ukupno}} &euro;</td>
+	  <td>{{user.get_full_name}}</td>
+	  <td>{{i.lijek.depo.naziv}}</td>	  
+	  <td><a href="{% url depo.posiljka.lijek.delete i.id %}">Brisanje</a>
+	  </td>
+	</tr>
+	{% endfor %}	                 
+	
+	<tr><td></td><td></td><td><strong>{{posiljka.broj_artikala}}</strong></td><td><strong>{{posiljka.vrijednost}} &euro;</strong></td><td></td><td></td><td></td></tr>
+        </tbody>
+	
+
+</table>
+
+
+</div>
+

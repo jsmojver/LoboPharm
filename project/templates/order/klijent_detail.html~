@@ -1,0 +1,86 @@
+{% if obavijest_dodan %} <!-- Ako je template pozvan iz form.save() novog korisnika, prikaži box da je uspješno dodan -->
+<div class="message-wrapper ok"><p><strong>SPREMLJENO.</strong> Korisnik {{ klijent.ime }} {{ klijent.prezime }} je uspješno dodan u sustav!</p><a href="#" class="close full"><img src="/static/img/close.gif" title="Zatvori" alt="zatvori" onClick="notification_close(this);" /></a><div class="clear"></div></div>
+{% endif %}
+
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url client.edit klijent.id %}">Uredi</a></li>
+       <li><a href="{% url client.select klijent.id %}">Odaberi</a></li>
+       <li><a href="">Gumb</a></li>
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+ <img src="/static/img/devel/korisnik3.png" style="float:left; width:256px; padding: 10px;" />
+
+<!-- <div class="content-75-right-wrapper">
+ <h2 class="content-box-header"><span>Klijent</span></h2>-->
+	<table class="data-table" style="float: right; width: 70%; margin-top:20px;"">
+        <caption>Osobni podaci</caption>
+
+	<tr><td>Ime:</td><td style="width:80%;">{{ klijent.ime }} {{ klijent.prezime }}</td></tr>
+	<tr><td>Adresa:</td><td><a href="javascript:window.open('http://maps.google.com/?q={{ klijent.adresa }},{{klijent.grad}},Croatia', '_blank');">{{ klijent.adresa }}, {{ klijent.postanski_broj }}, {{ klijent.grad }}</td></tr>
+	<tr><td>Zemlja:</td><td>{{klijent.zemlja}}</td></tr>
+	<tr><td>Telefon:</td><td>{{ klijent.telefon }}</td></tr>
+	<tr><td>Mobitel:</td><td>{{ klijent.mobitel }}</td></tr>
+	<tr><td>E-mail:</td><td>{{ klijent.email }}</td></tr>
+	<!-- Tu još ide napomena -->
+	</table>
+
+
+
+<!-- </div>-->
+  
+  
+<div class="clear space-2x"></div>
+  
+
+{% if klijent.narudzbe.all.count %}
+<!--<div class="content-100-wrapper">
+<h2 class="content-box-header"><span>Narudžbe:</span></h2>
+<div class="content-wrapper">
+-->
+<table class='data-table'>
+      <caption  style="-webkit-border-radius:15px;">Narudžbe:</caption>
+<thead>
+<tr><th>Narudžba broj</th><th>Status</th><th>Šifra</th><th>Polog</th><th>Ažurirano</th><th>Uneseno</th><th>Preuzeto</th><th>Plaćeno</th></tr>
+</thead>
+{% for i in klijent.narudzbe.all %}
+<tr><td>{{i.id}}</td><td>{{i.status}}</td><td><a href="/order/view/{{i.id}}">{{i.sifra}}</a></td><td>{{i.polog}}</td><td>{{i.modified}}</td><td>{{i.created}}</td>
+<td><img src="/static/img/devel/iks2.png" /></td><td><img src="/static/img/devel/tick2.png" /></td>
+</tr>
+{% endfor %}
+</table>
+
+
+<table class='data-table'>
+      <caption  style="-webkit-border-radius:15px;">Artikli:</caption>
+<thead>
+<tr><th>Narudžba broj</th><th>Status</th><th>Šifra</th><th>Polog</th><th>Ažurirano</th><th>Uneseno</th><th>Preuzeto</th><th>Plaćeno</th></tr>
+</thead>
+{% for i in klijent.narudzbe.all %}
+  {% for j in i.artikli.all %}
+    <tr onClick="show_order({{i.id}});"><td>{{j.ime}}</td><td>{{i.status}}</td><td>{{i.sifra}}</td><td>{{i.polog}}</td><td>{{i.modified}}</td><td>{{i.created}}</td>
+      <td><img src="/static/img/devel/iks2.png" /></td><td><img src="/static/img/devel/tick2.png" /></td>
+    </tr>
+  {% endfor %}
+{% endfor %}
+</table>
+
+
+<!--
+ </div>
+</div>
+<br /> -->
+
+{% else %}
+ <div class="content-100-wrapper">
+<h2 class="content-box-header"><span>Narudžbe:</span></h2>
+<div class="content-wrapper">
+ Nema prethodnih narudžbi!
+</div></div>
+
+ 
+{% endif %}
+
+

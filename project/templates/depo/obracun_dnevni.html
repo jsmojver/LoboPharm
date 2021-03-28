@@ -1,0 +1,32 @@
+<img src="/static/img/devel/checkout2.png" style="float: left; margin-bottom: -30px; margin-left: 15px; width: 64px;" />
+<div>
+<h3>Dnevni obračun</h3>
+<table class="dt2">
+
+	<!-- Tu ide extends XYZ a osnovni dio izvući da bude zajednički? -->
+
+      
+      <thead>
+        <tr>
+	   	   <th>Djelatnik</th>           
+	   	   <th>Broj kutija</th>
+           <th>Iznos</th>           		   
+           <th>Iznos (kn)</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in korisnici %}	  
+		<tr class="{% cycle 'odd' 'even' %}">	
+			<td>{{i.get_full_name}}</td>			
+			<td>{{i.broj_kutija}}</td>
+			<td>{% if i.inkasirano.cijena__sum %}{{i.inkasirano.cijena__sum}}{% else %}0{% endif %} &euro;</td>
+			<td>{% if i.inkasirano_hrk %}{{i.inkasirano_hrk}}{% else %}0{% endif %} kn</td>
+		</tr>	  
+     {% endfor %}
+     
+</table>
+</div>
+<div>
+</div>

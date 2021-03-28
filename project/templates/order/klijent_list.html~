@@ -1,0 +1,47 @@
+<table class="data-table" id="popis_lijekova">
+
+      <caption>Pacijenti (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+				   <th>Ime</th>
+           <th>Adresa</th>
+           <th>Pošta</th>
+           <th>Grad</th>
+           <th>Fiksni</th>
+           <th>Mobilni</th>
+           <th>Opaska</th>
+	   <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="klijent-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+   		<!-- <td><a href="#" onClick="show_user({{i.id}}); return false;">{{i.prezime}}, {{i.ime}}</a></td> -->
+			<td><a href="{% url client.view i.id %}">{{i.prezime}}, {{i.ime}}</a></td>
+			<td>{{i.adresa}}</td>
+ 		  <td>{{i.postanski_broj}}</td>
+			<td>{{i.grad}}</td>
+			<td>{{i.telefon}}</td>
+			<td>{{i.mobitel}}</td>
+		 	<td>{{i.opaska|truncatewords:4}}</td>
+			<td><a href="{% url client.edit i.id %}">Uredi</a></td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url client.browse as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>
+
+<!-- #<span class="pages">
+#  {% if page_obj.has_previous %}<a href="?page={{page_obj.previous_page_number}}">&lt;</a>{% endif %}
+#  {% for p in digg_page_range %}
+#    {% if not p %}...{% else %}{% ifequal p page_obj.number %}<span>{{p}}</span>{% else %}<a href="?page={{p}}">{{p}}</a>{% endifequal %}{% endif %}
+#  {% endfor %}
+#  {% if page_obj.has_next %}<a href="?page={{page_obj.next_page_number}}">&gt;</a>{% endif %}
+#</span> -->

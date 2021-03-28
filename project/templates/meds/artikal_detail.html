@@ -1,0 +1,156 @@
+<!-- <img src="/static/img/form/pills2.png" style="float:left;" /> -->
+<div>
+
+{% include "meds/meds_menu_header.html" %}
+ 
+<div class="clear space-1x"></div>
+
+<h3> Pregled artikla </h3>
+                    <div class="content-66-left-wrapper" style="height:190px;">
+                      <h2 class="content-box-header"><span>Artikal</span></h2>
+                      <div class="content-wrapper">
+			<table class="data-table">
+			<tr><td>Naziv artikla:</td><td><strong>{{ artikal.name }}</strong></td></tr>
+			<tr><td>Količina:</td><td><strong>{{ artikal.kolicina }} {{ artikal.jedinice }}</strong></td></tr>
+			<tr><td>Cijena u Njemačkoj: </td><td>Nabavna: <strong>{{ artikal.ApoEk|addpoint }} &euro;</strong> &nbsp; &nbsp; &nbsp; Prodajna: <strong>{{ artikal.ApoVk|addpoint }} &euro;</strong> &nbsp; &nbsp; &nbsp; PZN: <strong>{{ artikal.PznOrg }}</strong></td></tr>
+			<tr><td>Cijena za pacijenta: </td><td><strong>{{ artikal.cijena_s_marzom }} &euro;</strong><span id="meds_izracun_cijene"></span></td></tr>
+			</table>
+                      </div>
+                    </div>
+  
+                    <div class="content-30-right-wrapper centralno-poravnanje" style="height:190px;">
+                      <h2 class="content-box-header"><span>Pakiranje</span></h2>
+                      <div class="content-wrapper">
+			<table>
+			<tr><td><img src="/static/img/box_dimensions_diagram.jpg" style="width:96px;height:96px;" /></td><td><img src="/static/img/vaga.png" style="width:96px;height:96px;" /></td></tr>
+                       {% if artikal.dimenzije.id %}
+			<tr><td><strong>{{ artikal.dimenzije.duljina }}</strong> x <strong>{{ artikal.dimenzije.sirina }}</strong> x <strong>{{ artikal.dimenzije.visina }}</strong> mm</td><td><strong>{{ artikal.dimenzije.masa }}</strong> g</td></tr>
+  		       {% else %}
+			<tr><td><strong>?</strong> x <strong>?</strong> x <strong>?</strong> mm</td><td><strong>?</strong> g</td></tr>
+		       {% endif %}
+
+			</table>
+
+                      </div>
+                    </div>
+  
+                    
+                    <div class="clear space-2x"></div>
+		    <div class="content-100-wrapper" >
+                      <div class="content-wrapper">
+			{% if artikal.OralfestFl %}Za oralnu primjenu, tablete &nbsp;&nbsp; {% endif %}
+			{% if artikal.OralfluessigFl %}Za oralnu primjenu, tekućina, &nbsp;&nbsp; {% endif %}
+			{% if artikal.VeterinaerFl %}Veterinarski pripravak, &nbsp;&nbsp;{% endif %}
+                        {% if artikal.ApoKz == 1 %}Izdaje se na recept, &nbsp;&nbsp;{% endif %}
+                        {% if artikal.BtmFl %}Opijat, &nbsp;&nbsp;{% endif %}
+                        {% if artikal.WarnFl %}Postoje upozorenja, &nbsp;&nbsp;{% endif %}
+                        {% if artikal.EigenArtFl %}Specifičan preparat, &nbsp;&nbsp;{% endif %}
+                        {% if artikal.NachfolgerFl %}Nasljednik, novija generacija, &nbsp;&nbsp;{% endif %}
+                        {% if artikal.VorgaengerFl %}Prethodnik, starija generacija, &nbsp;&nbsp;{% endif %}
+                        {% if artikal.InvasivFl %}Invazivna aplikacija, &nbsp;&nbsp;{% endif %}
+                      </div>
+                    </div>
+                    <div class="clear space-2x"></div>
+  
+                    <div class="content-30-left-wrapper">
+                      <h2 class="content-box-header"><span>Dobavljač</span></h2>
+                      <div class="content-wrapper">
+<div style="text-align: center; padding-bottom: 10px;"> {% if artikal.dobavljac.ima_logo %} <img src="{{artikal.dobavljac.fotka}}" /> {% endif %} </div>                        
+
+<table class='dobavljac'> <tr><td>Naziv: </td><td><strong>{{ artikal.dobavljac.naziv }}</strong></td></tr>
+	<tr><td></td><td>{{ artikal.dobavljac.dodatak_nazivu }}</td></tr>
+ 	<tr><td>Tip:</td><td>{{ artikal.dobavljac.tip_naziv }}</td></tr>
+	{% for i in artikal.dobavljac.adrese.all %}
+	  <tr class='dobavljac-prored'><td></td><td></td></tr>
+  	  <tr><td></td><td><h4>{{i.tip.opis}}</h4></td></tr>
+	  {% for j in i.broj %}
+  		<tr><td>{{j.telefon_human_readable}}:</td><td>{{ j.broj }}</td></tr>
+	  {% endfor %}
+		{% if i.distribucija %} <tr><td></td><td>{{ i.distribucija }}</td></tr> {% endif %}
+		{% if i.ulica %} <tr><td>Ulica: </td><td>{{i.ulica}}</td></tr> {% endif %}
+		{% if i.mjesto %}<tr><td>Mjesto: </td><td> {{i.postanski_broj}} {{i.mjesto}}</td></tr> {% endif %}
+	{% endfor %}
+	</table>
+	
+
+                      </div>
+                    </div>
+   
+                    <div class="content-30-middle-wrapper centralno-poravnanje">
+                      <h2 class="content-box-header"><span>ATC klasifikacija: {{ artikal.ATCCode }}</span></h2>
+			<table>
+  			   <tr><td></td><td>ATC kategorien</td></tr>
+			{% if artikal.ATCCode %}
+			  {% for i in artikal.ATC.tablica %}
+  			   <tr><td></td><td><img src="/static/img/down.png" /></td></tr>
+  			   <tr><td>{{i.0}}</td><td>{{i.1}}</td></tr>
+			  {% endfor %}
+			{% endif %}
+			</table>
+                      <div class="content-wrapper">
+                      </div>
+                    </div>
+ 
+                    <div class="content-30-right-wrapper" {% if not artikal.IdentaFl %} style="opacity:0.5;"{% endif %}>
+                      <h2 class="content-box-header"><span>Identifikacija tablete</span></h2>
+                      <div class="content-wrapper" style="text-align: center;">
+{% if artikal.identifikacija.fotka %} 
+	<img src="/static/img/identa/{{artikal.identifikacija.fotka}}" style="border:1px solid #021a40; padding: 1px; margin-bottom: 10px;" />
+{% endif %}
+						<table class="data-table">                        
+{% if 1 %}
+<tr><td>Širina:</td><td>{{artikal.identifikacija.D}} mm</td></tr>
+<tr><td>Visina:</td><td>{{artikal.identifikacija.H}} mm</td></tr>
+<tr><td>Duljina:</td><td>{{artikal.identifikacija.L}} mm</td></tr>
+<tr><td>Masa:</td><td>{{artikal.identifikacija.G}} mg</td></tr>
+
+<tr><td>Natpis:</td><td>{{artikal.identifikacija.PraegV}}</td></tr>
+{% if artikal.identifikacija.PraegR %}
+	{% if 'LOGO' in artikal.identifikacija.PraegR %}
+		<tr><td>Logo na poleđini:</td><td><img src="/static/img/identa/{{artikal.identifikacija.poledina}}.jpg" /></td></tr>
+	{% else %}
+		<tr><td>Natpis straga:</td><td>{{ artikal.identifikacija.PraegR }}</td></tr>  
+	{% endif %}
+{% endif %}
+<tr><td>Boja:</td><td>{{artikal.identifikacija.boja.naziv}}</td></tr>
+<tr><td>Tip:</td><td>{{artikal.identifikacija.tip.naziv}}</td></tr>
+{% endif %}
+			</table>
+
+<!-- <table>
+</table> -->
+
+                      </div>
+                    </div>
+
+<div class="clear space-2x"></div>
+
+<img src="/static/img/devel/hzzo.png" style="width:50px; float:right; margin-bottom: -25px; margin-right: -10px;" />
+                   
+		<table class='dt2'>
+			<tr><th>ATC Naziv</th><th>Zaštićeno ime lijeka</th><th>Generičko ime</th><th>Proizvođač</th><th>Oblik lijeka</th><th>Cijena</th></tr>
+			{% for i in artikal.ATC.listahzzo.values %}
+				<tr><td>{{i.ATC_naziv}}</td><td>{{i.zasticeno_ime_lijeka}}</td><td>{{i.genericko_ime}}</td><td>{{i.proizvodac}}</td><td>{{i.oblik_lijeka}}</td><td>{{i.cijena_u_kn_za_orig_pakir}} kn</td></tr>
+			{% endfor %}
+		</table>
+
+<!-- ALMP -->
+
+<div class="clear space-2x"></div>
+
+<img src="/static/img/devel/halmed.png" style="float:right; margin-bottom: -15px; margin-right: -10px;" />
+                   
+		<table class='dt2'>
+			<tr><th>ATC Naziv</th><th>Ime lijeka</th><th>Djelatna tvar</th><th>Proizvođač</th><th>Sažetak opisa</th><th>Uputa o lijeku</th><th>Način izdavanja</th></tr>
+			{% for i in artikal.ATC.listaalmp.values %}
+				<tr><td>{{i.atk}}</td><td>{{i.naziv}}</td><td>{{i.djelatna_tvar}}</td><td>{{i.proizvodac}}</td>
+				  <td><a class="nohijack" href="/static/{{i.sazetak_opisa}}">PDF</a></td>
+				  <td><a class="nohijack" href="/static/{{i.uputa_o_lijeku}}">PDF</a></td>
+				  <td>{{i.nacin_izdavanja}}</td></tr>
+			{% endfor %}
+		</table>
+
+</div>
+
+
+

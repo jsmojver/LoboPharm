@@ -1,0 +1,80 @@
+{% if obavijest_dodan %} <!-- Ako je template pozvan iz form.save() novog korisnika, prikaži box da je uspješno dodan -->
+<div class="message-wrapper ok"><p><strong>SPREMLJENO.</strong> Korisnik {{ klijent.ime }} {{ klijent.prezime }} je uspješno dodan u sustav!</p><a href="#" class="close full"><img src="/static/img/close.gif" title="Zatvori" alt="zatvori" onClick="notification_close(this);" /></a><div class="clear"></div></div>
+{% endif %}
+
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li>{% if i.id != 19 %}<a href="{% url client.edit klijent.id %}">Uredi</a>{% endif %}</li>
+       <li><a href="{% url client.select klijent.id %}">Odaberi</a></li>
+       <li><a href="">Gumb</a></li>
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+ <img src="/static/img/devel/korisnik3.png" style="float:left; width:256px; padding: 10px;" />
+
+<!-- <div class="content-75-right-wrapper">
+ <h2 class="content-box-header"><span>Klijent</span></h2>-->
+	<table class="data-table" style="float: right; width: 70%; margin-top:20px;"">
+        <caption>Osnovni podaci</caption>
+
+    {% if klijent.tip_klijenta == 1 %} <!-- Fizička osoba -->
+	<tr><td>Ime:</td><td style="width:80%;">{{ klijent.ime }} {{ klijent.prezime }}</td></tr>
+	<tr><td>Adresa:</td><td><a class="nohijack" href="javascript:window.open('http://maps.google.com/?q={{ klijent.adresa }},{{klijent.grad}},Croatia', '_blank');">{{ klijent.adresa }}, {{ klijent.postanski_broj }}, {{ klijent.grad }}</td></tr>
+	<tr><td>Zemlja:</td><td>{{klijent.zemlja}}</td></tr>
+	<tr><td>Telefon:</td><td>{{ klijent.telefon }}</td></tr>
+	<tr><td>Mobitel:</td><td>{{ klijent.mobitel }}</td></tr>
+	<tr><td>E-mail:</td><td>{{ klijent.email }}</td></tr>
+	{% else %} <!-- Pravna osoba -->
+	<tr><td>Naziv:</td><td style="width:80%;">{{ klijent.naziv }}</td></tr>
+	<tr><td>Adresa:</td><td><a class="nohijack" href="javascript:window.open('http://maps.google.com/?q={{ klijent.adresa }},{{klijent.grad}},Croatia', '_blank');">{{ klijent.adresa }}, {{ klijent.postanski_broj }}, {{ klijent.grad }}</td></tr>
+	<tr><td>Telefon:</td><td>{{ klijent.telefon }}</td></tr>
+	<tr><td>OIB:</td><td>{{ klijent.oib }}, {{ klijent.get_tip_obveznika }}</td></tr>
+	<tr><td>E-mail:</td><td>{{ klijent.email }}</td></tr>
+	<tr><td>Rabat:</td><td>{{klijent.rabat}}</td></tr>		
+	{% endif %}
+	<!-- Tu još ide napomena -->
+	</table>
+
+<!-- </div>-->
+  
+  
+<div class="clear space-2x"></div>
+  
+
+{% if klijent.narudzbe.all.count %}
+<!--<div class="content-100-wrapper">
+<h2 class="content-box-header"><span>Narudžbe:</span></h2>
+<div class="content-wrapper">
+-->
+
+<table class='dt2'>
+      <!-- <caption style="-webkit-border-radius:15px;">Artikli:</caption> -->
+<thead>
+<tr><th>Naziv artikla</th><th>Status</th><th>Šifra</th><th>Promjena</th><th>Uneseno</th></tr>
+</thead>
+{% for i in klijent.zadnje_narudzbe %} 
+  {% for j in i.artikli.all %}
+    <tr class="{% cycle 'even-row' 'odd-row' %}"><td>{{j.ime}}</td><td>{{j.get_status}}</td><td><a href="{% url order.view i.id %}">{{i.sifra}}</a></td><td>{{i.modified}}</td><td>{{i.created}}</td>       
+    </tr>
+  {% endfor %}
+{% endfor %}
+</table>
+
+
+<!--
+ </div>
+</div>
+<br /> -->
+
+{% else %}
+ <div class="content-100-wrapper">
+<h2 class="content-box-header"><span>Narudžbe:</span></h2>
+<div class="content-wrapper">
+ Nema prethodnih narudžbi!
+</div></div>
+
+ 
+{% endif %}
+
+

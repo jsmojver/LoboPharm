@@ -1,0 +1,35 @@
+{% include "nabava/nabava_header.html" %}
+
+<div class="clear space-1x"></div>
+
+<table class="data-table">      	   		  
+      <caption> Pregled narudžbi od dobavljača (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>Narudžba</th>
+		   <th>Konto</th>           
+           <th>Datum narudžbe</th>
+	       <th>Zabilježba</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	 {% for i in object_list %}
+		<tr class="{% cycle 'odd' 'even' %}">
+   		<td>{{i.id}}</td>
+		<td><a href="{% url nabava.one.list i.id %}">
+			{{i.konto.name}}
+		</a></td> 		
+		<td>{{i.created}}</td>
+		<td>{{i.zabiljezba}}</td>
+		</tr>
+     {% endfor %}       
+                       
+     </tbody>
+
+	 {% url nabava.all.view as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>

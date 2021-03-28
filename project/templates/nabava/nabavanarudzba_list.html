@@ -1,0 +1,33 @@
+{% include "nabava/nabavanarudzba_header.html" %}
+
+<table class="data-table">      	   		  
+    <caption> Pregled narudžbe {{ nabava.id }} - artikal {{ ime }} (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>Količina</th>
+           <th>Klijent</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	 {% for i in object_list %}
+		<tr class="{% cycle 'odd' 'even' %}">
+        <td>{{i.artikal.kolicina}}</td>
+        <td><a href="{% url order.view i.artikal.narudzba.id %}">
+                {% if i.artikal.narudzba.klijent.ime %}    
+			        {{i.artikal.narudzba.klijent.ime }}
+                {% else %}
+			        {{i.artikal.narudzba.klijent.naziv }}
+                {% endif %}
+		</a></td> 		
+		</tr>
+     {% endfor %}       
+                       
+     </tbody>
+
+	 {% url nabava.item.list nabava.id ime trziste std_kolicina jedinice as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>

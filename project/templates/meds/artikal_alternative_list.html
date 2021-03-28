@@ -1,0 +1,11 @@
+<table class="data-table" id="search_rezultati">
+
+     {% include "meds/lista_lijekova.html" %}
+
+	{% url meds.alternative object_list.0.ATCCode as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+<!-- </div> -->
+
+

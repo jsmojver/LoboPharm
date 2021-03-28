@@ -1,0 +1,20 @@
+     <img src="/static/img/mac.png" style="float: left; margin-bottom: -20px; margin-left: 50px; width: 96px; padding-right: 20px;" />
+<div style="border: 1px dotted gray; width: 450px; box-shadow: 8px 8px 5px #ddd; border-radius: 15px; padding: 30px; margin-top: 20px; margin-left: 95px;" >
+	<h3>ZKI Izračun</h3>
+	<form id="forma-zki-calc" method="post" action="{% url fiskalizacija.zki.kalkulator %}" class='modelforms'>
+		<table>
+<tr><th><label for="id_naziv">OIB:</label></th><td><input id="id_oib" type="text" name="oib" maxlength="256" value="{{oib}}"></td></tr>
+<tr><th><label for="id_naziv">Datum i vrijeme: (DD.MM.YYYY HH:MM:SS)</label></th><td><input id="id_datumvrijeme" type="text" name="datumvrijeme" value="{{datumvrijeme}}" maxlength="256" /></td></tr>
+<tr><th><label for="id_naziv">Broj</label></th><td><input id="id_broj" type="text" name="broj" maxlength="256" value="{{broj}}" /></td></tr>
+<tr><th><label for="id_naziv">Prostor:</label></th><td><input id="id_prostor" type="text" name="prostor" maxlength="256" value="{{prostor}}" /></td></tr>
+<tr><th><label for="id_naziv">Uredjaj:</label></th><td><input id="id_uredjaj" type="text" name="uredjaj" maxlength="256" value="{{uredjaj}}" /></td></tr>
+<tr><th><label for="id_naziv">Iznos:</label></th><td><input id="id_iznos" type="text" name="iznos" maxlength="256" value="{{iznos}}" /></td></tr>
+		</table>
+		<div style="text-align: right;">
+		  <input class="modelforms-gumb" type="image" src="/static/img/devel/kvacica.png" style="width: 64px; border: 0px; margin-right: 20px;" />
+		</div>
+	</form>
+	<div class="clear space-2x" style="height: 1px;"></div>
+	{% if zki %}<h3>ZKI: {{ zki }} </h3>{% endif %}
+</div>
+

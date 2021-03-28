@@ -1,0 +1,14 @@
+     <img src="/static/img/form/pill.png" style="float: left; margin-bottom: -20px; margin-left: 60px; width: 96px;" />
+<div style="border: 1px dotted gray; width: 450px; box-shadow: 8px 8px 5px #ddd; border-radius: 15px; padding: 30px; margin-top: 20px; margin-left: 85px;" >
+	<h3>Dodavanje lijeka</h3>
+	<form id="forma-dodavanje-pacijenta" method="post" action="{% url depo.lijek.add %}" class='modelforms'>
+		<table>
+		{{ form.as_table }}
+		</table>
+		<div style="text-align: right;">
+		  <input class="modelforms-gumb" type="image" src="/static/img/devel/kvacica.png" style="width: 64px; border: 0px; margin-right: 20px;" />
+		</div>
+	</form>
+	<div class="clear space-2x" style="height: 1px;"></div>
+</div>
+

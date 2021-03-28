@@ -1,0 +1,51 @@
+<table class="data-table" id="popis_lijekova">
+
+      <caption>Depo - Popis Lijekova (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>ID</th>
+	         <th><a href="{% url lijekovi.list.sort toggleorder 'naziv' %}">Naziv</a></th>
+           <th><a href="{% url lijekovi.list.sort toggleorder 'cijena' %}">Cijena</a></th>
+           <th><a href="{% url lijekovi.list.sort toggleorder 'depo' %}">Depo</a></th>
+           <th><a href="{% url lijekovi.list.sort toggleorder 'stanje' %}">Stanje</a></th>
+           <th><a href="{% url lijekovi.list.sort toggleorder 'min_stanje' %}">Minimalna zaliha</a></th>
+	   {% if perms.is_staff %}
+           <th><a href="{% url lijekovi.list.sort toggleorder 'stanje' %}">Stanje kutija</a></th>
+           <th></th>
+           <th></th>
+	   {% endif %}
+           <th></th>
+           <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="lijekovi-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+			<td>{{i.id}}</td>
+			<td>{{i.naziv}}</td>
+			<td>{{i.cijena}} kn</td>
+			<td>{{i.depo}}</td>
+			<td>{{i.stanje}}</td>
+			<td>{{i.min_stanje}}</td>
+			{% if perms.is_staff %}
+			<td>{{i.stanje_kutija}}</td>
+		 	<td><a href="{% url depo.stanje.kutije i.id %}">Skladišna lista</a></td>
+		 	<td><a href="{% url depo.views.graph_lijek_alltime i.id %}">Promet</a></td>
+			{% endif %}
+		 	<td><a href="{% url depo.lijek.edit i.id %}">Uredi</a></td>
+		 	<td>{% if i.ima_dovoljno %}{% else %} <img src="/static/img/table/usklicnik.png" style="width:16px;" /> {%endif%}</td>
+		</tr>
+        {% endfor %}       
+
+
+        </tbody>
+
+	{% url lijekovi.list.sort order sortfield as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+
+

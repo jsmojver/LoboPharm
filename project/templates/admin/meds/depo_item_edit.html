@@ -1,0 +1,99 @@
+{% extends "admin/base/body_content.html" %}
+
+{% if item.id %}
+    {% set title = "Izmjena: %s" % (item.naziv) %}
+{% else %}
+    {% set title = "Novi unos" %}
+{% endif %}
+
+{% set backlink = "/administrator/meds/depo/" %}
+
+{% block main_content %}
+
+    <h1>{{ title }}</h1>
+
+    <nav class="navbar navbar-default toolbar" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="navbar-right">
+                <a href="#" class="btn btn-success navbar-btn submit"><i class="icon-save"></i> Spremi</a>
+                <a href="{{ backlink }}" class="btn btn-primary navbar-btn"><i class="icon-chevron-left"></i> Povratak</a>
+            </div>
+        </div>
+    </nav>
+
+    <form id="fm" class="form-horizontal" role="form" method="post" action="{{ request.path }}">
+        <input type="hidden" name="backlink" value="{{ backlink }}" />
+        <div class="form-group">
+            <label for="naziv" class="col-sm-2 control-label">Naziv</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="naziv" name="naziv" placeholder="Naziv" value="{{ item.naziv }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="trziste" class="col-sm-2 control-label">Depo</label>
+            <div class="col-sm-4">
+                <select id="depo" name="depo" class="form-control">
+                    {% for c in depoi %}
+                        <option value="{{ c.id }}"{% if (not item.id and loop.first) or (item.id and item.depo == c) %} selected="selected" {% endif %}>{{ c.naziv }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="nabavna_cijena_eur" class="col-sm-2 control-label">Nabavna cijena</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control text-right" id="nabavna_cijena_eur" name="nabavna_cijena_eur" placeholder="Nabavna cijena" value="{{ item.nabavna_cijena_eur | format_float(precision=2) }}" />
+            </div>
+            <div class="col-sm-1">
+                <p class="form-control-static">&euro;</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Maloprodajna cijena</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control text-right" id="maloprodajna_cijena" name="cijena" placeholder="Maloprodajna cijena" value="{{ item.cijena | format_float(precision=2) }}" />
+            </div>
+            <div class="col-sm-1">
+                <p class="form-control-static">kn</p>
+            </div>
+            <div class="col-sm-1">
+                <p class="form-control-static">
+                    <span id="maloprodajna_cijena_eur">{{ item.cijena | hrk2eur | format_float(precision=2) }}</span> &euro;
+                </p>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+
+        $(function()
+        {
+            $("#maloprodajna_cijena").keyup(
+                function()
+                {
+                    var post_data = {
+                        "value": $(this).val()
+                    };
+                    $.post("/administrator/hrk2eur/", post_data,
+                        function(data)
+                        {
+                            $("#maloprodajna_cijena_eur").text(data.value_eur_str);
+                        }, "json"
+                    );
+                }
+            );
+
+            $(".btn.submit").click(
+                function()
+                {
+                    $("#fm").submit();
+                    return false;
+                }
+            );
+        });
+
+    /* ]]> */
+    </script>
+
+{% endblock %}

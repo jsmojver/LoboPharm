@@ -1,0 +1,85 @@
+{% include "meds/meds_search_header.html" %}
+
+<div style="text-align: center;">
+</div>
+
+<img src="/static/img/devel/pills_2.png" style="float: left; margin-bottom: -50px; margin-left: 30px; width: 128px;"/>
+<div
+    style="border: 1px dotted gray; width: 450px; box-shadow: 8px 8px 5px #ddd; border-radius: 15px; padding: 30px; margin-top: 30px; margin-left: 85px;">
+    <form class="method-get modelforms advanced_search" method="GET" action="{% url meds.search.advanced %}">
+        <h3 style="margin-left: 20px;">Napredno pretraživanje</h3>
+        <table>
+            <tr>
+                <td>
+            <tr>
+                <th><label for="id_dobavljac">Dobavljac:</label></th>
+                <td>
+
+                    <input class="autocomplete" type="text" name="dobavljac" id="id_dobavljac" maxlength="64"
+                           placeholder="Naziv" data-autocomplete-callback=""
+                           data-autocomplete-url="{% url ajax_autocomplete_hersteller %}" maxlength="64">
+                </td>
+            </tr>
+
+
+            <tr>
+                <th><label for="id_djelatna_tvar">Djelatna tvar 1:</label></th>
+                <td>
+                    <input class="autocomplete" type="text" name="djelatna_tvar_1" id="id_djelatna_tvar_1" maxlength="64"
+                           placeholder="Naziv" data-autocomplete-callback=""
+                           data-autocomplete-url="{% url ajax_autocomplete_stoffname %}"></td>
+            </tr>
+
+            <tr>
+                <th><label for="id_djelatna_tvar">Djelatna tvar 2:</label></th>
+                <td>
+                    <input class="autocomplete" type="text" name="djelatna_tvar_2" id="id_djelatna_tvar_2" maxlength="64"
+                           placeholder="Naziv" data-autocomplete-callback=""
+                           data-autocomplete-url="{% url ajax_autocomplete_stoffname %}"></td>
+            </tr>
+
+            <tr>
+                <th><label for="id_djelatna_tvar">Djelatna tvar 3:</label></th>
+                <td>
+                    <input class="autocomplete" type="text" name="djelatna_tvar_3" id="id_djelatna_tvar_3" maxlength="64"
+                           placeholder="Naziv" data-autocomplete-callback=""
+                           data-autocomplete-url="{% url ajax_autocomplete_stoffname %}"></td>
+            </tr>
+
+
+            <tr>
+                <th><label for="id_atc">ATC:</label></th>
+                <td>
+                    <input class="autocomplete" type="text" name="atc" id="id_atc" maxlength="64" placeholder="Naziv"
+                           data-autocomplete-callback="" data-autocomplete-url="{% url ajax_autocomplete_atc %}"
+                           style="text-transform: uppercase;"></td>
+            </tr>
+
+            <tr>
+                <th><label for="id_pzn">PZN:</label></th>
+                <td><input id="id_pzn" type="text" name="pzn" maxlength="64"/></td>
+            </tr>
+
+            <tr>
+                <th><label for="id_ean">EAN:</label></th>
+                <td><input id="id_ean" type="text" name="ean" maxlength="64"/></td>
+            </tr>
+
+
+            <tr>
+                <th></th>
+                <td><input type="hidden" name="submitted" value="True"></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td>
+                    <input class="trazigumb-2" type="submit" value="Traži">
+                </td>
+            </tr>
+        </table>
+
+    </form>
+
+
+    <div class="clear space-2x" style="height: 1px;"></div>
+</div>

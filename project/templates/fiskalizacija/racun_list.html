@@ -1,0 +1,39 @@
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="javascript:fiskaliziraj_dostavi_naknadno();" class="nohijack">Naknadno dostavi sve račune</a></li>
+       <li><a href="javascript:ispisi_potvrdu_obracuna();" class="nohijack">Ispiši dnevni obračun</a></li>
+       <li><a class="nohijack" href="javascript:$.getScript('{% url fiskalizacija.provjera.racuna %}');">Provjeri račune</a></li>
+       <li><a class="nohijack" href="{% url order.views.pdf_danasnji_fiskalni_racuni %}">Današnji računi (PDF)</a></li>
+
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+ <div class="clear space"></div>
+
+<table class="data-table" id="popis-fiskalnih-racuna">
+
+    <caption>Fiskalni računi (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+	<thead>
+	<tr><th>Broj</th><th>Datum i vrijeme</th><th>ZKI</th><th>Izdao</th><th>Jir</th><th>Iznos</th><th></th></tr>
+	</thead>
+	 <tbody>
+
+	{% for i in object_list %}
+		{% if i.jir == 'veleprodajni' %}
+			<tr style="font-size:11px;opacity:0.5;"><td>{{i.oznaka_racuna}}</td><td colspan=6 style="text-align: center;">Veleprodajni račun</td></tr>
+		{% else %}
+			<tr style="font-size:11px;{% if i.storno %}opacity:0.5;{%endif%}"><td><a href="{% url order.fiskaliziraj.racun_detalji i.id %}">{{i.oznaka_racuna}}</a></td><td>{{i.datum_vrijeme_zastitni}}</td><td>{{i.zastitni_kod}}</td><td>{{i.djelatnik.get_full_name}}</td><td>{{i.jir}}</td><td>{{i.iznos}}</td>
+			<td>
+			{% if i.jir %} <img src="/static/img/devel/tick2.png" /> {% else %} <img src="/static/img/devel/iks.png" />{% endif %}
+			</td>
+			</tr>
+		{% endif %}
+	{% endfor %}
+                     
+    </tbody>
+
+	 {% url fiskalizacija.racun.list as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>

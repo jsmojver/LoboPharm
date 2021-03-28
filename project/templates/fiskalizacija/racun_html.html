@@ -1,0 +1,60 @@
+{% include "fiskalizacija/racun_menu_header.html" %}
+
+<div class="clear space-2x"></div>
+
+
+    <div style="width: 100%">
+     <div id='receipt-container' style="width: 35em; font-size: 10px; font-family: receipt; padding: 20px;">
+        <div style="text-align: center">
+        <img src="/static/img/logo10.bmp" width="350px;" />
+        <br />
+        {{ vrijeme }}
+        <p class="font-b"> - R A Č U N - </p>
+        <br /> 
+        <span>broj: <u><strong>{{racun.oznaka_racuna}}</strong></u></span>
+	<br />
+	<br />
+        <span>Datum i vrijeme: <u><strong>{{racun.datum_vrijeme_zastitni}}</strong></u></span>
+        <br />
+        <span>ZKI: <u><strong>{{racun.zastitni_kod}}</strong></u></span>
+        <br />
+        <br />
+        <pre style="font-size: 0.9em; font-family: receipt;">Naziv proizvoda               Kol     Cijena      Iznos</pre>
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        {% for i in racun.stavke.all %}
+        <div><pre style="font-size: 0.9em; font-family: receipt;">{{i.naziv|ljust:"29"}}{{i.kolicina|rjust:"5"}}{{i.cijena|rjust:"11"}}{{i.iznos|rjust:"11"}}</pre></div>
+        {% endfor %}
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        <div style="text-align: right;"> <p class="font-c"> UKUPNO: {{racun.iznos}} kn </p> </div>
+        <br />
+        <br />
+	
+	<div><u><strong>Obračun poreza</strong></u></div>
+        <br />
+        <pre style="font-size: 0.9em; font-family: receipt;">Vrsta poreza                  Stopa   Osnovica    Iznos</pre>
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        {% for i in racun.porezi.all %}
+        <div><pre style="font-size: 0.9em; font-family: receipt;">{{i.naziv|ljust:"29"}}{{i.stopa|rjust:"5"}}{{i.osnovica|rjust:"11"}}{{i.iznos|rjust:"11"}}</pre></div>
+        {% endfor %}
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        
+        {% if racun.jir %}
+		<div>JIR: <strong><u>{{racun.jir}}</u></strong> </div>
+	{% else %}
+		<div>JIR: <strong><u>Nije moguće dohvatiti JIR</u></strong> </div>
+		<br />
+		<div>Razlog: <strong><u>Internetska veza u prekidu</u></strong> </div>
+	{% endif %}
+        <br />
+        <div> Račun izdao: <strong>{{racun.djelatnik.userprofile.oznaka_operatera}}</strong></div>
+	<br />
+        <div> Način plaćanja: <strong>Gotovina - novčanice i kovanice</strong></div>
+	<br />
+	<br />
+
+        <div> ** Hvala na povjerenju! ** </div><br /><br />
+        </div>
+
+     </div>
+    </div>
+

@@ -1,0 +1,115 @@
+{% extends "admin/base/body_content.html" %}
+
+{% if item.id %}
+    {% set title = "Izmjena: %s" % (item.name) %}
+{% else %}
+    {% set title = "Novi unos" %}
+{% endif %}
+
+{% set backlink = "/administrator/meds/njemacka/" %}
+
+{% block main_content %}
+
+    <h1>{{ title }}</h1>
+
+    <nav class="navbar navbar-default toolbar" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="navbar-right">
+                <a href="#" class="btn btn-success navbar-btn submit"><i class="icon-save"></i> Spremi</a>
+                <a href="{{ backlink }}" class="btn btn-primary navbar-btn"><i class="icon-chevron-left"></i> Povratak</a>
+            </div>
+        </div>
+    </nav>
+
+    <form id="fm" class="form-horizontal" role="form" method="post" action="{{ request.path }}">
+        <input type="hidden" name="backlink" value="{{ backlink }}" />
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Naziv</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" name="name" placeholder="Naziv" value="{{ item.name }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ApoEk" class="col-sm-2 control-label">Nabavna cijena</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control text-right recalc_onkeyup" id="ApoEk" name="ApoEk" placeholder="Nabavna cijena" value="{{ (item.ApoEk / 100.0) | format_float(precision=2) }}" />
+            </div>
+            <div class="col-sm-1">
+                <p class="form-control-static">&euro;</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ApoVk" class="col-sm-2 control-label">Prodajna cijena</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control text-right recalc_onkeyup" id="ApoVk" name="ApoVk" placeholder="Prodajna cijena" value="{{ (item.ApoVk / 100.0) | format_float(precision=2) }}" />
+            </div>
+            <div class="col-sm-1">
+                <p class="form-control-static">&euro;</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Veleprodajna cijena</label>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="veleprodajna_cijena_eur">{{ item.calc_veleprodajna_cijena() | format_float(precision=2) }}</span> &euro;
+                </p>
+            </div>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="veleprodajna_cijena_kn">{{ item.calc_veleprodajna_cijena() | eur2hrk | format_float(precision=2) }}</span> kn
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Maloprodajna cijena</label>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="maloprodajna_cijena_eur">{{ item.calc_maloprodajna_cijena() | format_float(precision=2) }}</span> &euro;
+                </p>
+            </div>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="maloprodajna_cijena_kn">{{ item.calc_maloprodajna_cijena() | eur2hrk | format_float(precision=2) }}</span> kn
+                </p>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+
+        $(function()
+        {
+            $(".recalc_onkeyup").keyup(
+                function()
+                {
+                    var post_data = {
+                        "ApoEk": $("#fm input[name='ApoEk']").val(),
+                        "ApoVk": $("#fm input[name='ApoVk']").val()
+                    };
+                    $.post("/administrator/meds/njemacka/calc_prices/{{ item.ATC_id }}/", post_data,
+                        function(data)
+                        {
+                            $("#veleprodajna_cijena_eur").text(data.veleprodajna_cijena_eur_str);
+                            $("#veleprodajna_cijena_kn").text(data.veleprodajna_cijena_kn_str);
+                            $("#maloprodajna_cijena_eur").text(data.maloprodajna_cijena_eur_str);
+                            $("#maloprodajna_cijena_kn").text(data.maloprodajna_cijena_kn_str);
+                        }, "json"
+                    );
+                }
+            );
+
+            $(".btn.submit").click(
+                function()
+                {
+                    $("#fm").submit();
+                    return false;
+                }
+            );
+        });
+
+    /* ]]> */
+    </script>
+
+{% endblock %}

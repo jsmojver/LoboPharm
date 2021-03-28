@@ -1,0 +1,19 @@
+{% include "meds/meds_search_header.html" %}
+
+<div style="margin-left: 130px; margin-top: 20px;">
+<h3>Depo - Zahtjev za izdavanje lijekova</h3>
+</div>
+<img src="/static/img/form/pills2.png" style="float: left; margin-bottom: -50px; margin-left: 55px; width: 96px;" />
+<div style="border: 1px dotted gray; width: 45%; box-shadow: 8px 8px 5px #ddd; border-radius: 15px; padding: 30px; margin-top: 30px; margin-left: 85px; padding-top: 50px; " >
+	<form id="forma-dodavanje-pacijenta" method="post" action="{% url depo.zahtjev.izdavanje %}" class='modelforms'>
+		<table>
+			{{ form.as_table }}
+		</table>
+		<div style="text-align: right;">
+		  <input class="modelforms-gumb" type="image" src="/static/img/devel/submit3.png" style="width: 64px; border: 0px; margin-right: 20px;" />
+		</div>
+	</form>
+	<div class="clear space-2x" style="height: 1px;"></div>
+	<div id="podaci-o-lijeku"></div>
+</div>
+

@@ -1,0 +1,28 @@
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url order.set.konto narudzba.id "Konto 1" %}">Konto 1</a></li>
+<!--       <li><a href="javascript:void(0);" class="nohijack">Izdavanje poštom</a></li> -->
+       <!-- {% if not narudzba.vazeci_fiskalni_racun %} 
+          <li><a href="javascript:fiskaliziraj({{narudzba.id}});" class="nohijack">Fiskalni račun</a></li>
+          <li><a href="javascript:akontacija({{narudzba.id}});" class="nohijack">Fiskaliziraj polog</a></li>
+       {% endif %} -->
+       <li><a href="{% url order.set.konto narudzba.id "Konto 2" %}">Konto 2</a></li>
+       <!-- <li><a href="javascript:ispisi_potvrdu({{narudzba.id}});" class="nohijack">Račun</a></li> -->
+       <li><a href="{% url order.set.konto narudzba.id "Konto 3" %}">Konto 3</a></li>
+       <li><a href="javascript:ispisi_racun_njemacki({{narudzba.id}});" class="nohijack">Račun Nj.</a></li>
+       <li><a href="javascript:ispisi_potvrda_njemacki({{narudzba.id}});" class="nohijack">Potvrda Nj.</a></li>
+       <li><a href="javascript:ispisi_potvrdu_za_blagajnu({{narudzba.id}});" class="nohijack">Barkod</a></li>
+       <li><a href="javascript:ispisi_shipping_label({{ narudzba.id }});" class="nohijack">Naljepnica</a></li>
+       <li><a href="javascript:ispisi_papiric_o_narudzbi({{ narudzba.id }});" class="nohijack">Narudžba</a></li>
+       <li><a href="{% url order.check.konto narudzba.id %}" >Ponuda</a></li>
+       <li><a href="{% url order.vip.status narudzba.id %}">VIP status</a></li>
+
+       {% if narudzba.status != 6 %} 
+     	 <!-- <li><a href="{% url order.narudzba.naplati.sve narudzba.id %}">Naplati sve</a></li> 
+         <li><a href="{% url order.narudzba.izdaj.sve narudzba.id %}">Izdaj sve</a></li> -->
+         {% if narudzba.status != 7 and narudzba.bilanca_uplata == 0 and not narudzba.racuni.count and not narudzba.narudzba_racuni.count %} <a href="{% url order.narudzba.storniraj narudzba.id %}">Storniraj</a> {% endif %}
+       {% endif %}
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+

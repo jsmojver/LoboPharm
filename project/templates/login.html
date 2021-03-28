@@ -1,0 +1,103 @@
+{% load url from future %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US"> 
+<head> 
+	<title>e-Ljekarna | Prijava u sustav</title> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<link rel='stylesheet' href='/static/css/login.css' type='text/css' media='all' />
+        <!-- <script type="text/javascript" SRC="/static/js/jquery-1.7.2.min.js"></script> -->
+</head> 
+<body class="login"> 
+
+<video autoplay id="vid" style="display:none;"></video>
+ 
+<div id="login" style="margin-top: 200px;"> 
+
+<!-- Test
+{% if user.is_authenticated %} 
+Yay, hello {{user.first_name}}!
+{% else %} 
+Boo. 
+{% endif %}
+-->
+ 
+<form name="loginform" id="loginform" action="{% url 'django.contrib.auth.views.login' %}" method="post">
+	{% csrf_token %}
+
+	<div id="naslov"> Apodata </div>
+ 	<div id="loginbox">
+
+    <input type="hidden" name="next" id="next" value="/"></input>
+
+	<table>
+	<tr>
+	<td><p class="logintext">Korisnik:</p></td>
+	<td><input type="text" name="username" id="id_username" class="input" value="" size="20" tabindex="10" /></td>
+	</tr>
+
+	<tr>
+	<td><p class="logintext">Zaporka:</p></td>
+	<td><input type="password" name="password" id="id_password" class="input" value="" size="20" tabindex="10" /></td>
+	</tr>	
+
+	</table>
+
+	<p class="submit"> 
+		<input type="image" src="/static/img/login/prijava.png" alt="submit" />
+		<!-- <img src="/static/img/login/prijava.png" alt="submit" onClick="send_image();" /> -->
+	</p> 
+	</div>
+
+</form> 
+ 
+<p id="nav"> 
+</p> 
+ 
+</div> 
+ 
+<script type="text/javascript"> 
+try{document.getElementById('id_username').focus();}catch(e){}
+/*    var camera_works=1;
+    function send_image() {
+        $('.progress-indicator').css( 'display', 'block' );
+        var c = document.createElement('canvas');
+        c.width=640; c.height=480;ctx = c.getContext('2d');
+ 	if(camera_works) { 
+          if (localMediaStream) ctx.drawImage(video, 0, 0);            
+          $.post('/sysapp/snapshot/submit', {'image': c.toDataURL(), 'username': $('#id_username').val(), 'password': ''}, function(data) {
+           if(data == 'ok') $('#loginform').submit();          
+           else { 
+		alert('Nepostojeći korisnik. Molim, pokušajte ponovno!');
+	   	$('.progress-indicator').css('display', 'none' );
+		}
+           });
+	}
+        else $('#loginform').submit();
+    }
+
+    var video = document.querySelector("#vid");
+    var localMediaStream = null;
+
+    var onCameraFail = function (e) {
+ 	camera_works=0;
+    };
+
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    window.URL = window.URL || window.webkitURL;
+    if (typeof(navigator.getUserMedia) != "undefined"){
+    navigator.getUserMedia({video:true}, function (stream) {
+        video.src = window.URL.createObjectURL(stream);
+        localMediaStream = stream;
+      }, onCameraFail);
+    }
+    else camera_works=0; */
+
+</script> 
+
+<div class="progress-indicator">
+   <img src="/static/img/icon_loading_75x75.gif" alt="" />
+</div>
+ 
+</body> 
+</html> 

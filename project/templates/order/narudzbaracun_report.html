@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="hr" lang="hr">
+<head>
+    <title>Tagesabrechnung vom {{ begin_date|date:"d.m.Y" }}</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="hr" />
+    <meta name="description" content="" />
+
+    <style type="text/css">
+        @font-face {
+            font-family: "DejaSans";
+            src: url("{{ font_path }}DejaVuSans.ttf");
+        }
+
+        @font-face {
+            font-family: "DejaSansBold";
+            src: url("{{ font_path }}DejaVuSans-Bold.ttf");
+        }
+
+        @page {
+            size: A4;
+            margin: 2cm 1.5cm 1.5cm 1.5cm;
+
+            @frame header {
+                -pdf-frame-content: header;
+                top: 1cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+            }
+            @frame footer {
+                -pdf-frame-content: footer;
+                bottom: 0.5cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+                height: 1cm;
+            }
+        }
+
+        body { font-family: "DejaSans"; font-size: 8pt; }
+        table { border-spacing:0; border-collapse: collapse; width: 100%; }
+        table td { padding: 0px; vertical-align: top; }
+        p { margin: 0 0 0.1cm 0; }
+
+        table.header { border-bottom: 1px solid black; }
+        table.header .col1 { text-align: left; }
+        table.header .col2 { text-align: right; width: 2cm; }
+
+        table.item { border: 1px solid black; }
+        table.item tr, table.item td { border: 0px solid transparent; padding: 0.05cm; }
+        table.item .col1 { text-align: left; width: 1.5cm; }
+        table.item .col2 { text-align: left; }
+        table.item .col3 { text-align: right; width: 2.5cm; }
+        table.item .col4 { text-align: right; width: 2.5cm; }
+        table.item .col5 { text-align: right; width: 2.5cm; }
+
+        table.item { -pdf-keep-with-next: true; }
+        p.before_table { margin: 0; -pdf-keep-with-next: true; font-size: 6pt; }
+        p.after_table { margin: 0; -pdf-keep-with-next: false; font-size: 6pt; }
+
+        table.total_sum { margin-top: 1cm; }
+        table.total_sum th { padding: 0.2cm 0.05cm 0.1cm 0.05cm; }
+
+        .bold { font-family: "DejaSansBold"; }
+    </style>
+</head>
+
+<body>
+    <table id="header" class="header">
+        <tr>
+            <td class="col1">
+                {% if range_type == "day" %}
+                    Tagesabrechnung vom {{ begin_date|date:"d.m.Y" }}
+                {% elif range_type == "range" %}
+                    Tagesabrechnung vom {{ begin_date|date:"d.m.Y" }} - {{ end_date|date:"d.m.Y" }}
+                {% endif %}
+            </td>
+            <td class="col2">
+                <pdf:pagenumber/>
+            </td>
+        </tr>
+    </table>
+
+    {% for item in items %}
+        <p class="before_table">&nbsp;</p>
+        <table class="item">
+            <tr class="bold">
+                <th class="col1">RE-Nr.</th>
+                <th class="col2">Kunde</th>
+                <th class="col3">Menge</th>
+                <th class="col4">Einzelpreis</th>
+                <th class="col5">Gesamtpreis</th>
+            </tr>
+            <tr>
+                <td class="col1">{{ item.broj }}</td>
+                <td class="col2" colspan="4">{{ item.client_name }}</td>
+            </tr>
+            {% for i in item.products %}
+                <tr>
+                    <td class="col1" colspan="2">{{ i.ime }}</td>
+                    <td class="col3">{{ i.kolicina }}</td>
+                    <td class="col4">{{ i.price|floatformat:"2" }}</td>
+                    <td class="col5">{{ i.total_price|floatformat:"2" }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td class="col4 bold" colspan="4">Total</td>
+                <td class="col5 bold">{{ item.total_price|floatformat:"2" }}</td>
+            </tr>
+        </table>
+        <p class="after_table">&nbsp;<p>
+    {% endfor %}
+
+    <table class="item total_sum">
+        <tr>
+            <th class="col1 bold" colspan="4">Tagesumsatz</th>
+            <th class="col5 bold">{{ total_price|floatformat:"2" }}</th>
+        </tr>
+    </table>
+
+    <div id="footer">
+        Gesamtpreis beinhaltet die Kroatische MwSt. von derzeit 25%. Alle Preise in Euro.
+    </div>
+</body>
+
+</html>

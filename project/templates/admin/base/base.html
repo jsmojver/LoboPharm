@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <title>{% if title %}{{ title }}{% else %}Admin panel{% endif %} :: eLjekarna</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="&copy; Repetitor, www.repetitor.hr :: Eden Kirin" />
+    <meta name="description" content="{% block page_description %}Admin panel{% endblock %}" />
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="/static/css/admin.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/static/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+
+
+<body>
+    {% block prebody_content %}{% endblock %}
+    {% block body_content %}{% endblock %}
+</body>
+
+</html>

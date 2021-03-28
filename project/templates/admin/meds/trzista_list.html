@@ -1,0 +1,106 @@
+{% extends "admin/base/body_content.html" %}
+
+{% set title = "Tržišta" %}
+{% set edit_link = "/administrator/meds/trziste/item/edit/" %}
+{% set backlink = "/administrator/" %}
+
+
+{% block main_content %}
+
+    <h1>{{ title }}</h1>
+
+    <nav class="navbar navbar-default toolbar" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="navbar-right">
+                <a href="{{ backlink }}" class="btn btn-primary navbar-btn"><i class="icon-chevron-left"></i> Povratak</a>
+            </div>
+        </div>
+    </nav>
+
+    <form id="fm" class="form-inline" method="post" action="{{ request.path }}">
+        <input type="hidden" name="backlink" value="{{ backlink }}" />
+        <table class="table table-striped items meds">
+            <thead>
+                <tr>
+                    <th>Naziv</th>
+                    <th class="text-right" style="width: 100px;">Koef. VPC</th>
+                    <th class="text-right" style="width: 100px;">Koef. MPC</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in items %}
+                    <tr id="item_{{ item.id }}">
+                        <td><a href="#" class="edit_item" data-id="{{ item.id }}">{{ item.naziv | default("[ bez naziva ]", True) }}</a></td>
+                        <td class="text-right koef_vpc">{{ item.koeficijent_ljekarne | format_float(precision=2) }}</td>
+                        <td class="text-right koef_mpc">{{ item.koeficijent_pacijenti | format_float(precision=2) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+
+
+    <div class="modal fade" id="dlg_edit" tabindex="-1" role="dialog" aria-labelledby="dlg_confirm_title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="dlg_edit_title"><strong></strong> - Izmjena koeficijenta</h4>
+                </div>
+                <form role="form" class="modal-body form-horizontal" method="post" action="{{ request.path }}">
+                    <input type="hidden" name="id" value="" />
+                    <input type="hidden" name="cmd" value="edit" />
+                    <div class="form-group">
+                        <label for="koef_vpc" class="col-sm-4 control-label">Veleprodajni koeficijent</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control text-right" id="koef_vpc" name="koef_vpc" placeholder="Koeficijent" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="koef_mpc" class="col-sm-4 control-label">Maloprodajni koeficijent</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control text-right" id="koef_mpc" name="koef_mpc" placeholder="Koeficijent" value="" />
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+                    <button type="button" id="dlg_edit_exec" class="btn btn-primary">Nastavi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+
+        $(function()
+        {
+            $(".edit_item").click(
+                function()
+                {
+                    var id = $(this).data("id");
+                    $("#dlg_edit h4.modal-title strong").text($(this).text());
+                    $("#dlg_edit input[name='id']").val(id);
+                    $("#dlg_edit input[name='koef_vpc']").val($("tr#item_" + id + " td.koef_vpc").text());
+                    $("#dlg_edit input[name='koef_mpc']").val($("tr#item_" + id + " td.koef_mpc").text());
+                    $("#dlg_edit").modal('show');
+                    return false;
+                }
+            );
+
+            $("#dlg_edit_exec").click(
+                function()
+                {
+                    $("#dlg_edit form").submit();
+                    return false;
+                }
+            );
+        });
+
+    /* ]]> */
+    </script>
+
+{% endblock %}

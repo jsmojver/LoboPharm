@@ -1,0 +1,40 @@
+<table class="data-table">
+
+
+      <caption>Poštanski brojevi (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>ID</th>
+	   <th>Poštanski broj</th>
+           <th>Poštanski ured</th>
+           <th>Depo</th>
+           <th>Stanje</th>
+           <th>Minimalna zaliha</th>
+           <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr class="{% cycle 'odd' 'even' %}">
+			<td>{{i.id}}</td>
+			<td>{{i.broj}}</td>
+			<td>{{i.naziv_pu}}</td>
+			<td>{{i.depo}}</td>
+			<td>{{i.stanje}}</td>
+			<td>{{i.min_stanje}}</td>
+		 	<td>Uredi</td>
+
+		</tr>
+        {% endfor %}       
+
+
+        </tbody>
+
+	{% url order.poste.list as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+

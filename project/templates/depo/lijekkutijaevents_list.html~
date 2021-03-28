@@ -1,0 +1,40 @@
+{% with imeLijeka=object_list.0.kutija.lijek.lijek.naziv kutijaId=object_list.0.kutija.lijek.id barkod=object_list.0.kutija.id %}
+
+<div class="insideTabs">
+    <ul class="insideTabsMenu">
+       <li><a href="{% url depo.posiljka.kutija.detail kutijaId %}"><< Povratak</a></li>
+    </ul> 
+    <div class="insideTabsMenuArrow"></div>
+</div>
+<div class="clear space-1x"></div>
+
+<table class="data-table" id="posiljka_prikaz">
+
+    <caption>{{ imeLijeka }} [{{ barkod }}]</caption>
+      <thead>
+        <tr>
+       	   <th>Djelatnik</th>
+           <th>Dogadjaj se desio</th>
+           <th>Zadnja izmjena</th>
+           <th>Status</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+	 	{% for i in object_list %}
+  	<tr {% if i.vrsta == 1 %}style='opacity:.70;'{%endif%}>
+  	  <td>{{i.user.get_full_name}}</td>
+  	  <td>{{i.created}}</td>
+  	  <td>{{i.modified}}</td>
+  	  <td>{{i.ime_statusa}}</td>
+  	</tr>
+  	{% endfor %}	                 
+	
+	</tbody>
+	
+	{% url depo.posiljka.kutija.events object_list.0.kutija.lijek.id as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+{% endwith %}
+

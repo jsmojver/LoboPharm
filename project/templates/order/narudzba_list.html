@@ -1,0 +1,49 @@
+{% with object_list.0.posiljka as posiljka %}
+<table class="data-table">      	   		  
+      <caption> Pregled narudžbi (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>Narudžba</th>
+		   <th>Klijent</th>           
+           <th>Datum narudžbe</th>
+           <th>Status</th>
+           <th>Naručio</th>
+	   <th></th>
+	   <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr class="{% cycle 'odd' 'even' %}" {% if i.status == 7 or i.status == 6 %}style="opacity:0.35;"{%endif%}>
+   		<td>{{i.broj}}</td>
+		<td><a href="{% url order.view i.id %}">
+			{% if i.klijent.tip_klijenta == 1 %}
+				{{i.klijent.prezime}}, {{i.klijent.ime}}
+			{% else %}
+				{{i.klijent.naziv}}
+			{% endif %}
+		</a></td> 		
+		<td>{{i.created}}</td>
+		<td>{{i.get_status}}</td>
+		<td>{{i.narucio.get_full_name}}</td>
+		<td>			
+			{% if i.status != 6 and i.status != 7 and i.bilanca_uplata == 0 %} <a href="{% url order.narudzba.storniraj i.id %}">Storniraj</a> {% endif %}
+		</td>
+		<td>
+			{% if i.slati_postom %} <img src="/static/img/pismo.png" style="width:24px;"/>{% endif %}
+			{% if not i.ispisana_potvrda %}<img src="/static/img/devel/alert2.png" style="width:24px;"/>{% endif %}
+		</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url order.posiljka.active.view as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>
+
+{% endwith %}

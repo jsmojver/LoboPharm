@@ -1,0 +1,57 @@
+#!/usr/bin/python
+
+import os
+import sys
+
+sys.path.append(os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + "/../"))
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'project.settings'
+
+
+#--------------------------------------------------------------------------------------------------
+
+
+def import_depo_csv():
+    from project.depo.models import Lijek
+
+    class CSVImportItem():
+        pass
+
+    def import_csv_report(fname):
+        import csv
+        report = []
+
+        f  = open(fname, "rb")
+        reader = csv.reader(f, dialect='excel-tab')
+
+        rownum = 0
+        for row in reader:
+            # Save header row.
+            if rownum == 0:
+                header = row
+            else:
+                item = CSVImportItem()
+                item.id = row[0]
+                item.nabavna_cijena_eur = row[3].replace(",", ".")
+                report.append(item)
+            rownum += 1
+
+        f.close()
+
+        return report
+
+    report = import_csv_report("/tmp/depo.csv")
+
+    for r in report:
+        Lijek.objects.filter(id=r.id).update(nabavna_cijena_eur=r.nabavna_cijena_eur)
+
+
+#--------------------------------------------------------------------------------------------------
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        cmd = sys.argv[1]
+
+        if cmd == "test":
+            import_depo_csv()

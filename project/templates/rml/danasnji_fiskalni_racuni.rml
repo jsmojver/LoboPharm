@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>My Title</title>
+        <style type="text/css">
+            @page {
+                size: {{ pagesize }};
+                margin: 1cm;
+	        @frame header { 
+	            -pdf-frame-content: headerContent; 
+	            top:0.5cm; 
+	            margin-left: 9cm; 
+	            margin-right: 1cm; 
+	            height:6.5cm;
+		}
+                @frame footer {
+                    -pdf-frame-content: footerContent;
+                    bottom: 0cm;
+                    margin-left: 9cm;
+                    margin-right: 9cm;
+                    height: 1cm;
+                }
+             } 
+	    @font-face {
+		font-family: DroidSans; 
+		src: url(/var/www/diocles/templates/rml/Georgia.ttf);
+		}
+	    td,div { font-family: DroidSans; }
+	    table { border-top: 1px solid lightgrey; border-collapse:none; padding-top: 2px;}
+
+        </style>
+    </head>
+    <body>
+        <div id="headerContent">
+            {%block page_head%}
+            {%endblock%}
+        </div>
+		<div style="font-size: 18px; text-align:center;">
+	               Popis računa, {{datum}}
+		</div>
+		<div style="font-size: 14px; text-align:center;">
+		       Ukupno {{ broj }} računa u iznosu {{ iznos }} kn<br />
+		</div>
+	<hr />
+        <div>
+            {% for i in racuni %}
+                <div style="font-size: 12px;">Račun br. {{i.oznaka_racuna}}
+			
+			{% if i.storno %} (storniran) {% endif %} {% if i.stornira_racun %} (stornira račun {{i.stornira_racun.oznaka_racuna }}) {% endif %}
+  			{% if i.naknadno_dostavljen %} NAKNADNO DOSTAVLJEN {% endif %}
+		</div>
+		<div style="font-size: 8px;">
+			Klijent: {{ i.narudzba.klijent.get_full_name }}, &nbsp; &nbsp; Djelatnik: {{ i.djelatnik.get_full_name }}, &nbsp; &nbsp; Datum i vrijeme:{{ i.datum_vrijeme_zastitni }}, <br /> UUID: {{ i.uuid }}, &nbsp; &nbsp; JIR: {{i.jir}}, &nbsp; &nbsp; ZKI: {{i.zastitni_kod}}, &nbsp; &nbsp; 
+		</div>
+		<table style="font-size:8px;">
+		{% for j in i.stavke.all %}
+		  <tr>
+                       <td>{{j.naziv}}</td>
+		       <td>{{j.kolicina}}</td>
+                       <td>{{j.cijena}}</td>
+                       <td>{{j.iznos}}</td>
+		  </tr>
+		{% endfor %}
+		  <tr style="font-size:11px;"><td></td><td></td><td>Ukupno</td><td>{{i.iznos}}</td></tr>
+		</table>
+		<hr />
+            {% endfor %}
+        </div>
+
+
+        <div id="footerContent">
+            {%block page_foot%}
+                Stranica <pdf:pagenumber>
+            {%endblock%}
+        </div>
+    </body>
+</html>
+

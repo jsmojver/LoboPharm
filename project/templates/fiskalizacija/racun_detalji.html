@@ -1,0 +1,61 @@
+{% include "fiskalizacija/racun_menu_header.html" %} 
+
+<img src="/static/img/posprinter.png" style="float: right; margin-top:50px;" />
+
+<table class="data-table" style="margin-left: 20px; margin-top: 20px; width: 60%;">
+       <caption>{% if racun.stornira_racun %} Stornirajući {% endif %} Fiskalni račun {{ racun.oznaka_racuna }} {% if racun.storno %} - STORNIRAN {% endif %}</caption>
+
+	{% if racun.narudzba %}
+		<tr><td>Narudžba:</td><td> <a href="{% url order.view racun.narudzba.id %}">Narudžba broj {{ racun.narudzba.id }}</a></td></tr>
+	{% endif %}
+	<tr><td>Klijent:</td><td>  {{ racun.narudzba.klijent.get_full_name }}</a></td></tr>
+	<tr><td>Djelatnik:</td><td> {{ racun.djelatnik.get_full_name }}</td></tr>
+	<tr><td>Iznos:</td><td> {{ racun.iznos }}</td></tr>
+	<tr><td>Datum i vrijeme:</td><td> {{ racun.datum_vrijeme_racun }}</td></tr>
+	<tr><td>Datum i vrijeme (ZKI):</td><td> {{ racun.datum_vrijeme_zastitni }}</td></tr>
+	<tr><td>Broj računa:</td><td> {{ racun.oznaka_racuna }}</td></tr>
+	<tr><td>Naplatni uređaj:</td><td> {{ racun.naplatni_uredjaj }}</td></tr>
+	<tr><td>Naknadno dostavljen:</td><td> {{ racun.naknadno_dostavljen }}</td></tr>
+	{% if racun.stornira_racun %} <tr><td>Stornira račun:</td><td><a href="{% url fiskalizacija.racun.detalji racun.stornira_racun_id %}">Račun br. {{racun.stornira_racun.id}}</a></td></tr>
+	{% else %} 
+	<tr><td>Storno:</td><td> {{ racun.storno }}</td></tr>
+        {% endif %}
+
+	<tr><td>UUID:</td><td> {{ racun.uuid }}</td></tr>
+	<tr><td>Jir:</td><td> {{ racun.jir }}</td></tr>
+	<tr><td>Zaštitni kod:</td><td> {{ racun.zastitni_kod }}</td></tr>
+	<tr><td>Način plaćanja:</td><td> {{ racun.nacin_placanja }}</td></tr>
+	<tr><td>OIB operatera:</td><td> {{ racun.oib_operatera }}</td></tr>
+	<tr><td>Oznaka operatera:</td><td> {{ racun.djelatnik.userprofile.oznaka_operatera }}</td></tr>
+	<tr><td>OIB obveznika:</td><td> {{ racun.oib_obveznika }}</td></tr>
+	<tr><td>Oznaka poslovnog prostora:</td><td> {{ racun.oznaka_poslovnog_prostora }}</td></tr>
+</table>
+
+<table class="data-table" style="width: 60%; margin-left: 20px; margin-top: 30px;">
+	<caption>Stavke računa</caption>
+	<tr style="font-weight: bold;"><td>Naziv</td><td>Količina</td><td>Cijena</td><td>Iznos</td></tr>
+	{% for i in racun.stavke.all %}
+	<tr><td>{{i.naziv}}</td><td>{{i.kolicina}}</td><td>{{i.cijena}}</td><td>{{i.iznos}}</td></tr>
+	{% endfor %}
+	<tr><td></td><td></td><td></td><td></td></tr>
+	<tr><td></td><td></td><td>Ukupno:</td><td>{{racun.suma_stavki}}</td></tr>
+</table>
+
+<table class="data-table" style="width: 60%; margin-left: 20px; margin-top: 30px;">
+	<caption>Obračun poreza</caption>
+
+	<tr style="font-weight: bold;"><td>Vrsta poreza</td><td>Stopa</td><td>Osnovica</td><td>Iznos</td><td>Ukupno</td></tr>
+	{% for i in racun.porezi.all %}
+	<tr><td>PDV</td><td>{{i.stopa}}</td><td>{{i.osnovica}}</td><td>{{i.iznos}}</td><td>{{i.ukupno}}</td></tr>
+	{% endfor %}
+</table>
+
+<table class="data-table" style="width: 60%; margin-left: 20px; margin-top: 30px;">
+	<caption>Poruke sa PU</caption>
+	<tr style="font-weight: bold;"><td>Tip</td><td>Vrijeme</td><td>Status</td><td>Trajanje</td><td>Potpis</td></tr>
+	{% for i in racun.log.all %}
+	<tr><td><a href="{% url fiskalizacija.racunlog.view i.id %}">{{i.uuid}}</a></td><td>{{i.vrijeme}}</td><td>{{i.http_status}}</td><td>{{i.trajanje}}</td><td>{% if i.signature_valid%}Ispravan{% else %}Neispravan{% endif %}</td></tr>
+	{% endfor %}
+</table>
+
+

@@ -1,0 +1,21 @@
+{% include "meds/meds_search_header.html" %}
+
+<div style="text-align: center;"> 
+  <img src="/static/img/advanced_search_2.png" />
+</div>
+
+<form class="forma-trazenje" method="post" action="{% url searchAbdaMeds %}">
+  <table><tr><td>
+  <input class="trazilica autocomplete" autofocus="autofocus" type="text" name="q" placeholder="Naziv" data-autocomplete-callback="javascript:$(this).submit();" data-autocomplete-url="{% url ajax_autocomplete_abda %}">
+  <input class="trazigumb" type="submit" value="Traži">    
+	</td></tr>	
+  </table>
+  
+</form>
+
+<div style="width:100%; text-align:center;">
+        <div>
+                Pretražujem ABDA bazu 
+        </div>
+</div>
+

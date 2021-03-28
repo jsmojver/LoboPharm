@@ -1,0 +1,10 @@
+<div style="text-align: center;"> 
+  <img src="{{STATIC_URL}}/static/img/devel/pills_2.png" />
+</div>
+
+<form class="forma-trazenje" method="post" action="{% url searchMeds %}">
+  <table><tr><td>
+  <input class="trazilica autocomplete" type="text" name="q" placeholder="Naziv" data-autocomplete-url="{% url ajax_autocomplete_ime %}">
+  <input class="trazigumb" type="submit" value="Traži">
+	</td></tr></table>
+</form>

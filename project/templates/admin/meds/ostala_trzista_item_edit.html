@@ -1,0 +1,144 @@
+{% extends "admin/base/body_content.html" %}
+
+{% if item.id %}
+    {% set title = "Izmjena: %s" % (item.ime) %}
+{% else %}
+    {% set title = "Novi unos" %}
+{% endif %}
+
+{% set backlink = "/administrator/meds/ostala_trzista/" %}
+
+{% block main_content %}
+
+    <h1>{{ title }}</h1>
+
+    <nav class="navbar navbar-default toolbar" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="navbar-right">
+                <a href="#" class="btn btn-success navbar-btn submit"><i class="icon-save"></i> Spremi</a>
+                <a href="{{ backlink }}" class="btn btn-primary navbar-btn"><i class="icon-chevron-left"></i> Povratak</a>
+            </div>
+        </div>
+    </nav>
+
+    <form id="fm" class="form-horizontal" role="form" method="post" action="{{ request.path }}">
+        <input type="hidden" name="backlink" value="{{ backlink }}" />
+        <div class="form-group">
+            <label for="ime" class="col-sm-2 control-label">Naziv</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="ime" name="ime" placeholder="Naziv" value="{{ item.ime }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="atc_sifra" class="col-sm-2 control-label">ATC šifra</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="atc_sifra" name="atc_sifra" placeholder="ATC šifra" value="{{ item.ATC.sifra | default("", True) }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="kolicina" class="col-sm-2 control-label">Količina</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="kolicina" name="kolicina" placeholder="Količina" value="{{ item.kolicina | default("", True) }}" />
+            </div>
+            <label for="jedinice" class="col-sm-2 control-label">Jedinice</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="jedinice" name="jedinice" placeholder="Jedinice" value="{{ item.jedinice | default("", True) }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="trziste" class="col-sm-2 control-label">Tržište</label>
+            <div class="col-sm-4">
+                <select id="trziste" name="trziste" class="form-control">
+                    {% for c in trzista %}
+                        <option value="{{ c.id }}"{% if (not item.id and loop.first) or (item.id and item.trziste == c) %} selected="selected" {% endif %}>{{ c.naziv }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="cijena" class="col-sm-2 control-label">Nabavna cijena</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control text-right" id="cijena" name="cijena" placeholder="Nabavna cijena" value="{{ item.cijena | format_float(precision=2) }}" />
+            </div>
+            <div class="col-sm-1">
+                <p class="form-control-static">&euro;</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Veleprodajna cijena</label>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="veleprodajna_cijena_eur">{{ item.calc_veleprodajna_cijena() | format_float(precision=2) }}</span> &euro;
+                </p>
+            </div>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="veleprodajna_cijena_kn">{{ item.calc_veleprodajna_cijena() | eur2hrk | format_float(precision=2) }}</span> kn
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Maloprodajna cijena</label>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="maloprodajna_cijena_eur">{{ item.calc_maloprodajna_cijena() | format_float(precision=2) }}</span> &euro;
+                </p>
+            </div>
+            <div class="col-sm-2">
+                <p class="form-control-static text-right">
+                    <span id="maloprodajna_cijena_kn">{{ item.calc_maloprodajna_cijena() | eur2hrk | format_float(precision=2) }}</span> kn
+                </p>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+
+        function recalc_cijene()
+        {
+            var post_data = {
+                "nabavna_cijena": $("#cijena").val(),
+                "atc_sifra": $("#atc_sifra").val(),
+                "trziste": $("#trziste").val()
+            };
+            $.post("/administrator/meds/ostala_trzista/calc_prices/", post_data,
+                function(data)
+                {
+                    $("#veleprodajna_cijena_eur").text(data.veleprodajna_cijena_eur_str);
+                    $("#veleprodajna_cijena_kn").text(data.veleprodajna_cijena_kn_str);
+                    $("#maloprodajna_cijena_eur").text(data.maloprodajna_cijena_eur_str);
+                    $("#maloprodajna_cijena_kn").text(data.maloprodajna_cijena_kn_str);
+                }, "json"
+            );
+        }
+
+        $(function()
+        {
+            $("#cijena").keyup(
+                function()
+                {
+                    recalc_cijene();
+                }
+            );
+
+            $("#trziste").change(
+                function()
+                {
+                    recalc_cijene();
+                }
+            );
+
+            $(".btn.submit").click(
+                function()
+                {
+                    $("#fm").submit();
+                    return false;
+                }
+            );
+        });
+
+    /* ]]> */
+    </script>
+
+{% endblock %}

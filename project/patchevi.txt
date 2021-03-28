@@ -1,0 +1,95 @@
+-> patch par linija ispod len(reply) > 0
+u suds client.py
+
+
+    def failed(self, binding, error):
+        """
+        Request failed, process reply based on reason
+        @param binding: The binding to be used to process the reply.
+        @type binding: L{suds.bindings.binding.Binding}
+        @param error: The http error message
+        @type error: L{transport.TransportError}
+        """
+        status, reason = (error.httpcode, tostr(error))
+        reply = error.fp.read()
+        log.debug('http failed:\n%s\nstatus: %s\nreason: %s\n', reply, status, reason)
+        if status == 500:
+            if len(reply) > 0:
+->              try: 
+->                  reply, result = binding.get_reply(self.method, reply)
+->                  self.last_received(reply)
+->                  return (status, reply)
+->              except:
+->                  return (status, None)
+            else:
+                return (status, None)
+        if self.options.faults:
+            raise Exception((status, reason))
+        else:
+            return (status, None)
+
+
+
+
+
+
+
+--------------------------------------------------
+
+    def failed(self, binding, error):
+        """
+        Request failed, process reply based on reason
+        @param binding: The binding to be used to process the reply.
+        @type binding: L{suds.bindings.binding.Binding}
+        @param error: The http error message
+        @type error: L{transport.TransportError}
+        """
+        status, reason = (error.httpcode, tostr(error))
+        reply = error.fp.read()
+        log.debug('http failed:\n%s\nstatus: %s\nreason: %s\n', reply, status, reason)
+        if status == 500:
+            if len(reply) > 0:
+                reply, result = binding.get_reply(self.method, reply)
+                self.last_received(reply)
+                plugins = PluginContainer(self.options.plugins)
+                ctx = plugins.message.unmarshalled(reply=result)
+                result = ctx.reply
+                return (status, result)
+            else:
+                return (status, None)
+        if self.options.faults:
+            raise Exception((status, reason))
+        else:
+            return (status, None)
+
+-----------> nova verzija koja vraća uredno grešku koja se može parsat itd itd
+
+ideja: OVERRIDE metode failed iz suds clienta
+
+dakle:
+
+from suds import client
+
+def _failed(self, binding, error):
+   status, reason = (error.httpcode, tostr(error))
+   reply = error.fp.read()
+   log.debug('http failed:\n%s\nstatus: %s\nreason: %s\n', reply, status, reason)
+   if status == 500:
+      if len(reply) > 0:
+         reply, result = binding.get_reply(self.method, reply)
+         self.last_received(reply)
+         plugins = PluginContainer(self.options.plugins)
+         ctx = plugins.message.unmarshalled(reply=result)
+         result = ctx.reply
+         return (status, result)
+      else:
+         return (status, None)
+   if self.options.faults:
+      raise Exception((status, reason))
+   else:
+      return (status, None)
+
+suds.client.faild = _failed
+
+
+

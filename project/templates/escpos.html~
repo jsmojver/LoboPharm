@@ -1,0 +1,6 @@
+    <div style="width: 100%">
+     <div id='receipt-container' style="width: 39em; font: 0.73em/1.5em receipt; height: 80em; font-family: receipt; padding: 20px;">
+        {{x|safe}}
+     </div>
+    </div>
+

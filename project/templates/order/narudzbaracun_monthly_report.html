@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="hr" lang="hr">
+<head>
+    <title>Monatsabrechnung für {{ month }} / {{ year }} - Privatkunden</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-language" content="hr" />
+    <meta name="description" content="" />
+
+    <style type="text/css">
+        @font-face {
+            font-family: "DejaSans";
+            src: url("{{ font_path }}DejaVuSans.ttf");
+        }
+
+        @font-face {
+            font-family: "DejaSansBold";
+            src: url("{{ font_path }}DejaVuSans-Bold.ttf");
+        }
+
+        @page {
+            size: A4;
+            margin: 2cm 1.5cm 1.5cm 1.5cm;
+
+            @frame header {
+                -pdf-frame-content: header;
+                top: 1cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+            }
+            @frame footer {
+                -pdf-frame-content: footer;
+                bottom: 0.5cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+                height: 1cm;
+            }
+        }
+
+        body { font-family: "DejaSans"; font-size: 8pt; }
+        table { border-spacing:0; border-collapse: collapse; width: 100%; }
+        table td { padding: 0px; vertical-align: top; }
+        p { margin: 0 0 0.1cm 0; }
+
+        table.header { border-bottom: 1px solid black; }
+        table.header .col1 { text-align: left; }
+        table.header .col2 { text-align: right; width: 2cm; }
+
+        table.items { border: 1px solid black; }
+        table.items tr, table.items td { border: 0px solid transparent; border-bottom: 1px solid black; padding: 0.1cm 0.05cm 0.05cm 0.05cm; }
+        table.items .col1 { text-align: left; }
+        table.items .col2 { text-align: right; width: 3cm; }
+
+        table.total_sum { margin-top: 1cm; }
+        table.total_sum th { padding: 0.2cm 0.05cm 0.1cm 0.05cm; }
+
+        .bold { font-family: "DejaSansBold"; }
+    </style>
+</head>
+
+<body>
+    <table id="header" class="header">
+        <tr>
+            <td class="col1">
+                Monatsabrechnung für {{ month }} / {{ year }} - Privatkunden
+            </td>
+        </tr>
+    </table>
+
+    <table class="items">
+        <tr class="bold">
+            <th class="col1">Datum</th>
+            <th class="col2">Tagesumsatz</th>
+        </tr>
+        {% for day in days %}
+            <tr>
+                <td class="col1">{{ day.0|date:"d.m.Y" }}</td>
+                <td class="col2">{{ day.1|format_float:2 }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <table class="items total_sum">
+        <tr>
+            <th class="col1 bold" colspan="4">Gesamtumsatz</th>
+            <th class="col2 bold">{{ sum_total|format_float:2 }}</th>
+        </tr>
+    </table>
+
+    <div id="footer">
+        Gesamtumsatz beinhaltet die kroatische MwSt. von derzeit 25%. Alle Preise in Euro.
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>My Title</title>
+        <style type="text/css">
+            @page {
+                size: {{ pagesize }};
+                margin: 1cm;
+	        @frame header { 
+	            -pdf-frame-content: headerContent; 
+	            top:0.5cm; 
+	            margin-left: 9cm; 
+	            margin-right: 1cm; 
+	            height:6.5cm;
+		}
+                @frame footer {
+                    -pdf-frame-content: footerContent;
+                    bottom: 0cm;
+                    margin-left: 9cm;
+                    margin-right: 9cm;
+                    height: 1cm;
+                }
+             } 
+	    @font-face {
+		font-family: DroidSans; 
+		src: url(/var/www/diocles/templates/rml/Georgia.ttf);
+		}
+	    td,div { font-family: DroidSans; }
+	    table { border-top: 1px solid lightgrey; border-collapse:none; padding-top: 2px;}
+
+        </style>
+    </head>
+    <body>
+        <div id="headerContent">
+            {%block page_head%}
+            {%endblock%}
+        </div>
+        <div>
+		<div style="font-size: 18px; text-align:center;">
+	               Obračun smjene, {{datum}}
+		</div>
+		<div style="font-size: 14px; text-align:center;">
+		       Današnji tečaj eura: {{ tecaj }}<br />
+		       Djelatnica: {{ djelatnik.get_full_name }}<br />
+		</div>
+	</div>
+	<hr />
+	<div style="font-size: 18px; text-align:center;">
+               Što je naručeno?
+	</div>
+	<div style="font-size: 14px; text-align:center;">
+	       Naručeno: {{ kutija }} kutija, {{ artikala }} artikala<br />
+	       Uplaćeno za današnje narudžbe: {{ uplaceno|default_if_none:"0.00" }} kn.
+	</div>
+        <div>
+            {% for i in narudzbe %}
+              {% if i.status != 7 %} <!-- Ako nije stornirano -->
+                <div style="font-size: 18px;">Narudžba br. {{i.broj}} - {{i.klijent.get_full_name}} </div>
+		<div>Djelatnica {{i.narucio.get_full_name|safe}} je za {{i.klijent.get_full_name}} dana {{i.created}} naručila slijedeće artikle u iznosu <b>{{i.ukupna_cijena_bez_troskova_euri}} &euro;</b> uz trošak transporta {{i.usluge_transporta}} &euro;</div>
+		<div> &bull; Naručeni artikli: </div>
+		<table>
+		{% for j in i.artikli.all %}
+		  <tr>
+		       <td width="300px" style="padding-left:20px" >{{j.ime}}, {{j.std_kolicina|floatformat:2}}, {{j.jedinice|default_if_none:""}}, {{j.kratica_dobavljaca|default_if_none:""}}</td>	
+		       <td width="150px">{{j.created}}</td>	
+		       <td>{{ j.kolicina }}</td>
+		       <td>{{j.jedinicna_cijena}} {{j.valuta_text}}</td>	
+		       <td>{{j.get_total}} {{j.valuta_text}}</td>	
+		       <td>{{j.trziste.naziv}}</td>	
+		  </tr>
+		{% endfor %}
+		</table>
+		<div> &bull; Financije: </div>
+		<table>
+		{% for j in i.uplate.all %}
+		  <tr>
+		       <td width="100px" style="padding-left:20px" >{{j.get_vrsta}}</td>	
+		       <td width="100px">{{ j.djelatnik.get_full_name }}</td>
+		       <td>{{j.timestamp|safe}}</td>	
+		       <td>{{j.get_tip}}</td>	
+		       <td width="150px">{{j.get_vrsta_predznak}} {{j.iznos}} {{j.valuta.kratica}}</td>	
+		  </tr>
+		{% endfor %}
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>Bilanca: {{i.grand_total_kn}} kn</td>
+		</tr>
+		</table>
+		<hr />
+              {% endif %}
+            {% endfor %}
+        </div>
+
+
+
+	<hr />
+	<div style="font-size: 18px; text-align:center;">
+               Što je izdano s depoa?
+	</div>
+	<div style="font-size: 14px; text-align:center;">
+	       Izdano: {{ kutija_depo }} kutija, {{ artikala_depo }} artikala<br />
+	       Naplaćeno: {{ uplate_depo|default_if_none:"0.00" }} kn.
+	</div>
+
+        <div>
+		<table>
+		  <tr>
+		       <td width="700px" style="padding-left:20px" >Naziv artikla</td>	
+		       <td width="100px">Količina</td>	
+		  </tr>
+                {% for key, value in depo_obracun.items %}
+		  <tr>
+		       <td width="700px" style="padding-left:20px" >{{key}}</td>	
+		       <td width="100px">{{value}}</td>	
+		  </tr>
+		{% endfor %}
+		</table>
+        </div>
+        <hr />
+	<div style="font-size: 18px; text-align:center;">
+                Dnevnik mog prometa depoa
+	</div>
+        <div>
+            {% for i in depo %}
+              {% if i.status != 7 %} <!-- Ako nije stornirano -->
+		<table>
+		{% for j in i.artikli.all %}
+		  <tr>
+		       <td width="300px" style="padding-left:20px" >{{j.ime}}</td>	
+		       <td width="150px">{{j.created}}</td>	
+		       <td>{{ j.kolicina }}</td>
+		       <td>{{j.jedinicna_cijena}} {{j.valuta_text}}</td>	
+		       <td>{{j.get_total}} {{j.valuta_text}}</td>	
+		       <td>{{j.trziste.naziv}}</td>	
+		  </tr>
+		{% endfor %}
+		</table>
+              {% endif %}
+            {% endfor %}
+        </div>
+
+
+	<hr />
+	<hr />
+	<div style="font-size: 18px; text-align:center;">
+               Fiskalni računi 
+	</div>
+	<div style="font-size: 14px; text-align:center;">
+	       Broj računa: {{ broj_racuna|default_if_none:"0" }}<br />
+	       Stanje blagajne: {{ iznos_racuna|default_if_none:"0.00" }} kn.
+	</div>
+
+        <div>
+		<table>
+		  <tr>
+		       <td width="50px">Broj</td>	
+		       <td width="150px">Datum i vrijeme</td>	
+		       <td width="200px">JIR</td>	
+		       <td width="200px">Zaštitni kod</td>	
+		       <td>Iznos</td>	
+		       <td>Nak.dost.</td>	
+		  </tr>
+                {% for i in racuni %}
+		  <tr>
+		       <td width="50px">{{i.oznaka_racuna}}</td>	
+		       <td width="150px">{{i.datum_vrijeme_zastitni}}</td>	
+		       <td width="200px">{{i.jir}}</td>	
+		       <td width="200px">{{i.zastitni_kod}}</td>	
+		       <td>{{i.iznos}}</td>	
+		       <td>{{i.naknadno_dostavljen}}</td>	
+		  </tr>
+		{% endfor %}
+		</table>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <div id="footerContent">
+            {%block page_foot%}
+                Stranica <pdf:pagenumber>
+            {%endblock%}
+        </div>
+    </body>
+</html>
+

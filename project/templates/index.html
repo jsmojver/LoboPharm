@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="" />
+
+    <title>eLjekarna</title>
+
+    <link rel="stylesheet" href="/static/css/jqueryui/jquery.ui.datepicker.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/general.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css" media="screen" />
+    <!-- <link rel="stylesheet" href="/static/css/calendar.css" type="text/css" media="screen" /> -->
+    <link rel="stylesheet" href="/static/css/message.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/form.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/wysiwyg.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/static/css/jquery.gritter.css" type="text/css" media="screen" />
+    <!-- <link rel="stylesheet" href="/static/css/jquery.calculator.css" type="text/css" media="screen" /> -->
+        
+    <!-- <link rel="stylesheet" href="/static/css/jquery-ui-1.8.21.custom.css" type="text/css" media="screen" /> -->
+    <!--[if IE ]><link rel="stylesheet" href="/static/css/ie.css" type="text/css" media="screen" /><![endif]-->
+    <!--[if IE 6]><link rel="stylesheet" href="/static/css/ie6.css" type="text/css" media="screen" /><![endif]-->
+    <!--[if IE 7]><link rel="stylesheet" href="/static/css/ie7.css" type="text/css" media="screen" /><![endif]-->
+
+    <script type="text/javascript" SRC="/static/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" SRC="/static/js/jquery-ui-1.9.2.min.js"></script>
+    <!-- <script type="text/javascript" SRC="/static/js/jquery.bpopup-0.7.0.min.js"></script> -->
+    <script type="text/javascript" SRC="/static/js/jquery.gritter.min.js"></script>
+    <script type="text/javascript" SRC="/static/js/jquery.cookie.js"></script>
+    <!-- <script type="text/javascript" SRC="/static/js/jquery.tablesorter.min.js"></script> -->
+    <script type="text/javascript" SRC="/static/js/jquery.hijack.js"></script>
+    <!-- <script type="text/javascript" SRC="/static/js/jquery.wysiwyg.js"></script> -->
+    <script type="text/javascript" SRC="/static/js/onload-index.js"></script>
+    <!-- <script type="text/javascript" SRC="/static/js/jquery.calculator.pack.js"></script> -->
+    <script type="text/javascript" SRC="/static/js/jquery.mousewheel.js"></script>
+    
+    <script type="text/javascript" SRC="/js/diocles/{{randint}}"></script>
+    <script type="text/javascript" src="/static/js/flot/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="/static/js/flot/jquery.flot.threshold.min.js"></script>
+
+    <!-- <script type="text/javascript" SRC="/static/js/memory_leak_checker.js"></script> -->
+    <script type="text/javascript">ip_adresa = '{{ip_adresa}}';</script>
+    
+  </head>
+
+  <body class="common">
+    <div id="page-wrapper-1">
+
+      <div id="header-wrapper-1">
+      
+        <h1 id="logo">
+          <!-- ****************** LOGO ****************** -->
+          <a href=""><img SRC="/static/img/logo4.png" alt="Apodata Logo" /></a>
+        </h1>
+
+        <div id="star"></div>
+        
+        
+        <!-- ****************** MENUS ****************** -->
+        <ul id="top-menu">
+          <!-- <li><a HREF="index.htm" title="">O aplikaciji</a></li>
+          <li><a href="" title="">Interakcije</a></li> -->
+          <li><a href="javascript:update_tecajne_liste();" title="">1 &euro; = {{ tecajna_lista.prodajni_tecaj }} kn ({{tecajna_lista.date}})</a></li>
+          <li id="kosarica_gore">
+          	{% include "order/naslovna_kosarica.html" %}
+          </li>
+        </ul> <!--top-menu-->
+
+        <ul id="main-menu">
+          <li><a class="active" href="javascript:load_and_focus_tab('{% url depo.zahtjev.izdavanje %}', 1);" title="">Depo</a></li>
+          <li><a href="javascript:show_meds_search();" title="">Naručivanje</a></li>
+          <li><a href="javascript:load_and_focus_tab('{% url sysapp.barcode.scan %}', 2);" title="">Skeniraj barkod</a></li>
+          <li><a href="javascript:load_and_focus_tab('{% url sysapp.obavijesti %}', 2);" title="">Obavijesti {% if nove_obavijesti %} <img src="/static/img/novo.png" style="margin-top: 5px; margin-right:-8px; width:32px; float:right;"/> {% endif %} </a></li>
+          {% if perms.fiskalizacija %}
+                <li><a href="javascript:load_and_focus_tab('{% url fiskalizacija.racun.nevezan %}', 2);" title="">Fiskalni Račun</a></li>
+	      {% endif %}
+          <li><a href="/administrator/">Administracija</a></li>
+        </ul> <!--main-menu-->
+
+        <!-- ****************** SEARCH BOX ****************** -->
+        <form id="search-box" method="post" action="">
+          <fieldset>
+            <input type="text" id="search-field" name="searchfield" value="" />
+            <input type="submit" name="search" id="search" value="Unos"/>
+            <a href="javascript:show_meds_advanced_search();" title="" id="advanced-search">Napredno pretraživanje</a>
+          </fieldset>
+        </form>
+
+      </div> <!--header-wrapper-1 -->
+
+
+      <!-- ****************** LEFT SIDEBAR ****************** -->
+      <div id="left-wrapper-1">
+          <h2 class="box-1-title">Djelatnik</h2>
+          <div class="box-1 centriraj">
+	    <img src="/static/img/form/apotekarka.png" style="float:left; padding-bottom: 10px; padding-left: 10px;" />
+            <p><strong>{{user.get_full_name}}</strong></p>
+	    <p>{{user.userprofile.odjel}}</p>
+            <p>Radno mjesto: <strong>{{user.userprofile.oznaka_naplatnog_uredjaja}}</strong></p>
+	    <p>({{user.userprofile.oznaka_operatera}})</p>
+            <p style="font-size:9px;">IP: {{ip_adresa}}</p>
+
+            <ul id="user-menu">
+              <li><a href="" title="">Zaduženja</a> |&nbsp;</li>
+              <li><a href="" title="">Postavke</a> |&nbsp;</li>
+              <!-- <li><a HREF="/accounts/logout" title="">Odjava</a></li> -->
+              <li><a HREF="javascript:odjava();" title="">Odjava</a></li>
+            </ul>
+            <div class="clear"></div>
+	    <p style="font-size:9px; margin-bottom:0px; margin-top:5px;">Posljednja prijava: {{user.last_login}}</p>
+	    <p id='debug-remove' style="font-size:4px;{% if not perms.is_staff %}visibility:hidden{%endif%}"></p> <!-- TODO: remove, for debugging purposes only -->
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+
+          <!-- ****************** SIDEMENU ****************** -->
+          <h2 class="box-1-title">Izbornik</h2>
+          <div class="box-1 insideTabs">
+		<ul id="side-menu">
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Klijenti</a>
+          			<ul id="sub-1" class="submenu-linkovi">
+          				<li><a href="/client/search" tab='0'>Pretraga</a></li>
+          				<li><a href="/client/create" tab='0'>Dodaj osobu</a></li>
+          				<li><a href="/client/browse" tab='0'>Popis osoba</a></li>
+          				<li><a href="/order/company/create" tab='0'>Dodaj tvrtku</a></li>
+          				<li><a href="/order/company/browse" tab='0'>Popis tvrtki</a></li>
+          			</ul>
+          		</li>          		     
+			{% if perms.fiskalizacija %}
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Depo</a>
+          			<ul id="sub-2" class="submenu-linkovi">
+          			    <li><a href="{% url depo.zahtjev.izdavanje %}" tab='1' >Zahtjev za izdavanje</a></li>
+          		   	    <!-- <li><a href="{% url depo.stavke.pregled %}" tab='1' >Stavke</a></li> -->
+          		   	    <li><a href="{% url order.my.depo.today %}" tab='1' >Moj današnji depo</a></li>
+          			    <li><a href="{% url lijekovi.list.sort 'asc' 'naziv' %}" tab='1' >Lista lijekova</a></li>
+          		            <li><a href="/ajax/lijekovi/naruciti" tab='1' >Nedostatne zalihe</a></li>
+          			</ul>
+          		</li>	
+			{% endif %}
+
+          		<li class="submenu-item">
+                               <a class="submenu-link" HREF="#">Narudžba</a>
+				<ul id="sub-3" class="submenu-linkovi">
+		                        <li><a href="/order/kosarica/view" tab='2'>Košarica</a></li>
+		                        <li><a href="/meds/search" tab='2'>Pretraživanje lijekova</a></li>
+		                        <li><a href="{% url order.my.list %}" tab='2'>Moje današnje narudžbe</a></li>
+		                        <li><a href="{% url order.posiljka.active.view %}" tab='2'>Pregled svih narudžbi</a></li>
+		                        <li><a href="{% url nabava.all.view %}" tab='2'>Narudžbe prema dobavljačima</a></li>
+		                        <li><a href="{% url order.incoming.view %}" tab='2'>Artikli u dolasku</a></li>
+		                        <li><a href="{% url order.uplate.obracun %}" tab='2'>Obračun</a></li>
+		                        <li><a href="{% url order.racuni.list %}" tab='2'>Popis računa</a></li>
+				</ul>
+          		</li>
+          		
+			{% if perms.depo %}
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Skladište</a>
+          			<ul id="sub-4" class="submenu-linkovi">
+          			      <!--  <li><a href="{% url depo.stanje.ukupno %}" tab='1' >Skladišno stanje</a></li>          				
+          				<li><a href="{% url depo.inventura.skenirano %}" tab='1' >Stanje na inventuri</a></li>
+          				<li><a href="{% url depo.inventura.list %}" tab='1' >Inventure</a></li> -->
+          				<li><a href="{% url depo.stavke.nerijesene %}" tab='1' >Neobrađeni zahtjevi</a></li>
+          				<li><a href="{% url lijekovi.list.sort 'asc' 'naziv' %}" tab='1' >Lijekovi</a></li>
+          				<li><a href="{% url depo.posiljka.lijek.add %}" tab='1' >Dodaj pošiljku</a></li>
+          				<li><a href="{% url depo.lijek.add %}" tab='1' >Dodaj lijek</a></li>
+          				<!-- <li><a href="{% url depo.obracun.dnevni %}" tab='1' >Dnevni obračun</a></li> -->
+          				<li><a href="/ajax/lijekovi/naruciti" tab='1' >Nedostatne zalihe</a></li>
+           				<li><a href="/depo/posiljka/list" tab='1' >Arhiva pošiljki</a></li>        
+           				<!-- <li><a href="{% url sysapp.message.send %}" tab='1' >Pošalji poruku</a></li> -->
+          			</ul>
+          		</li>
+			{% endif %}
+			{% if perms.fiskalizacija %}
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Fiskalizacija</a>
+          			<ul id="sub-5" class="submenu-linkovi">
+           				{% if perms.is_staff %} <li><a href="{% url fiskalizacija.pp.list %}" tab='1' >Fiskalizacija - PP</a></li> {% endif %}
+           				<li><a href="{% url fiskalizacija.racun.nevezan %}" tab='1' >Izdavanje fiskalnih računa</a></li>
+           				<li><a href="{% url fiskalizacija.racun.list %}" tab='1' >Pregled fiskalnih računa</a></li>  				
+           				<li><a href="{% url fiskalizacija.zki.kalkulator %}" tab='1' >ZKI ručni izračun</a></li>  				
+           				<li><a href="{% url fiskalizacija.obracun %}" tab='1' >Fiskalni obračun</a></li>  				
+          			</ul>
+          		</li>
+			{% endif %}
+          		<li class="submenu-item">
+          			<a class="submenu-link" href="#">Ostalo</a>
+          			<ul id="sub-6" class="submenu-linkovi">
+           				<li><a href="{% url sysapp.ticket.create %}" tab='1' >Otvori ticket</a></li>  				
+           				<li><a href="{% url sysapp.ticket.list %}" tab='1' >Pregled ticketa</a></li>  				
+          			</ul>
+          		</li>
+          		
+          		
+          		
+            </ul>
+
+            <div class="clear"></div>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+		
+ 		<!-- ****************** STATUS VEZE ****************** -->
+
+
+          <h2 class="box-1-title">Status veze</h2>
+          <div class="box-1" style="height: 55px;" id="termometar-box">
+		    <div class="clear"><img id="semafor-slika" src="/static/img/semafor.png" style="float:left; margin-left: 15px; padding-right: 10px; width:64px;" />
+	<!--	    	<div class="statusveze"><span id="status_net">Veza na Internet: <br />(Ispravna - 42ms)</span></div>		    
+		    	<div class="statusveze"><span id="status_cis">Veza na Poreznu: <br />(Ispravna - 271ms)</span></div>		    -->
+                      
+		    	<div class="statusveze">Porezna - <span id="status_cis">?</span><br />Internet - <span id="status_net">?</span><br />Njemačka - <span id="status_vpn">?</span></div>	
+			
+		    </div>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+
+
+
+		<!-- ****************** TEMPERATURA FRIŽIDERA ****************** -->
+
+
+          <h2 class="box-1-title">Hladnjaci</h2>
+          <div class="box-1" style="height: 55px;" id="termometar-box">
+		    <div class="clear"><img id="termometar-slika" src="/static/img/devel/termometar.png" style="float:left; margin-left: 15px; padding-right: 10px; width:64px;" />
+		    	<div class="termometar"><span id="temp_friz_1">0.00</span> &deg;C</div>
+		    	<div class="termometar"><span id="temp_friz_2">0.00</span> &deg;C</div>		    
+		    </div>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+
+
+          <!-- ****************** RED ČEKANJA ****************** -->
+
+
+          <h2 class="box-1-title">Red čekanja</h2>
+          <div class="box-1" style="height: 120px;">
+		<!-- <ul style="padding-left: 10px; padding-right: 10px;"> -->
+		<div id="semafor">001</div>
+  		<div id="semafor-komande">
+			<img src="/static/img/semafor/play.png" onClick="javascript:test_redomat();"/>
+			<img src="/static/img/semafor/pause.png" />
+			<img src="/static/img/semafor/user.png" />
+			<img src="/static/img/semafor/power.png" />
+
+		</div>
+
+		<!-- </ul> -->
+            <div class="clear"></div>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+
+
+          <!-- ****************** SAT ****************** -->
+          <h2 class="box-1-title">Sat</h2>
+          <div class="box-1">
+            <ul id="clock">	
+	   			<li id="sec"></li>
+	   			<li id="hour"></li>
+				<li id="min"></li>
+			</ul>
+          </div> <!--box-1-->
+          <div class="shadow"></div>
+      </div> <!--left-wrapper-->
+
+
+      <div id="content-wrapper-1">
+        <div id="squeeze">
+          <div id="content">
+
+            <div id="mainTabs" >
+
+              <!-- ****************** MAIN TABS MENU ****************** -->
+              <ul id="mainTabsMenu">
+                <li><a href="#mainTab-1" onclick="this.blur();">Pacijenti</a></li>
+                <li><a href="#mainTab-2" onclick="this.blur();">Depo</a></li>
+                <li><a href="#mainTab-3" onclick="this.blur();">Narudžbe</a></li>
+              </ul>
+              <div class="clear"></div>
+  
+              <!-- ****************** PACIJENTI ****************** -->
+              <div id="mainTab-1">
+
+              </div> <!--mainTab-1-->
+              
+              <!-- ****************** DEPO ****************** -->
+              <div id="mainTab-2">
+	      </div>
+
+	      <!-- **************** NARUDŽBE **************** -->
+
+              <div id="mainTab-3">
+              </div> <!--mainTab-3-->
+                           
+            </div> <!--mainTabs-->
+
+          </div> <!--content-wrapper-->
+  
+          <div class="clear"></div>
+
+        </div>
+      </div> <!--content-wrapper-->
+
+      <div class="clear"></div>
+    </div> <!--page-wrapper-1 -->
+
+    <object id="print_plugin" type="application/x-diocles" style="width:1px;height:1px;margin:0px;padding:0px;z-index:999;"></object>
+    <!-- ****************** FOOTER ****************** -->
+    <div id="footer-wrapper-1">
+      <div id="footer-arrow">
+        <p><strong>apodata systems</strong> &copy; 2012.</p>
+        <p>
+        </p>
+      </div>
+    </div> <!--footer-wrapper-1 -->
+    <!-- <object id="print_plugin" type="application/x-diocles" hidden="true"></object> -->
+
+  </body>
+</html>

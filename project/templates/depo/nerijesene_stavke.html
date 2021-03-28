@@ -1,0 +1,65 @@
+<script type="text/javascript">
+  function refresh_nerijesene() {
+        refresh_process_running = 1;
+	if(get_active_tab() == 1 && $('#nerijesene-stavke').length) { url_into_active_main_tab('{% url depo.stavke.nerijesene %}'); }
+        setTimeout("refresh_nerijesene();", 5000);
+  }
+  if(!refresh_process_running) refresh_nerijesene();
+</script>
+
+<table class="data-table" id="nerijesene-stavke">
+
+	<!-- Tu ide extends XYZ a osnovni dio izvući da bude zajednički? -->
+
+      <caption>Izdavanje lijekova - neriješeni zahtjevi (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+      <thead>
+        <tr>
+	   	   <th>Naziv</th>           
+           <th>Količina</th>
+           <th>Kutija na skladištu</th>
+           <th>Status</th>           
+           <th>Zatražio</th>
+		   <th>Upućeno</th>	 	       
+           <th></th>           
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+	  {% with narudzba=i.narudzba klijent=i.narudzba.klijent %}
+		<tr class="{% cycle 'odd' 'even' %}">	
+			{% if i.narudzba %}
+                        <td>{{i.narucenartikal.ime}}</td>
+			<td>{{i.kolicina}}</td>
+			<td><a href="{% url order.view narudzba.id %}">{{klijent.get_full_name}}</a></td>
+			<td>{{narudzba.get_status}}</td>			
+			<td>{{i.user.get_full_name}}</td>
+			<td>{{i.created}}</td>		 	
+			<td>
+				[ <a href="{% url depo.zahtjev.status.ukloni i.id 2 %}">Riješeno</a> | 
+				<a href="{% url depo.zahtjev.status.ukloni i.id 5 %}">Odbijeno</a> | 
+				<a href="{% url depo.zahtjev.status.ukloni i.id 6 %}">Stornirano</a> ]		
+			</td>
+			{% else %}		
+			<td>{{i.lijek}}</td>			
+			<td>{{i.kolicina}}</td>
+			<td>{{i.lijek.stanje}}</td>
+			<td>{{i.status_tekst}}</td>
+			<td>{{i.user.get_full_name}}</td>
+			<td>{{i.created}}</td>		 	
+			<td>
+				[ <a href="{% url depo.zahtjev.status.ukloni i.id 2 %}">Riješeno</a> | 
+				<a href="{% url depo.zahtjev.status.ukloni i.id 5 %}">Odbijeno</a> | 
+				<a href="{% url depo.zahtjev.status.ukloni i.id 6 %}">Stornirano</a> ]		
+			</td>
+			{% endif %}			
+		</tr>
+      {% endwith %}                 	
+    {% endfor %}       
+        </tbody>
+
+	{% url depo.stavke.nerijesene as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>

@@ -1,0 +1,108 @@
+ <div class="insideTabs">
+    <ul class="insideTabsMenu">
+       {% if object_list %}<li><a class="nohijack" href="{{printpos}}"> Ispiši obračun blagajne za datum </a></li>{% endif %}
+       <li><a class="nohijack" href="javascript:$.getScript('{% url order.obracun.moj_promet %}');">Moj dnevni promet (roba)</a></li>
+       <li><a class="nohijack" href="javascript:$.getScript('{% url order.uplate.moj.obracun %}');">Moj zaključak blagajne (lova)</a></li>
+       <li><a href="{% url order.ispis.danasnjih.narudzbi.pdf %}" tab='2' class="nohijack">Današnje narudžbe</a></li>
+       <li><a href="{% url order.slanje.danasnjih.narudzbi.pdf %}" tab='2' class="nohijack">Šalji narudžbe mailom</a></li>
+       <li><a href="{% url order.moje.dnevno.pdf.izvjesce %}" tab='2' class="nohijack">Moje dnevno izvješće</a></li>
+       <li><a href="{% url order.dnevni.obracun.blagajne.pdf %}" tab='2' class="nohijack">PDF blagajna </a></li>
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+<div class="clear space-2x"></div>
+
+
+      <img src="/static/img/lova2.png" style="float: left; margin-bottom: 0px; margin-top: 0px; margin-left: 50px; width:256px;" />
+<div class="content-30-right-wrapper" style="border: none;">
+      <div class="content-wrapper">
+           
+<form method="post" action="{% url order.uplate.obracun %}"> 
+
+      <table class="dt2" style="height:220px;">
+         <tbody>       
+  <tr><td>Djelatnik</td>
+  <td>
+	<select name="blagajnik">
+	  {% for i in djelatnici %}
+	  <option value="{{i.id}}">{{i.get_full_name}}</option>
+	  {% endfor %}
+	</select>
+  </td>
+
+
+  <tr><td>Dan</td>
+  <td><input type="number" name="dan" value="{{dan}}"></td></tr>
+  <tr><td>Mjesec</td>
+  <td><input type="number" name="mjesec" value="{{mjesec}}"></td></tr>
+  <tr><td>Godina</td>
+  <td><input type="number" name="godina" value="{{godina}}"></td></tr>
+  <tr><td></td><td><input type="submit" value="Pregledaj" class="table-button"></td></tr>
+                      
+        </tbody>
+      </table>
+        </form>
+	</div>
+
+</div>
+
+<div class="content-30-right-wrapper" style="border: none;">
+      <div class="content-wrapper">
+           
+      <table class="dt2" style="height:220px;">
+         <tbody>       
+  <tr><td>Djelatnik</td><td>{{ blagajnik.get_full_name }}</td>
+  <tr><td>Uplaćeno Eur</td><td>{{euri_uplate.iznos__sum}}</td>
+  <tr><td>Uplaćeno Kn</td><td>{{kune_uplate.iznos__sum}}</td>
+  <tr><td>Prva uplata</td><td>{{ interval.created__min }}</td>
+  <tr><td>Zadnja uplata</td><td>{{ interval.created__max }}</td>
+                      
+        </tbody>
+      </table>
+	</div>
+
+</div>
+<!-- <div class="clear space-2x"></div> -->
+
+
+{% if object_list %}
+
+
+ <div class="content-100-left-wrapper" style="border: none;">
+  <div class="content-wrapper">
+
+        <table class="dt2">
+          <thead>
+            <tr>
+               <th>Narudžba</th>           
+               <th>Vrsta</th>           
+               <th>Tip</th>
+               <th>Vrijeme</th>
+               <th>Klijent</th>
+               <th>Iznos</th>
+               <th>Napomena</th>
+            </tr>
+           </thead>
+
+           <tbody>
+
+           {% for i in object_list %}        
+             <tr class="{% cycle 'odd' 'even' %}">   
+               <td><a href="{% url order.view i.narudzba.id %}">Otvori narudžbu</a></td>                    
+               <td>{{i.get_vrsta}}</td>                    
+               <td>{{i.get_tip}}</td>
+               <td>{{i.created}}</td>
+               <td>{{i.klijent.get_full_name}}</td>
+               <td>{{i.iznos}} {{i.valuta.kratica}}</td>
+               <td>{{i.napomena}}</td>
+             </tr>     
+           {% endfor %}
+           </tbody>
+         </table>
+
+  </div>
+
+ </div>
+
+{% endif %}

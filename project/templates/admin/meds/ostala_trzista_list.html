@@ -1,0 +1,115 @@
+{% extends "admin/base/body_content.html" %}
+{% import "base/pagination.html" as pagination %}
+{% set include_list_controls = True %}
+{% set include_list_filter = True %}
+
+{% set title = "Lijekovi - Ostala tržišta" %}
+{% set edit_link = "/administrator/meds/ostala_trzista/item/edit/" %}
+{% set backlink = "/administrator/" %}
+
+
+{% block main_content %}
+
+    <h1>{{ title }}</h1>
+
+    <nav class="navbar navbar-default toolbar" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" id="filter_search" class="form-control apply_filter_on_enter" placeholder="Pretraga" style="width: 400px;" value="{{ filter_search }}"/>
+                </div>
+                <button type="submit" class="btn btn-default apply_filter_on_click"><i class="icon-search"></i> Traži</button>
+                <a href="#" class="btn btn-default clear_filter">Obriši</a>
+            </form>
+
+            <div class="navbar-right">
+                <a href="{{ edit_link }}" class="btn btn-success navbar-btn"><i class="icon-plus"></i> Dodaj</a>
+                <a href="{{ backlink }}" class="btn btn-primary navbar-btn"><i class="icon-chevron-left"></i> Povratak</a>
+            </div>
+        </div>
+    </nav>
+
+    {% autopaginate items %}
+    {{ pagination.render_pagination(items_pages) }}
+
+    <form id="fm" class="form-inline" method="post" action="{{ request.path }}">
+        <input type="hidden" name="backlink" value="{{ backlink }}" />
+        <table class="table table-striped items meds">
+            <thead>
+                <tr>
+                    <th class="chx"><input type="hidden" id="selected_items" name="selected_items" value="" /></th>
+                    <th>Naziv</th>
+                    <th class="text-right" style="width: 60px;">Kol.</th>
+                    <th style="width: 60px;">Jed.</th>
+                    <th class="text-right" style="width: 90px;">Nabavna &euro;</th>
+                    <th class="text-right" style="width: 90px;">VPC &euro;</th>
+                    <th class="text-right" style="width: 90px;">MPC &euro;</th>
+                    <th class="text-right" style="width: 90px;">MPC kn</th>
+                    <th style="width: 150px;">Tržište</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td class="chx">
+                            <input type="checkbox" name="sel_{{ loop.index0 }}" class="cmd_chx" />
+                            <input type="hidden" class="item_id" value="{{ item.id }}" />
+                        </td>
+                        <td><a href="{{ edit_link }}{{ item.id }}/">{{ item.ime | default("[ bez naziva ]", True) }}</a></td>
+                        <td class="text-right">{{ item.kolicina }}</td>
+                        <td>{{ item.jedinice }}</td>
+                        <td class="text-right">{{ item.cijena | format_float(precision=2) }}</td>
+                        <td class="text-right">{{ item.calc_veleprodajna_cijena() | format_float(precision=2) }}</td>
+                        <td class="text-right">{{ item.calc_maloprodajna_cijena() | format_float(precision=2) }}</td>
+                        <td class="text-right">{{ item.calc_maloprodajna_cijena() | eur2hrk | format_float(precision=2) }}</td>
+                        <td>{{ item.trziste.naziv }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if items.count() %}
+            <div class="list_cmd">
+                <a href="#" id="select_all">Označi sve</a> /
+                <a href="#" id="deselect_all">Odznači sve</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+
+                Označeno:
+                <select name="operation" class="form-control operation" id="operation">
+                    <option value="none" selected="selected">-</option>
+                    <option value="delete">Obriši</option>
+                </select>
+
+                <button class="btn" id="cmd_exec_confirm" data-toggle="modal" data-target="#dlg_confirm">Izvrši</button>
+            </div>
+        {% else %}
+            <p class="empty_list">Lista je prazna.</p>
+        {% endif %}
+    </form>
+
+    {{ pagination.render_pagination(items_pages) }}
+
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+
+        function set_filter()
+        {
+            var filter_search = $("#filter_search").val();
+            $.cookie("ostala_trzista_filter_search", filter_search, { path: "/", expires: 30 });
+        }
+
+        function clear_filter()
+        {
+            $.cookie("ostala_trzista_filter_search", "", { path: "/" });
+        }
+
+        $(function()
+        {
+        });
+
+    /* ]]> */
+    </script>
+
+{% endblock %}

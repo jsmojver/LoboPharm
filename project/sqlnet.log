@@ -1,0 +1,57 @@
+
+
+***********************************************************************
+Fatal NI connect error 12560, connecting to:
+ (DESCRIPTION=(CONNECT_DATA=(SERVICE_NAME=ORCL)(CID=(PROGRAM=python@pharm)(HOST=pharm)(USER=root)))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.229)(PORT=1521)))
+
+  VERSION INFORMATION:
+	TNS for Linux: Version 10.2.0.5.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 10.2.0.5.0 - Production
+  Time: 12-JAN-2015 19:57:58
+  Tracing not turned on.
+  Tns error struct:
+    ns main err code: 12560
+    TNS-12560: Message 12560 not found; No message file for product=network, facility=TNS
+    ns secondary err code: 0
+    nt main err code: 530
+    TNS-00530: Message 530 not found; No message file for product=network, facility=TNS
+    nt secondary err code: 113
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12560, connecting to:
+ (DESCRIPTION=(CONNECT_DATA=(SERVICE_NAME=ORCL)(CID=(PROGRAM=python)(HOST=pharm)(USER=root)))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.229)(PORT=1521)))
+
+  VERSION INFORMATION:
+	TNS for Linux: Version 10.2.0.5.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 10.2.0.5.0 - Production
+  Time: 12-JAN-2015 19:58:41
+  Tracing not turned on.
+  Tns error struct:
+    ns main err code: 12560
+    TNS-12560: Message 12560 not found; No message file for product=network, facility=TNS
+    ns secondary err code: 0
+    nt main err code: 530
+    TNS-00530: Message 530 not found; No message file for product=network, facility=TNS
+    nt secondary err code: 113
+    nt OS err code: 0
+
+
+***********************************************************************
+Fatal NI connect error 12560, connecting to:
+ (DESCRIPTION=(CONNECT_DATA=(SERVICE_NAME=ORCL)(CID=(PROGRAM=python@pharm)(HOST=pharm)(USER=root)))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.229)(PORT=1521)))
+
+  VERSION INFORMATION:
+	TNS for Linux: Version 10.2.0.5.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 10.2.0.5.0 - Production
+  Time: 12-JAN-2015 19:59:45
+  Tracing not turned on.
+  Tns error struct:
+    ns main err code: 12560
+    TNS-12560: Message 12560 not found; No message file for product=network, facility=TNS
+    ns secondary err code: 0
+    nt main err code: 530
+    TNS-00530: Message 530 not found; No message file for product=network, facility=TNS
+    nt secondary err code: 113
+    nt OS err code: 0

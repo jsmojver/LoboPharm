@@ -1,0 +1,51 @@
+
+{% if object_list.count %}
+<table class="data-table" id="rezultati_trazilice_korisnika">
+
+      <img src="/static/img/form/p1.png" style="float: left; margin-bottom: -50px; margin-left: 10px; width:64px;" />
+      <caption style="padding-left: 80px" >Rezultati pretrage</caption>
+
+
+      <thead>
+        <tr>
+				   <th>Ime</th>
+           <th>Adresa</th>
+           <th>Grad</th>
+           <th>Fiksni</th>
+           <th>Mobilni</th>
+           <th>Opaska</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="klijent-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+			<td><a href="#" onClick="show_user({{i.id}}); return false;">{{i.ime}} {{i.prezime}}</a></td>
+			<td>{{i.adresa}}</td>
+			<td>{{i.grad}}</td>
+			<td>{{i.fiksni}}</td>
+			<td>{{i.mobilni1}}</td>
+		 	<td>{{i.opaska}}</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+</table>
+
+{% else %}
+
+<div style="text-align: center;"> 
+  <img src="/static/img/devel/people_search3.jpg" />
+</div>
+
+<form id="forma-trazenje-lijekova" method="post" action="/meds/search">
+  <table><tr><td>
+  <input id="trazilica" type="text" name="ime_pacijenta" placeholder="Naziv">
+  <input id="trazigumb" type="submit" value="Traži">
+	</td></tr></table>
+</form>
+
+{% endif %}
+
+

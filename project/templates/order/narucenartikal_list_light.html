@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="" />
+
+    <title>eLjekarna</title>
+
+    <link rel="stylesheet" href="{{STATIC_URL_2}}/static/css/general.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{STATIC_URL_2}}/static/css/styles.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{STATIC_URL_2}}/static/css/message.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{STATIC_URL_2}}/static/css/form.css" type="text/css" media="screen" />
+
+    <script type="text/javascript">ip_adresa = '{{ip_adresa}}';</script>
+    
+  </head>
+
+  <body class="common">
+  <div class="table-right-1">
+	<a href="/light/order/incoming/view" class="table-button"> Osvježi </a>
+	<a href="/accounts/logout" class="table-button"> Odjava </a>
+  </div>
+
+<table class="data-table">      	   		  
+      <caption> Naručeni lijekovi  (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+
+      <thead>
+        <tr>
+           <th>Ime</th>
+	   <th>Klijent</th>           
+           <th>Količina</th>
+           <th>Jedinice</th>
+           <th>Tržište</th>
+           <th>Naručio</th>
+           <th>Datum</th>
+           <th>Jedinična cijena</th>
+           <th>Ukupno</th>
+	   <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr class="{% cycle 'odd' 'even' %}">
+   		<td>{{i.ime}}</td> 			
+		<td>
+				{% if i.narudzba.klijent.tip_klijenta == 1 %}
+					{{i.narudzba.klijent}}
+				{% else %}
+					{{i.narudzba.klijent.naziv}}
+				{% endif %}   		   				
+		</td> 		
+		<td>{{i.kolicina}}</td>
+		<td>{{i.jedinice}}</td>
+		<td>{{i.trziste}}</td>
+		<td>{{i.narucio}}</td>
+		<td>{{i.created}}</td>
+		<td>{{i.jedinicna_cijena}} &euro; </td>
+		<td>{{i.get_total}} &euro; </td>
+		<td>
+			Preuzmi | Zaprimi | Odbij		
+	
+			<!-- <a href="{% url order.artikal.zaprimi i.id 0 %}">Preuzmi</a> | 
+			<a href="{% url order.artikal.zaprimi i.id 0 %}">Zaprimi</a> | 
+			<a href="{% url order.artikal.zaprimi i.id 0 %}">Odbij</a> -->
+		</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url light.order.incoming.view as url %}
+	 {% include "paginator.html" with adresa=url %}
+
+</table>
+
+  </body>
+</html>

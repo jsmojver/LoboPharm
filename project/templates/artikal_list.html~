@@ -1,0 +1,10 @@
+<table class="data-table" id="search_rezultati">
+
+     {% include "meds/lista_lijekova.html" %}
+
+	{% url meds.search.q query order sortfield as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>
+<!-- </div> -->
+

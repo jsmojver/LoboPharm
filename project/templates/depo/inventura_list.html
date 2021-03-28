@@ -1,0 +1,38 @@
+<div class="clear space-1x"></div>
+
+<table class="data-table" id="posiljka_prikaz">
+
+    <caption>{{paginator.count}} obavljenih inventura</caption>
+      <thead>
+        <tr>
+      	   <th>Broj</th>
+           <th>Kreirana</th>
+           <th>Zadnja izmjena</th>
+           <th>Nedostaje</th>
+           <th>Na stanju</th>                      
+           <th>Ukupno</th>
+           <th>Šteta</th>           
+        </tr>
+      </thead>
+
+	 <tbody>
+	
+   	{% for i in object_list %}
+  	<tr>
+  	  <td>{{i.id}}</td>
+  	  <td><a href="{% url depo.inventura.detail i.id %}">{{i.created}}</a></td>  	  
+  	  <td>{{i.modified}}</td>
+  	  <td>{{i.nedostaje}}</td>  	  
+  	  <td>{{i.na_stanju}}</td>  	  
+  	  <td>{{i.ukupno}}</td>
+  	  <td></td>  	  
+  	</tr>
+  	{% endfor %}	                 
+	
+	
+  </tbody>
+	
+	{% url depo.inventura.list as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>

@@ -1,0 +1,31 @@
+<!-- <img src="/static/img/form/pills2.png" style="float:left;" /> -->
+<div>
+
+{% include "meds/meds_menu_header.html" %}
+
+<div class="clear space-1x"></div>
+
+  <table class='dt2'>
+    {% for i in interakcije %}
+    <th><img src='/static/img/upozorenje/{{ i.interaktion.klinischebedeutung }}.png' style="width:50px;height:50px;" /></th>
+    <th><h3>{{i.interaktion.ozbiljnost}} &nbsp;&nbsp; {{ i.interaktion.mechanismusdynamischkurz }}</h3> <h4> {{ i.interaktion.effektkurz }}</h4></th>
+	{% for j in i.interaktion.text.all %}
+	<tr><td> {{j.tip_naziv }} </td><td>{{j.text|linebreaks}}</td></tr>
+	{% endfor %}
+    {% endfor %}
+  </table>
+
+ 
+<!-- 	<table class='dt2'>
+		{% for i in interakcije %}
+		<tr><th>Redni broj</th><th>Tip tvari</th><th>Generičko ime</th><th>Količina</th><th>Jedinice</th></tr>
+			{% for j in i.interaktion.text.all %}
+			<tr><td>{{j.text}}</td></tr>
+			{% endfor %}
+		{% endfor %}
+	</table> -->
+
+</div>
+
+
+

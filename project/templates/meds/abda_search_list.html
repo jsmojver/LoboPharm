@@ -1,0 +1,43 @@
+<table class="data-table" id="search_rezultati">
+
+      <caption>Rezultati pretrage (str. {{ page_obj.number }} / {{ paginator.num_pages }}) </caption>
+
+      <thead>
+        <tr>
+           <th>Ime</th>
+           <th>Zemlja</th>
+           <th>Dobavljač</th>
+           <th>ATC kod</th>
+           <th>Broj djelatnih tvari</th>
+           <th>Djelatne tvari</th>
+           <th></th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+  		<tr class="{% cycle 'odd' 'even' %}">
+			<td>{{i.produktname}} <br /> ({{i.get_drf}})</td>
+			<td>{{i.anbieter.staatkuerzel}} </td>
+			<td>{{i.anbieter.name}}</td>
+			<td>{{i.atccode}}</td>
+			<td>{{i.wirkstoffanzahl}}</td>
+		 	<td>	
+			{% for j in i.lista_djelatnih_tvari %}
+				- <a href="{% url meds.abda.stoff.search.q j.id %}">{{ j.naziv_tvari }}</a><br />
+			{% endfor %}
+
+			</td>
+		 	<td></td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url meds.abda.search.q query as url %}
+	 {% include "paginator.html" with adresa=url %}
+	
+</table>
+<!-- </div> -->
+

@@ -1,0 +1,30 @@
+{% macro render_pagination(pages) -%}
+    {% if pages.is_paginated %}
+        <ul class="pagination pagination-sm">
+            {% set has_page = pages.page_obj.has_previous() %}
+            <li{% if not has_page %} class="disabled"{% endif %}>
+                {% if has_page %}
+                    <a href="?page={{ pages.page_obj.previous_page_number() }}{{ pages.getvars }}{{ pages.hashtag }}">&laquo;</a>
+                {% else %}
+                    <span>&laquo;</span>
+                {% endif %}
+            </li>
+            {% for page in pages.pages %}
+                {% if page %}
+                    <li{% if page == pages.page_obj.number %} class="active"{% endif %}><a href="?page={{ page }}{{ pages.getvars }}{{ pages.hashtag }}" class="page">{{ page }}</a></li>
+                {% else %}
+                    <li><span>...</span></li>
+                {% endif %}
+            {% endfor %}
+
+            {% set has_page = pages.page_obj.has_next() %}
+            <li{% if not has_page %} class="disabled"{% endif %}>
+                {% if has_page %}
+                    <a href="?page={{ pages.page_obj.next_page_number() }}{{ pages.getvars }}{{ pages.hashtag }}">&raquo;</a>
+                {% else %}
+                    <span>&raquo;</span>
+                {% endif %}
+            </li>
+        </ul>
+    {% endif %}
+{%- endmacro %}

@@ -1,0 +1,43 @@
+    {% include "order/narudzba_header.html" %}
+    <div class="clear space-2x"></div>
+
+ 
+    <div style="width: 100%">
+     <div id='receipt-container' style="width: 35em; font-size: 10px; font-family: receipt; padding: 20px;">        
+	<div style="text-align: center">
+	<img src="/static/img/logo_kurfursten.bmp" width="350px;" />
+	<br />
+	{{ vrijeme }}
+	<p class="font-b"> - R E C H N U N G - </p>
+	<span>Auftraggeber: <u><strong>{{narudzba.klijent.get_full_name}}</strong></u></span>
+	<br />
+	<span>Datum der Bestellung: <u><strong>{{narudzba.created}}</strong></u></span>
+	<br />
+	<br />
+
+        <pre style="font-size: 0.9em; font-family: receipt;">Artikel                     Menge      Preis      Total</pre>
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        {% for i in narudzba.artikli.all %}
+<!--        <div><pre style="font-size: 0.9em; font-family: receipt;">{{i.ime|ljust:"29"}}{{i.kolicina|rjust:"5"}}{{i.jedinicna_cijena|rjust:"11"}}{{i.get_total|rjust:"11"}}</pre></div> -->
+        
+	<div><pre style="font-size: 0.9em; font-family: receipt;">{{i.ime|slice:"20"|ljust:"20"}} {{i.std_kolicina|default_if_none:""|floatformat:"0"|rjust:"3"}} {{i.jedinice|default_if_none:""|rjust:"2"}} {{i.jedinicna_cijena|rjust:"11"}} &euro; {{i.get_total|rjust:"11"}} &euro;</pre></div>
+	<div><pre style="font-size: 0.9em; font-family: receipt;">{{i.kolicina|ljust:"25"}} {{i.jedinicna_cijena|eur2hrk|rjust:"10"}} KN  {{i.get_total|eur2hrk|rjust:"10"}} KN</pre></div>
+        {% endfor %}
+        <hr style="color: black; padding-bottom: 2px; border-bottom: 1px solid black; " />
+        <div style="text-align: right;"> <p class="font-c"> Gesamtbetrag: {{narudzba.ukupna_cijena}}&euro; </p> </div>
+        <div style="text-align: right;"> <p class="font-c"> {{narudzba.ukupna_cijena|eur2hrk}}kn </p> </div>
+        <br />
+        <div> Anzahlung: <strong>{{narudzba.get_polog}} &euro;</strong> </div>
+        <div> Restzahlung: <strong>{{narudzba.za_platiti}} &euro;</strong> </div>
+        <br />
+	<br />
+	<img src="{% url sysapp.views.eanpng narudzba.get_barcode %}" /><br />
+	<div> ** Vielen Dank fur Ihren Besuch!! ** </div><br />
+	</div>
+
+     </div>
+    </div>
+
+
+
+

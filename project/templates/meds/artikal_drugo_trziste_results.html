@@ -1,0 +1,60 @@
+<table class="data-table" id="search_rezultati">
+
+      <caption>Rezultati pretrage (str. {{ page_obj.number }} / {{ paginator.num_pages }}) </caption>
+
+      <thead>
+          <tr>
+              <th>Ime</th>
+              <th>Kol</th>
+              <th>Jed</th>
+              <th>Nabavna</th>
+              <th>Veleprodajna</th>
+              <th>Maloprodajna</th>
+              <th>Tržište</th>
+              <th></th>
+          </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+  		<tr class="{% cycle 'odd' 'even' %}">
+			<td>{{i.ime}}</td>
+			<td>{{i.kolicina}}</td>
+			<td>{{i.jedinice}}</td>
+			<td>{{i.cijena}} &euro;</td>
+			<td>{{i.cijena_ljekarne}} &euro;</td>
+			<td>{{i.cijena_pacijenti}} &euro; ({{i.cijena_pacijenti|eur2hrk}} kn)</td>
+			<td>{{i.trziste.naziv}}</td>
+			<td>
+				<form action="{% url order.kosarica.add.alternate %}" method="post" style="float:right;">
+         			<input type="hidden" name="lijekId" value="{{ i.id }}"></input>
+         			<input type="number" name="kolicina" value="0" class="kotacic" style="width:50px;"></input>
+         			<input type="submit" class="" value="Dodaj u košaricu"></input>
+         		</form>			
+			</td>		
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	 {% url meds.search.drugotrziste.query query as url %}
+	 {% include "paginator.html" with adresa=url %}
+	
+</table>
+<!-- </div> -->
+
+<script type="text/javascript">
+$(function() {
+    $(".kotacic").bind("mousewheel", function(event, delta, deltaX, deltaY) {
+        if (delta > 0) {
+            this.value = parseInt(this.value) + 1;
+        } else {
+            if (parseInt(this.value) > 0) {
+                this.value = parseInt(this.value) - 1;
+            }
+        }
+        return false;
+     });
+});
+</script>

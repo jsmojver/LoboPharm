@@ -1,0 +1,182 @@
+{% if user.kosarica.klijent %}
+
+<script type="text/javascript">naslovna_kosarica_reload();</script>
+
+<div class="insideTabs">
+    <ul class="insideTabsMenu">       
+       <li><a href="{% url meds.search.form %}">Nastavi s traženjem</a></li>
+       <li><a href="{% url order.kosarica.submit %}">Završi narudžbu</a></li>
+       <li><a href="{% url order.kosarica.empty %}">Isprazni</a></li>
+<!--       <li><a class="nohijack" href="javascript:izdaj_nevezan_fiskalni();">Izdaj nevezan fiskalni račun</a></li> -->
+       <li><a class="nohijack" href="javascript:$.get('/client/select/19/', function(d){show_cart()});">Anonimni kupac (depo)</a></li>
+    </ul>
+    <div class="insideTabsMenuArrow"></div>
+</div>
+
+	<img src="/static/img/devel/cart7.png" style="padding-left: 20px; padding-top: 20px;" />
+
+	<table class="data-table" style="float: right; width: 72%; margin-top:20px;">
+        <caption>Klijent</caption>
+
+
+{% if user.kosarica.klijent.tip_klijenta == 1 %} <!-- Fizička osoba -->
+	<tr><td>Ime:</td><td style="width:80%;"><a href="{% url client.view user.kosarica.klijent.id %}">{{ user.kosarica.klijent }}</a></td></tr>
+	<tr><td>Adresa:</td><td><a class="nohijack" href="javascript:window.open('http://maps.google.com/?q={{ user.kosarica.klijent.adresa }},{{user.kosarica.klijent.grad}},Croatia', '_blank');">{{ user.kosarica.klijent.adresa }}, {{ user.kosarica.klijent.postanski_broj }}, {{ user.kosarica.klijent.grad }}</td></tr>
+	<tr><td>Telefon:</td><td>{{ user.kosarica.klijent.telefon }}</td></tr>
+	<tr><td>Mobitel:</td><td>{{ user.kosarica.klijent.mobitel }}</td></tr>
+	<tr><td>E-mail:</td><td>{{ user.kosarica.klijent.email }}</td></tr>
+	<tr><td>Napomena:</td><td></td></tr>
+{% else %} <!-- Pravna osoba -->
+	<tr><td>Naziv:</td><td style="width:80%;"><a href="{% url client.view user.kosarica.klijent.id %}">{{ user.kosarica.klijent.naziv }}</a></td></tr>
+	<tr><td>Adresa:</td><td><a class="nohijack" href="javascript:window.open('http://maps.google.com/?q={{ user.kosarica.klijent.adresa }},{{user.kosarica.klijent.grad}},Croatia', '_blank');">{{ user.kosarica.klijent.adresa }}, {{ user.kosarica.klijent.postanski_broj }}, {{ user.kosarica.klijent.grad }}</td></tr>
+	<tr><td>Telefon:</td><td>{{ user.kosarica.klijent.telefon }}</td></tr>
+	<tr><td>OIB:</td><td>{{ user.kosarica.klijent.oib }}</td></tr>
+	<tr><td>Rabat:</td><td>{{ user.kosarica.klijent.rabat }}</td></tr>
+{% endif %}
+	<!-- Tu još ide napomena -->
+	</table>
+
+
+<!-- </div>-->
+  
+{% if user.kosarica.zbroji %}
+  
+<div class="clear space-2x"></div>
+
+	<table class="data-table" id="kosarica_list">
+
+      	<thead>
+	        <tr>
+       	<th>Naziv artikla</th>
+	   	<th>Količina</th>
+	   	<th style="text-align:center;">Jed. cijena</th>
+	   	<th>Tržište</th>
+	   	<th>Napomena</th>
+	   	<th>Ukupno</th>
+	   	<th></th>
+	        </tr>
+      	</thead>
+
+		 <tbody>
+
+
+		{% for i in user.kosarica.artikli.all %}
+			<tr class="{% cycle 'odd' 'even' %}">
+				<td>{{i.naziv}}</td>
+				<td><input type="text" class="qtyedit" value="{{i.kolicina}}" alt="{{i.id}}" style="border:none; text-align:left; background:none;"/></td>
+				{% load l10n %}
+				<td><input type="text" class="inlineedit" value="{{i.cijena|unlocalize}}" alt="{{i.id}}" style="border:none; text-align:right; background:none;"/>{{i.valuta_text}}</td>
+				<td>{{i.trziste.naziv}}</td>
+				<td></td>
+				<td>{{i.ukupna_cijena|unlocalize}} {{i.valuta_text}}</td>
+				<td><a href="{% url order.kosarica.remove i.id %}">Obriši</a></td>
+			</tr>
+        {% endfor %}
+       
+ 
+        <tr><td></td><td>{{user.kosarica.zbroji}}</td><td></td><td></td><td></td><td>&Sigma; = {{user.kosarica.cijena}} HRK</td><td></td></tr>       
+
+     </tbody>
+   </table>
+
+
+<!-- <div class="clear space-2x"></div>
+ <table class="data-table">
+  </tbody>
+ 
+ <tr>
+   <form method="post" action="{% url order.uplata.add %}"> 
+    <td><select name="vrsta" style="background: rgba(255, 255, 255, 0); width: 80%; border: 0px; padding: 0px; color:grey; ">
+	  <option value="0" selected >Usluga transporta 2 eur</option>
+	  <option value="1">Usluga transporta 4 eur</option>
+	  <option value="2">Usluga transporta 6 eur</option>
+	  <option value="3">Poštarina 35 kn</option>
+        </select>
+    </td>
+    <td style="padding: 0px;"><input style="width: 95%; border: 1px;" class="text-box" name="naziv"></td>
+    <td></td>
+    <td>Dodaj</td>
+   </form>
+ </tr>
+        
+                       
+   </tbody>
+ </table>
+-->
+
+
+				
+	{% if user.kosarica.artikli.count > 1 %}
+	  {% with user.kosarica.provjeri_interakcije as interakcije %}
+	   {% if interakcije %}	  
+		<div class="clear space-2x"></div>
+		<table class='dt2'>
+			<tr><td></td><td>Klasa ozbiljnosti</td><td>Opis interakcije</td><td>Lijekovi</td></tr>
+			{% for i in interakcije %}
+			  {% with lijek=i.0 interakcija=i.0.interaktion  %}			  			 
+			  <tr><td><a href="{% url meds.interaction.detail lijek.interaktion_id %}">
+			  			{% if interakcija.klinischebedeutung == 1 %} 
+			  				<img src="/static/img/devel/warning1.png" style="width:64px;" /></a>
+			  			{% else %}			  				
+			  				<img src="/static/img/devel/warning4.png" style="width:64px;" /></a>
+			  			{% endif %}			  						  			
+			  			</td>			  			
+			  			<td><h3 style="font-size: 3em;">{{ interakcija.klinischebedeutung }}</h3></td>
+			  			<td>
+			  			     {{ interakcija.ozbiljnost }}<br /><br />
+			  				 {{ interakcija.mechanismusdynamischkurz }}     
+			  			</td>
+			  			<td>
+			  		
+			  		  <p>{{lijek.name}}</p>
+			  		  <img src="/static/img/devel/arrows2.png" />
+			  		  <p>{{i.1.name}}</p>
+			  		
+			  		</td></tr>
+			  {% endwith %}
+			{% endfor %}
+		</table>	
+		
+		{% else %}
+		  
+		  
+		  <div class="success message" style="border: 1px dashed lightblue; border-radius: 15px; padding: 15px; margin-top: 20px;">
+		  		<img src="/static/img/devel/no_interactions.png" style="width:64px; float: left; style:" />
+                 <h3 style="padding-top: 15px; margin-left: 80px;" >Interakcije među lijekovima</h3>
+                 <p style="margin-left: 80px;">Među trenutno odabranim artiklima u košarici nema poznatih interakcija! <br/>Napomena: moguće je provjeriti samo interakcije njemačkih lijekova jer o ostalima nema podataka već samo cijene!</p>
+		  </div>
+		  
+	    {% endif %}
+	  {% endwith %}
+	{% endif %}
+	
+    {% endif %}
+
+
+{% endif %}
+
+<script type="text/javascript">
+
+$('.inlineedit').keypress(function(e) {
+  if(e.which == 13) {
+          try { 
+		$(this).val(eval($(this).val()));
+	  	$.getScript('/order/kosarica/priceadjust/'+$(this).attr('alt')+'/'+$(this).val(), function(data, status, jqxhr){
+		    show_cart();
+			});
+		}
+          catch(err) { console.log(err);};
+      }
+   });
+
+$('.qtyedit').keypress(function(e) {
+  if(e.which == 13) {
+	  	$.getScript('/order/kosarica/qtyadjust/'+$(this).attr('alt')+'/'+$(this).val(), function(data, status, jqxhr){
+		show_cart();
+			});
+		}
+   });
+
+</script>
+
+

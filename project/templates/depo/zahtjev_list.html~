@@ -1,0 +1,39 @@
+<table class="data-table" id="stavke">
+
+	<!-- Tu ide extends XYZ a osnovni dio izvući da bude zajednički? -->
+
+      <caption>Depo - Popis Stavki (str. {{ page_obj.number }} / {{ paginator.num_pages }})</caption>
+      <thead>
+        <tr>
+           <th>ID</th>
+	   <th>Naziv</th>
+           <th>Cijena</th>
+           <th>Količina</th>
+           <th>Ukupni iznos</th>
+           <th>Zadužio</th>
+           <th>Vrijeme</th>
+           <th>Status</th>
+        </tr>
+      </thead>
+
+	 <tbody>
+
+	{% for i in object_list %}
+		<tr id="lijekovi-stavak-{{i.id}}" class="{% cycle 'odd' 'even' %}">
+			<td>{{i.id}}</td>
+			<td>{{i.lijek}}</td>
+			<td>{{i.lijek.cijena}} &#8364;</td>
+			<td>{{i.kolicina}}</td>
+			<td>{{i.ukupna_cijena}} &#8364;</td>
+			<td>{{i.user.get_full_name}}</td>
+		 	<td>{{i.created}}</td>
+			<td>{{i.status_tekst}}</td>
+		</tr>
+        {% endfor %}       
+                       
+        </tbody>
+
+	{% url depo.stavke.pregled as url %}
+	{% include "paginator.html" with adresa=url %}
+
+</table>

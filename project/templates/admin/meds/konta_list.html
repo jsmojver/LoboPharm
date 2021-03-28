@@ -1,0 +1,63 @@
+{% extends "admin/base/body_content.html" %}
+{% import "base/pagination.html" as pagination %}
+{% set include_list_controls = True %}
+{% set include_list_filter = True %}
+
+{% set title = "Lijekovi - Konta" %}
+{% set edit_link = "/administrator/meds/konta/item/edit/" %}
+{% set backlink = "/administrator/" %}
+
+
+{% block main_content %}
+
+    <h1>{{ title }}</h1>
+
+    <nav class="navbar navbar-default toolbar" role="navigation">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="navbar-right">
+                <a href="{{ edit_link }}" class="btn btn-success navbar-btn"><i class="icon-plus"></i> Dodaj</a>
+                <a href="{{ backlink }}" class="btn btn-primary navbar-btn"><i class="icon-chevron-left"></i> Povratak</a>
+            </div>
+        </div>
+    </nav>
+
+    {% autopaginate items %}
+    {{ pagination.render_pagination(items_pages) }}
+
+    <form id="fm" class="form-inline" method="post" action="{{ request.path }}">
+        <input type="hidden" name="backlink" value="{{ backlink }}" />
+        <table class="table table-striped items meds">
+            <thead>
+                <tr>
+                    <th>Naziv</th>
+                    <th class="text-right" style="width: 90px;">Šifra</th>
+                    <th style="width: 150px;">Kontakt</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td><a href="{{ edit_link }}{{ item.id }}/">{{ item.name | default("[ bez naziva ]", True) }}</a></td>
+                        <td class="text-right">{{ item.sifra }}</td>
+                        <td>{{ item.kontakt }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+
+    {{ pagination.render_pagination(items_pages) }}
+
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+
+        $(function()
+        {
+        });
+
+    /* ]]> */
+    </script>
+
+{% endblock %}
