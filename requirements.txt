@@ -14,9 +14,11 @@ jsmin==2.0.11
 pisa==3.0.33
 pyserial==2.7
 python-stdnum==0.8.1
-pyxmlsec==0.3.1
+pyxmlsec-next==0.3.1
 reportlab==2.7
 simplejson==3.6.5
 six==1.8.0
 suds==0.4
 wsgiref==0.1.2
+lxml==3.4.2
+trml2pdf==0.2.0
