@@ -1,0 +1,60 @@
+/****************/
+/* GENERAL FORM */
+/****************/
+
+.form-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.form-wrapper p {  float: left; margin: 0 0 3px 0; padding: 0;}
+
+.form-wrapper p.w-25p { width: 25%; }
+.form-wrapper p.w-33p { width: 33%; }
+.form-wrapper p.w-50p { width: 50%; }
+.form-wrapper p.w-66p { width: 66%; }
+.form-wrapper p.w-75p { width: 75%; }
+.form-wrapper p.w-100p { width: 100%; }
+
+.form-wrapper input.text-box { width: 150px; }
+.form-wrapper select { width: 150px; }
+.form-wrapper p label { text-align: right; }
+
+.form-wrapper .err {
+  border: 1px solid red;
+}
+
+.radio {
+  vertical-align: middle;
+  border: 0;
+}
+
+.radio-label {
+  margin-left: 10px;
+  margin-right: 15px;
+  vertical-align:middle;
+}
+
+.checkbox {
+  vertical-align: middle;
+  border: 0;
+}
+
+.checkbox-label {
+  margin-left: 10px;
+  margin-right: 15px;
+  vertical-align:middle;
+}
+
+#success_page h1 { 
+  background: url('../img/success.gif') left no-repeat;
+  padding-left:22px;
+  margin-bottom: 20px;
+  font-size: 130%;
+}
+
+#success_page p { 
+  padding-left:22px;
+  font-size: 100%;
+}
+

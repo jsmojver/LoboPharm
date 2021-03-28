@@ -1,0 +1,108 @@
+/*******************/
+/* CALENDAR STYLES */
+/*******************/
+
+#calendar{
+  margin: 10px 10px 0px 10px;
+  position: relative;
+}
+
+#calendar .ui-datepicker-header {
+ /* background-color: #7c9fb0; */
+  background: #7c9fb0; 
+  line-height: 24px;
+  font-weight: bold;
+  padding-top: 2px;
+}
+
+#calendar .ui-datepicker-calendar thead tr {
+  background-color : #880055;
+}
+
+#calendar .ui-datepicker-prev, #calendar .ui-datepicker-next {
+  display: block;
+  width: 11px;
+  height: 14px;
+  margin: 4px 6px 0 6px;
+  position: relative;
+}
+
+#calendar .ui-datepicker-prev {
+  float: left;
+  background: url('../img/calendar/calendar-prev.gif') no-repeat;
+}
+
+#calendar .ui-datepicker-next {
+  float: right;
+  background: url('../img/calendar/calendar-next.gif') no-repeat;
+}
+
+#calendar .ui-datepicker-prev span, #calendar .ui-datepicker-next span{
+  display: none;
+}
+
+#calendar .ui-datepicker-title{
+  text-align: center;
+  color: #FFF;
+  text-transform: uppercase;
+}
+
+#calendar .ui-datepicker-title .ui-datepicker-year{
+  display: none;
+}
+
+#calendar .ui-datepicker-calendar {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 3px;
+}
+
+#calendar .ui-datepicker-calendar th {
+  line-height: 24px;
+  color: #55798a;
+  background-color: #7c9fb0;
+  border-bottom: 3px solid #F1F1F1;
+  font-weight: bold;
+  font-size: 90%;
+}
+
+#calendar .ui-datepicker-calendar td {
+  width: 20px;
+  height: 20px;
+  background-color: #93C3DB;
+  border: 1px solid #7CA2B7;
+  text-align: center;
+  line-height: 23px;
+  padding: 0;
+  font-size: 90%;
+}
+
+#calendar .ui-datepicker-calendar td.ui-datepicker-unselectable {
+  background-color: transparent;
+  border: 0px solid #7CA2B7;
+}
+
+#calendar .ui-datepicker-calendar td a {
+  display: block;
+  text-decoration: none;
+  color: #FFF;
+  font-weight: bold;
+}
+
+#calendar .ui-datepicker-calendar td a:hover{
+  color: #373737;
+  background-color: #fff;
+}
+
+#calendar .ui-datepicker-calendar td.ui-datepicker-other-month{
+  background-image: none;
+}
+
+#calendar .ui-datepicker-calendar td.ui-datepicker-today{
+  background-color: #E94285;
+  border: 1px solid #7CA2B7;
+}
+
+#calendar .ui-datepicker-current{
+  color: #000;
+}

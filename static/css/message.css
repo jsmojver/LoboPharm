@@ -1,0 +1,43 @@
+/*******************/
+/*     MESSAGES    */
+/*******************/
+
+.message-wrapper {
+  position: relative;
+  padding: 10px 20px 5px 45px;
+  margin: 10px 0 10px 0;
+}
+
+.message-wrapper .close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+
+.message-wrapper p {
+  padding: 0;
+  margin: 0;
+}
+
+.ok {
+  background: #bdf6b7 url('../img/message/icon-ok.gif') no-repeat 15px 10px;
+  border: 1px solid #21930e;
+}
+
+.attention {
+  background: #a8c4ee url('../img/message/icon-attention.gif') no-repeat 15px 10px;
+  border: 1px solid #006da6;
+}
+
+.warning {
+  background: #f3f4a0 url('../img/message/icon-warning.gif') no-repeat 15px 10px;
+  border: 1px solid #e1e324;
+}
+
+.error {
+  background: #f6b7ba url('../img/message/icon-error.gif') no-repeat 15px 10px;
+  border: 1px solid #cb1a1a;
+}

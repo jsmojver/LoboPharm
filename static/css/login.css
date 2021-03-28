@@ -1,0 +1,128 @@
+* { margin: 0; padding: 0; }
+
+
+
+body {
+	font: 11px "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+        background-color: #FAFAFF;
+}
+
+form {
+	margin-left: 8px;
+	padding: 16px 16px 67px 16px;
+	font-weight: normal;
+	-moz-border-radius: 14px;
+	-khtml-border-radius: 14px;
+	-webkit-border-radius: 14px;
+	border-radius: 5px;
+	background: #fff;
+	background-image: url('/static/img/login/pozadina.png'); background-repeat: no-repeat;
+	border: 1px solid #e5e5e5;
+	-moz-box-shadow: rgba(200,200,200,1) 0 4px 18px;
+	-webkit-box-shadow: rgba(200,200,200,1) 0 4px 18px;
+	-khtml-box-shadow: rgba(200,200,200,1) 0 4px 18px;
+	box-shadow: rgba(200,200,200,1) 0 4px 18px;
+}
+
+form .forgetmenot { font-weight: normal; float: left; margin-bottom: 0; }
+
+#submit-gumb {
+	opacity: 1;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding-right: 2px;
+}
+#submit-gumb:hover { opacity: 0.7; }
+
+#login form p {
+	margin-bottom: 0;
+}
+
+#loginbox {
+	padding-top: 20px;
+	width: 290px;
+}
+
+label {
+	color: #777;
+	font-size: 13px;
+}
+
+form .forgetmenot label {
+	font-size: 11px;
+	line-height: 19px;
+}
+
+form .submit { float: right; padding-top: 15px;}
+
+form p { margin-bottom: 24px; }
+
+#login { width: 609px; margin: 7em auto; }
+#naslov { font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif; 
+          font-size: 17px; 
+	  color: #777;
+	  padding-top: 5px;
+	  padding-bottom: 20px;
+}
+
+#login_error, .message {
+	margin: 0 0 16px 8px;
+	border-width: 1px;
+	border-style: solid;
+	padding: 12px;
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+#nav { margin: 0 0 0 8px; padding: 16px; }
+
+form .logintext {
+	color: #777;
+	width: 80px;
+	font-size:12px;
+}
+
+form .input {
+	color: #777;
+	font-family: arial;
+	font-weight: normal;
+}
+
+#id_password, #id_username, #user_email {
+	font-size: 20px;
+	width: 100%;
+	float: right;
+	padding: 1px;
+	margin-top: 3px;
+	margin-right: 0px;
+	margin-bottom: 8px;
+	border: 1px solid #e5e5e5;
+        border-radius: 5px 5px 5px 5px;
+	box-shadow: 2px 2px 2px #EEE;
+	background: #fbfbfb;
+}
+
+.progress-indicator {
+   top:0;
+   right:0;
+   width:100%;
+   height:100%;
+   position:fixed;
+   text-align:center;
+   /* IE filter */
+   filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+   -moz-opacity:0.5;    /* Mozilla extension */
+   -khtml-opacity:0.5;  /* Safari/Conqueror extension */
+   opacity:0.5; /* CSS3 */
+   z-index:1000;
+   background-color:white;
+   display:none;
+ }
+
+ .progress-indicator img {
+   margin-top:150px;
+ }
