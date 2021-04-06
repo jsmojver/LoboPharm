@@ -43,83 +43,102 @@ function beep() { beep_sound.play(); }
 /* Printing */
 
 print_plugin = '';
-function zebra_print(msg, callback) {  console.log(print_plugin.print(msg)); callback(); }
+function zebra_print(msg, callback) {  
+    console.log(
+//            print_plugin.print(msg)
+            printHexOnPrinter("Zebra", msg)   
+            ); 
+    callback(); 
+}
 
 function ispisi_shipping_label(broj) { 
   $.get("/order/print/shipping/label/" + broj, function(data){
-    print_plugin.print(data);   
+//    print_plugin.print(data);   
+    printHexOnPrinter("Zebra", data);   
   });
 }
 
 function ispisi_potvrdu(broj) { 
   $.get("/order/print2/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_racun_za_pristigle(broj) { 
   $.get("/order/print/racun/za/pristigle/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_racun_njemacki(broj) { 
   $.get("/order/print/racun/njemacki/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_racun_njemacki_broj(broj) { 
   $.get("/order/print/racun/njemacki/broj/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_potvrda_njemacki(broj) { 
   $.get("/order/print/potvrda/njemacki/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_potvrda_o_uplati_njemacki(broj) { 
   $.get("/order/print/potvrda/o/uplati/njemacki/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_papiric_o_narudzbi(broj) { 
   $.get("/order/print/papiric/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_potvrdu_o_narudzbi(broj) { 
   $.get("/order/print/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_potvrdu_za_blagajnu(broj) { 
   $.get("/order/print/barcode/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_racun(broj) {
   $.get("/order/fiskaliziraj/racun/print/" + broj, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_potvrdu_obracuna() {
   $.get("{% url fiskalizacija.obracun.dnevni %}", function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });
 }
 
 function ispisi_naljepnice(posiljkalijek_id) { 
   $.get("/depo/posiljka/kutija/kodiraj/" + posiljkalijek_id, function(data){
-    print_plugin.escpos(data);   
+//    print_plugin.escpos(data);   
+    printHexOnPrinter("Epson", data);   
   });  
 }
 
@@ -606,6 +625,11 @@ $(document).ready(function() {
 	     }               
         });
 
+    window.alert("start qz");
+    //launchQZ();
+    startConnection();
+    //    displayVersion();
+    window.alert("ready executed!");
 });
 
 function sakrij_formu_za_izdavanje() {
