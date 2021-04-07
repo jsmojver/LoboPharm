@@ -136,7 +136,8 @@ def uplate_obracun(request):
     for i in range(42): p += '\xcd' 
 
     p += TXT_ALIGN_CT + '\n  Sigurnosni kod potvrde: %s  \n\x1c\x70\x02\x00\n\n\n\n\n\n' %  randint(1000000000, 9999999999) + PAPER_FULL_CUT
-    printpos = 'javascript:print_plugin.escpos("%s");' % p.encode('hex')
+#    printpos = 'javascript:print_plugin.escpos("%s");' % p.encode('hex')
+    printpos = 'javascript:printHexOnPrinter("Epson", "%s");' % p.encode('hex')
 
     return render(request, 'order/uplate_obracun.html', {'object_list': uplate, 'djelatnici': User.objects.filter(groups__name='Izdavanje'), 'kune_uplate': kune_uplate, 'euri_uplate': euri_uplate, 'blagajnik': blagajnik, 'interval': interval, 'printpos': printpos})
   except NameError:
@@ -173,7 +174,8 @@ def danasnje_stanje_blagajne(request):
       p+= '{:<20}'.format(i.get_tip()[:20]) + '{:>20}'.format('%s' % i.created) + '{:>15}'.format('%s %s' % (i.iznos, i.valuta.kratica)) + '\n'
 
     p += TXT_ALIGN_CT + '\n  Sigurnosni kod potvrde: %s  \n\x1c\x70\x02\x00\n\n\n\n\n\n' %  randint(1000000000, 9999999999) + PAPER_FULL_CUT
-    return HttpResponse('javascript:print_plugin.escpos("%s");' % p.encode('hex'))
+#    return HttpResponse('javascript:print_plugin.escpos("%s");' % p.encode('hex'))
+    return HttpResponse('javascript:printHexOnPrinter("Epson", "%s");' % p.encode('hex'))
    
   except:
     return HttpResponse('')
@@ -205,7 +207,8 @@ def obracun_moj_promet(request):
   p += '\n\x1b\x21\x01' 
   p += TXT_ALIGN_CT + '\n  Sigurnosni kod potvrde: %s  \n\x1c\x70\x02\x00\n\n\n\n\n\n' %  randint(1000000000, 9999999999) + PAPER_FULL_CUT
   
-  printpos = 'javascript:print_plugin.escpos("%s");' % p.encode('hex')
+#  printpos = 'javascript:print_plugin.escpos("%s");' % p.encode('hex')
+  printpos = 'javascript:printHexOnPrinter("Epson", "%s");' % p.encode('hex')
   
   return HttpResponse(printpos)
 
@@ -989,7 +992,8 @@ def napravi_virman_printer(request, narudzba_id):
         
         p += '\n\n\n\n\n\n' + PAPER_FULL_CUT
 
-        return HttpResponse('javascript:print_plugin.escpos("%s");' % p.encode('hex'))
+#        return HttpResponse('javascript:print_plugin.escpos("%s");' % p.encode('hex'))
+        return HttpResponse('javascript:printHexOnPrinter("Epson", "%s");' % p.encode('hex'))
        
     except:
         return HttpResponse('')
