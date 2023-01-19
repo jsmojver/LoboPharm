@@ -4,6 +4,8 @@ from django import template
 from django.template.defaultfilters import stringfilter
 from math import fabs
 
+import settings
+
 register = template.Library()
 
 @register.filter(name='addpoint')
@@ -17,10 +19,10 @@ def eur2hrk(value):
     from order.models import TecajnaLista
     from decimal import Decimal
     """converts eur to hrk"""   
-    lista = TecajnaLista.objects.latest('date')    
+    #lista = TecajnaLista.objects.latest('date')    
     value = Decimal(value)
     
-    zaokruzi = Decimal(value*lista.prodajni_tecaj()).quantize(Decimal(10)**(-2)) # Zaokruzi na 2 decimale
+    zaokruzi = Decimal(value*settings.Def_Eur2Kn).quantize(Decimal(10)**(-2)) # Zaokruzi na 2 decimale
     if int(zaokruzi*100) % 4:
       zaokruzi += (4 - int(zaokruzi*100)%4) * Decimal('0.01') # Naštimaj da je sve lijepo djeljivo s 4 pa će i PDV savršeno štimati
 
@@ -31,9 +33,9 @@ def hrk2eur(value):
     from order.models import TecajnaLista
     from decimal import Decimal
     """converts eur to hrk"""   
-    lista = TecajnaLista.objects.latest('date')    
+    #lista = TecajnaLista.objects.latest('date')    
     value = Decimal(value)
-    return Decimal(value/lista.prodajni_tecaj()).quantize(Decimal(10)**(-2)) # Zaokruzi na 2 decimale
+    return Decimal(value/settings.Def_Eur2Kn).quantize(Decimal(10)**(-2)) # Zaokruzi na 2 decimale
 
 @register.filter(name='abs')
 def abs(value):

@@ -816,7 +816,7 @@ def GetOrCreateEskulapArtikal(nar_art):
     return es_art, created
 
 def CreateStavku(nar_art, es_art, rbr):
-    cijena = nar_art.jedinicna_cijena_kn()
+    cijena = nar_art.jedinicna_cijena_eur()
     pdv = get_pdv(atc_sifra=nar_art.atc_sifra)
     stavka = em.PonudeS(\
             rbr = rbr,

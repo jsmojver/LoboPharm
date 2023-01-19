@@ -200,6 +200,7 @@ SERVER_EMAIL = local.SERVER_EMAIL
 BankAccountNumber = "HR9525030071100084230"
 TaxRate = 25.0
 ApoKzTaxRate = 5.0
+Def_Eur2Kn = 7.5345
 
 VIRMAN_PDF = getattr(local, 'VIRMAN_PDF', False)
 
